@@ -1,0 +1,42 @@
+{
+  "name": "nodefs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack-dev-server --port 3000 --hot"
+  },
+  "config": {
+    "devHost": "localhost",
+    "devPort": 3000,
+    "devProxy": "http://10.0.2.90:8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zmzhydron/nodeFS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zmzhydron/nodeFS/issues"
+  },
+  "homepage": "https://github.com/zmzhydron/nodeFS#readme",
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-react": "^6.16.0",
+    "chokidar": "^1.6.1",
+    "express": "^4.14.0",
+    "jquery": "^3.1.1",
+    "lodash": "^4.17.3",
+    "react": "^15.4.1",
+    "react-router": "^3.0.0",
+    "sass-loader": "^4.1.1",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
