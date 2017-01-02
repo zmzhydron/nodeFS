@@ -1,4 +1,5 @@
 var path = require("path");
+var webpack = require("webpack");
 module.exports = {
 	entry: {
 		app: [
@@ -7,8 +8,15 @@ module.exports = {
 	},
 	output: {
     path: path.resolve(__dirname, "hehe"),
-    publicPath: "/assets/",
+    publicPath: "/src/",
 		filename: "zmz.js"
 	},
+	devServer: {
+		hot: true,
+		inline: true
+	},
+	plugins	: [
+		new webpack.HotModuleReplacementPlugin()
+	],
   devtool: 'eval-source-map'
 }
