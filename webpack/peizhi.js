@@ -3,7 +3,7 @@ var webpack = require("webpack");
 module.exports = {
 	entry: {
 		app: [
-			__dirname+"/../client/app.js"
+			__dirname+"/../client/app.jsx"
 		]
 	},
 	output: {
@@ -11,6 +11,7 @@ module.exports = {
     publicPath: "/src/",
 		filename: "zmz.js"
 	},
+	devtool: 'eval-source-map',
 	devServer: {
 		hot: true,
 		inline: true
@@ -18,5 +19,19 @@ module.exports = {
 	plugins	: [
 		new webpack.HotModuleReplacementPlugin()
 	],
-  devtool: 'eval-source-map'
+	module: {
+		loaders: [
+			{
+				test: /\.jsx?$/,
+				loader: 'babel-loader',
+				exclude: /node_modules/,
+				query: {
+				    presets: ['react','es2015','stage-0']
+				}
+			}
+		]
+	},
+	resolve: {
+	  extensions: ['','.coffee','.js']
+	}
 }

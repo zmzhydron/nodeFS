@@ -1,5 +1,6 @@
 var express = require("express");
 var app = express();
+var files = require("./file.js")
 console.log('111')
 var server = app.listen("8080", function(){
 	console.log(`fuck you`);  
@@ -13,9 +14,5 @@ app.get("/api/fuckyou" , function(req, res){
 	})
 })
 app.get("/api/suckyou" , function(req, res){
-	res.send({
-		name: "suckyou",
-		call: "suckyou",
-		age: 'suckyou'
-	});
+	res.send(files.test());
 })
