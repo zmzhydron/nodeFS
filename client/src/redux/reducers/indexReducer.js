@@ -1,6 +1,7 @@
 
 let initialState = {
-	me: "not work properly"
+	me: "not work properly",
+	rootValue: "shit"
 }
 
 var reducerGenerator = obj => (state = initialState, action) => {
@@ -17,6 +18,12 @@ var indexReducer = reducerGenerator({
 		let { value } = action;
 		return Object.assign({}, state, {
 			me: value+" hehe"
+		})
+	},
+	ADD_ROOTPATH: (state, action) =>{
+		let { value } = action;
+		return Object.assign({}, state, {
+			rootValue: value
 		})
 	}
 })

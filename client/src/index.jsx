@@ -10,18 +10,20 @@ import $ from "jquery"
 	}
 	trigger = (value) =>{
 		let { actions: { test, requestRoot } } = this.props;
-		console.log($);
-		test("fuck you man~~~~")
+		test("zhangmingzhi awesome")
 		requestRoot("zmz awesome");
-
+	}
+	componentDidMount(){
+		$("#fuckyoubutton").html("fuck you too button");
 	}
 	render(){
-		let { testProps: { me } } = this.props;
+		let { testProps: { me, rootValue } } = this.props;
 		return (
 			<div>
 				<h1>My name is zhangmingzhi, and this is file operating system!</h1>
 				<h2>{me}</h2>
-				<button onClick={this.trigger}>click me!</button>
+				<div>infosight: {JSON.stringify(rootValue)}</div>
+				<button id="fuckyoubutton" onClick={this.trigger}>click me!</button>
 			</div>
 		)
 	}
