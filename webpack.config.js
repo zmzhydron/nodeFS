@@ -1,4 +1,5 @@
 var path = require("path");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
 	entry: {
 		app: [
@@ -16,6 +17,7 @@ module.exports = {
   	inline: true,
   	contentBase: "client/"
   },
+  
   module: {
   	loader: [
   		{
@@ -25,6 +27,11 @@ module.exports = {
   			query: {
   				presets: ['es2015']
   			}
+  		},
+  		{
+  			test: /\.scss?$/,
+  			exclude: /node_modules/,
+  			loader: "style-loader!css-loader!sass-loader"
   		}
   	]
   }

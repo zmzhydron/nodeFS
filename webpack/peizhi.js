@@ -1,5 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
 	entry: {
 		app: [
@@ -17,7 +18,8 @@ module.exports = {
 		inline: true
 	},
 	plugins	: [
-		new webpack.HotModuleReplacementPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		
 	],
 	module: {
 		loaders: [
@@ -28,6 +30,11 @@ module.exports = {
 				query: {
 				    presets: ['react','es2015','stage-0']
 				}
+			},
+			{
+				test: /\.scss?$/,
+				exclude: /node_modules/,
+				loader: "style-loader!css-loader!sass-loader"
 			}
 		]
 	},

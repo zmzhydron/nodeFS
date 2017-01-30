@@ -5,7 +5,8 @@ import { Provider } from "react-redux"
 import { createStore, applyMiddleware } from "redux"
 import ReduxThunk from "redux-thunk"
 import reducers from "./src/redux/reducers/MainReducer.js"
-
+import * as css from "./src/css/index.scss"
+// require("css/index.scss")
 const createStoreWithMidderware = applyMiddleware(ReduxThunk)(createStore);
 
 let store = createStoreWithMidderware(reducers)

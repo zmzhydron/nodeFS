@@ -1,11 +1,13 @@
 var express = require("express");
+var bodyParser = require('body-parser')
 var app = express();
 var files = require("./file.js")
-console.log('111',__dirname);
-var server = app.listen("8080", function(){
-	console.log(`fuck you`);  
-})
-
+console.log('__dirname',__dirname);
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
+var server = app.listen("8080", function(){})
 app.get("/api/fuckyou" , function(req, res){
 	res.send({
 		name: "shit1",
@@ -13,8 +15,8 @@ app.get("/api/fuckyou" , function(req, res){
 		age: 28
 	})
 })
-app.get("/api/suckyou" , function(req, res){
-	// console.log(res, "************");
-	// res.send("suck you")
-	res.send(files.test());
+app.post("/api/getFiles" , function(req, res){
+	console.log(req.body);
+	var path = req.body.path;
+	res.send(files.getFiles(path));
 })

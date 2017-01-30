@@ -7,11 +7,12 @@ var ActionWrapper = type => value =>{
 }
 export const test = ActionWrapper("TEST");
 export const requestRoot = obj => dispatch => {
-	console.log(obj);
 	return $.ajax({
-		url: "/api/suckyou",
+		url: "/api/getFiles",
+		type: 'POST',
+		data: obj,
 		success: function(res){
-			console.log(res, "************")
+			console.log(res);
 			dispatch({
 				type: "ADD_ROOTPATH",
 				value: res
@@ -19,3 +20,4 @@ export const requestRoot = obj => dispatch => {
 		}
 	})
 }
+

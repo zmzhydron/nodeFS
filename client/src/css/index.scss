@@ -1,0 +1,30 @@
+body {
+}
+.serverBar{
+	padding: 10px;
+	button{
+		height: 35px;
+		margin-left:10px;
+	}
+	input{
+		width: 350px;
+		height: 30px;
+	}
+}
+.tableListCtn table{
+	border-top: solid 1px silver;
+	border-left: solid 1px silver;
+}
+.fileItems{
+	td{
+		padding:5px;
+		border-bottom: solid 1px silver;
+		border-right: solid 1px silver;
+	}
+	
+
+}
+.fileItems.title{
+	font-size:20px;
+	font-weight:bolder;
+}
