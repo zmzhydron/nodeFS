@@ -21,6 +21,7 @@ var files = {
 		if(!isDir){
 			return "NOT a Directory"
 		}
+		console.log(src,' currentRequest');
 		//遍历整个文件夹;
 		return fs.readdirSync(src).map( item => {
 			let innerPath = `${src}/${item}`,
@@ -50,22 +51,25 @@ var files = {
 						},
 						{
 							method: "isFile",
-							iftrue: "文件",
+							iftrue: "file",
 						},
 						{
 							method: "isDirectory",
-							iftrue: "文件架",
+							iftrue: "dir",
 						}
 					];
 			type = checkList.filter( item => r[item.method]())[0].iftrue
-			console.log(type, 'type');
 			return {
 				name: item,
 				lstatObj: r,
+				path: innerPath,
 				type,
 				size: r.size
 			}
 		})
+	},
+	playMedia: src => {
+		return fs.createReadStream(src);
 	}
 }
 module.exports = files;

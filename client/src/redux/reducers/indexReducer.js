@@ -1,6 +1,8 @@
 let initialState = {
 	me: "not work properly",
-	rootValue: "shit"
+	rootValue: "shit",
+	currentPath: 'C:/Users/Administrator/Desktop',
+	playSrc: "",
 }
 
 var reducerGenerator = obj => (state = initialState, action) => {
@@ -23,6 +25,16 @@ var indexReducer = reducerGenerator({
 		let { value } = action;
 		return Object.assign({}, state, {
 			rootList: value
+		})
+	},
+	CHANGE_PATH: (state, action) =>{
+		return Object.assign({}, state, {
+			currentPath: action.value
+		})
+	},
+	SET_PLAY_SRC: (state, action) =>{
+		return Object.assign({}, state, {
+			playSrc: action.value
 		})
 	}
 })

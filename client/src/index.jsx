@@ -7,45 +7,26 @@ import $ from "jquery"
 
 
 import TableList from "./tableList.jsx"
+import ControlBar from "./controlBar.jsx"
+import Player from "./player.jsx"
+
  class App extends React.Component{
 	constructor(props){
 		super();
-		this.state = {
-			currentPath: 'C:/Users/Administrator/Desktop'
-		}
-	}
-	trigger = (value) =>{
-		let { actions: { test, requestRoot } } = this.props,
-				{ currentPath } = this.state;
-		requestRoot({
-			path: currentPath
-		});
 	}
 	componentDidMount(){
-		this.refs.pathInputBox.value = this.state.currentPath;
 	}
 	componentDidUpdate(){
-		this.refs.pathInputBox.value = this.state.currentPath;	
-	}
-	changePath = e => {
-		let ele = e.target,
-				value = ele.value;
-		this.setState({
-			currentPath: value
-		})
 	}
  	render(){
-		let { indexProps: { me, rootValue } } = this.props,
-				{ currentPath } = this.state;
+		let { indexProps: { me, rootValue }, indexProps, actions } = this.props;
 		return (
 			<div>
 				<h1>My name is zhangmingzhi, and this is file operating system!</h1>
+				<Player {...indexProps} />
+				<ControlBar {...indexProps} actions = {actions}/>
 				<TableList {...this.props}/>
-				<div className="serverBar">
-					<input ref="pathInputBox" onBlur={this.changePath}/>
-					<button id="fuckyoubutton" onClick={this.trigger}>click me!</button>
-				</div>
-				
+
 			</div>
 		)
 	}
