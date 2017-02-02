@@ -8,16 +8,12 @@ import $ from "jquery"
 export default class App extends React.Component{
 	constructor(props){
 		super();
+		this.socket = io.connect('http://localhost:8080');
 	}
 	componentWillMount(){
 
 	}
 	componentDidMount(){
-		var socket = io.connect('http://localhost:8080');
-		socket.on('news', function (data) {
-		  console.log(data, "iiiiiiiiioooooooooo");
-		  socket.emit('my other event', { my: 'data' });
-		});
 	}
 	componentWillReceiveProps(){
 
@@ -32,28 +28,41 @@ export default class App extends React.Component{
 		
 	}
 	play = () => {
-		console.log(window.MediaSource);
-		let mediaSource = new MediaSource();
-		let video = this.refs.v;
+		let	mediaSource = new MediaSource(),
+				video = this.refs.v,
+				that = this,
+				queue = [],
+				MP4 = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
+				webm = 'video/webm; codecs="vorbis,vp8"',
+				videoPromise,
+				sourceBuffer;
 		video.src = window.URL.createObjectURL(mediaSource);
-		mediaSource.addEventListener('webkitsourceopen', function(e)
-		{
-		    var sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vorbis,vp8"');
-		    var socket = io.connect('http://localhost:3000');
-		    if(socket)
-		        console.log('Library retrieved!');
-		    socket.emit('VIDEO_STREAM_REQ','REQUEST');
-		    socket.on('VS', function (data) 
-		    {
-		        console.log(data);
-		        sourceBuffer.append(data);
-		    });
-		});
-		$.ajax({
-			url: '/api/getMedia',
-			dataType: "arraybuffer",
-			success: function( res ){
-				// ms
+		mediaSource.addEventListener('sourceopen', function(o){
+			video.play();
+			// videoPromise = video.play();
+			// videoPromise.then( function(){
+			// 	// debugger;
+			// 	console.log(`play!!!!!!!!`)
+			// }).catch( function(error){
+			// 	console.log(error);
+			// 	// debugger;
+			// })
+		  sourceBuffer = mediaSource.addSourceBuffer(webm);
+		  sourceBuffer.addEventListener("update", function(){
+		  	console.log("@@@@@@@@@@@@@@@@@@", sourceBuffer.updating, queue.length);
+		  	if(queue.length > 0 && !sourceBuffer.updating){
+		  		sourceBuffer.appendBuffer(queue.shift())
+		  	}
+		  }, false);
+		}, false);
+		that.socket.emit('requestMedia', { src: 'C:/22/test2.webm' });
+		that.socket.on("media", function(data){		  	
+			// that.socket.emit("pauseMedia");BMW X5BMW X5
+			if(sourceBuffer.updating || queue.length > 0){
+				queue.push(data);	
+			}else{
+				console.log(data);
+				sourceBuffer.appendBuffer(data);
 			}
 		})
 	}
@@ -65,7 +74,7 @@ export default class App extends React.Component{
 		// 		}
 		return (
 			<div>
-				<video ref="v" src="" controls="controls" height="480" width="640" type="video/webm"></video>
+				<video ref="v" src="http://v2v.cc/~j/theora_testsuite/320x240.ogg" controls="controls" height="480" width="640"></video>
 			</div>
 		)
 	}

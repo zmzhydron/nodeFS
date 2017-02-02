@@ -19,25 +19,31 @@ app.use(bodyParser.json())
 
 server.listen("8080", function(){})
 
-app.get("/api/fuckyou" , function(req, res){
-	res.send({
-		name: "shit1",
-		call: "bird",
-		age: 28
-	})
-})
 app.post("/api/getFiles" , function(req, res){
 	console.log(req.body);
 	var path = req.body.path;
 	res.send(files.getFiles(path));
 })
+var rs;
 io.on('connection', function (socket) {
   socket.emit('news', { hello: 'world' });
   socket.on('my other event', function (data) {
     console.log(data);
   });
+  socket.on('requestMedia', function(req){
+  	console.log(req);
+  	var src = req.src;
+  	rs = fs.createReadStream(src);
+  	rs.on('data', function(data){
+  		console.log(data);
+  		io.emit("media",data);
+  	})
+  })
+  socket.on("pauseMedia", function(req){
+  	console.log(`rs.pause();`)
+  	rs.pause();
+  })
+  socket.on("resumeMedia", function(req){
+  	rs.resume();
+  })
 });
-app.get("/api/getMedia" , function(req, res){
-	res.setHeader("content-type", "application/octet-stream");
-	fs.createReadStream('C:/22/Narcos.S01E01.720p.WEBRip.x264-TASTETV.mkv').pipe(res);
-})
