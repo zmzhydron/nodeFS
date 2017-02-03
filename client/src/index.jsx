@@ -9,6 +9,7 @@ import $ from "jquery"
 import TableList from "./tableList.jsx"
 import ControlBar from "./controlBar.jsx"
 import Player from "./player.jsx"
+import Chat from "./chat.jsx"
 
  class App extends React.Component{
 	constructor(props){
@@ -23,10 +24,10 @@ import Player from "./player.jsx"
 		return (
 			<div>
 				<h1>My name is zhangmingzhi, and this is file operating system!</h1>
+				<Chat {...indexProps} />
 				<Player {...indexProps} />
 				<ControlBar {...indexProps} actions = {actions}/>
-				<TableList {...this.props}/>
-
+				{/*<TableList {...this.props}/>*/}
 			</div>
 		)
 	}

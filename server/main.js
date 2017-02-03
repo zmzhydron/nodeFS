@@ -3,6 +3,8 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 var fs = require("fs");
+
+var chat = require("./chat.js");
 var files = require("./file.js");
 console.log('__dirname',__dirname);
 
@@ -25,11 +27,8 @@ app.post("/api/getFiles" , function(req, res){
 	res.send(files.getFiles(path));
 })
 var rs;
+var userCount = 0;
 io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
   socket.on('requestMedia', function(req){
   	console.log(req);
   	var src = req.src;
@@ -39,11 +38,13 @@ io.on('connection', function (socket) {
   		io.emit("media",data);
   	})
   })
-  socket.on("pauseMedia", function(req){
-  	console.log(`rs.pause();`)
-  	rs.pause();
-  })
-  socket.on("resumeMedia", function(req){
-  	rs.resume();
-  })
+  chat.start(socket);
+  
+  // socket.on("pauseMedia", function(req){
+  // 	console.log(`rs.pause();`)
+  // 	rs.pause();
+  // })
+  // socket.on("resumeMedia", function(req){
+  // 	rs.resume();
+  // })
 });

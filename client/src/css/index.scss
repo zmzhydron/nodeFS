@@ -34,3 +34,39 @@ body {
 	color:green;
 	cursor: pointer;
 }
+.chatBorder{
+	border:solid 1px silver;
+}
+.chatContent{
+	border:solid 1px lime;
+	width: 700px;
+	height: 300px;
+	padding-left: 10px;
+	overflow:scroll;
+	overflow-x: hidden;
+	li{
+		list-style: none;
+		height: 30px;
+		line-height: 30px;
+		font-weight: bold;
+		display: flex;
+		flex-flow: row nowrap;
+
+	}
+	.oneMessage{
+
+	}
+	.oneMessage.myself{
+		justify-content: flex-end;
+		.username{
+			order: 2;
+			color: red;
+		}
+		.usermessage{
+			order: -1;
+		}
+	}
+}
+.chatCtr{
+
+}

@@ -32,7 +32,8 @@ export default class App extends React.Component{
 				video = this.refs.v,
 				that = this,
 				queue = [],
-				MP4 = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
+				mp4 = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
+				mp5 = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"',
 				webm = 'video/webm; codecs="vorbis,vp8"',
 				videoPromise,
 				sourceBuffer;
@@ -47,21 +48,23 @@ export default class App extends React.Component{
 			// 	console.log(error);
 			// 	// debugger;
 			// })
-		  sourceBuffer = mediaSource.addSourceBuffer(webm);
+		  sourceBuffer = mediaSource.addSourceBuffer(mp4);
 		  sourceBuffer.addEventListener("update", function(){
-		  	console.log("@@@@@@@@@@@@@@@@@@", sourceBuffer.updating, queue.length);
+		  	// console.log("@@@@@@@@@@@@@@@@@@", sourceBuffer.updating, queue.length);
 		  	if(queue.length > 0 && !sourceBuffer.updating){
 		  		sourceBuffer.appendBuffer(queue.shift())
 		  	}
 		  }, false);
 		}, false);
-		that.socket.emit('requestMedia', { src: 'C:/22/test2.webm' });
+		that.socket.emit('requestMedia', { src: 'C:/22/zxc.mp4' });
 		that.socket.on("media", function(data){		  	
 			// that.socket.emit("pauseMedia");BMW X5BMW X5
+
 			if(sourceBuffer.updating || queue.length > 0){
 				queue.push(data);	
+				// console.log(sourceBuffer.updating, queue.length, 'sourceBuffer.updating');
 			}else{
-				console.log(data);
+				// console.log(data);
 				sourceBuffer.appendBuffer(data);
 			}
 		})
