@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+	  *{
+	  	padding: 0px;
+	  	margin: 0px;
+	  }
+		#a{
+			display: flex;
+			height: 300px;
+			width: 1000px;
+			flex-flow: row nowrap;
+			border: solid 1px red;
+		}
+		#c{
+			width: 100px;
+			flex-shrink: 0;
+		}
+		#b{
+			flex-grow: 2;
+			display: flex;
+			flex-flow: column nowrap;
+			border: solid 1px green;
+		}
+		#d li{
+			height: 30px;
+			padding-left:5px;
+			background-color: green;
+			max-width: 200px;
+			list-style: none;
+			flex-shrink:1;
+		}
+		#z{
+			flex-shrink: 0;
+		}
+		#d{
+			height: 30px;
+			display: flex;
+			flex-flow: row nowrap;
+			border: solid 1px black;
+			flex-grow: 2;
+		}
+	</style>
+</head>
+<body>
+	<div id="a">
+		<div id="c">c</div>
+		<ul id='d'>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+								<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+								<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+						<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+								<li>1234</li>
+			<li>1234</li>
+			<li>1234</li>
+			<li id="z">XXX</li>
+		</ul>
+		</div>			
+</body>
+</html>
