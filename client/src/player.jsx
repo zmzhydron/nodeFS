@@ -1,7 +1,7 @@
 /*
 	@2017-1-30
 	模板文件
-	
+
 */
 import React from "react"
 import $ from "jquery"
@@ -25,7 +25,7 @@ export default class App extends React.Component{
 
 	}
 	componentDidUpdate(){
-		
+
 	}
 	play = () => {
 		let	mediaSource = new MediaSource(),
@@ -57,11 +57,11 @@ export default class App extends React.Component{
 		  }, false);
 		}, false);
 		that.socket.emit('requestMedia', { src: 'C:/22/zxc.mp4' });
-		that.socket.on("media", function(data){		  	
+		that.socket.on("media", function(data){
 			// that.socket.emit("pauseMedia");BMW X5BMW X5
 
 			if(sourceBuffer.updating || queue.length > 0){
-				queue.push(data);	
+				queue.push(data);
 				// console.log(sourceBuffer.updating, queue.length, 'sourceBuffer.updating');
 			}else{
 				// console.log(data);
