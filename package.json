@@ -10,9 +10,9 @@
     "start": "node ./webpack/config"
   },
   "config": {
-    "devHost": "localhost",
+    "devHost": "192.168.2.91",
     "devPort": 3000,
-    "devProxy": "localhost:8080"
+    "devProxy": "192.168.2.91:8080"
   },
   "repository": {
     "type": "git",

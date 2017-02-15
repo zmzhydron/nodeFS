@@ -70,6 +70,36 @@ var files = {
 	},
 	playMedia: src => {
 		return fs.createReadStream(src);
+	},
+	readContent: src => {
+		if(!src){
+			return "path illege";
+		}
+		/*
+			TODO 由于不知道文件大小，所以需要使用stream来读取，但是流是异步的，所以要考虑怎么写
+		*/
+		// var data =""
+		// var fr = fs.createReadStream(src);
+		// fr.on("data", function(chunk){
+		// 	data += chunk.toString("utf8");
+		// })
+		// fr.on('end', function(){
+		// 	console.log(data);
+		// })
+		return fs.readFileSync(src).toString("utf8")
+				.trim()
+				.split("\n")
+				.map( item => {
+					var ary = item.split("#");
+					return {
+						"palce": ary[0],
+						"problem": ary[1],
+						"cause": ary[2],
+						"damege": ary[3],
+						"damegelevel": ary[4],
+						"resolve": ary[5]
+					}
+				})
 	}
 }
 module.exports = files;

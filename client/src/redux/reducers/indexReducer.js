@@ -2,6 +2,7 @@ let initialState = {
 	me: "not work properly",
 	rootValue: "shit",
 	currentPath: 'C:/Users/Administrator/Desktop',
+	accidents: [],
 	playSrc: "",
 }
 
@@ -35,6 +36,11 @@ var indexReducer = reducerGenerator({
 	SET_PLAY_SRC: (state, action) =>{
 		return Object.assign({}, state, {
 			playSrc: action.value
+		})
+	},
+	UPDATE_ACCIDENT: (state, action) =>{
+		return Object.assign({}, state, {
+			accidents: action.value
 		})
 	}
 })

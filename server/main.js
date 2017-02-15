@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var fs = require("fs");
 
 var chat = require("./chat.js");
+var player = require("./player.js");
 var files = require("./file.js");
 console.log('__dirname',__dirname);
 
@@ -26,25 +27,9 @@ app.post("/api/getFiles" , function(req, res){
 	var path = req.body.path;
 	res.send(files.getFiles(path));
 })
-var rs;
-var userCount = 0;
-io.on('connection', function (socket) {
-  socket.on('requestMedia', function(req){
-  	console.log(req);
-  	var src = req.src;
-  	rs = fs.createReadStream(src);
-  	rs.on('data', function(data){
-  		console.log(data);
-  		io.emit("media",data);
-  	})
-  })
-  chat.start(socket);
-  
-  // socket.on("pauseMedia", function(req){
-  // 	console.log(`rs.pause();`)
-  // 	rs.pause();
-  // })
-  // socket.on("resumeMedia", function(req){
-  // 	rs.resume();
-  // })
-});
+app.post("/api/readFiles" , function(req, res){
+  var path = req.body.path;
+  res.send(files.readContent(path));
+})
+chat.start(io);
+player.start(io);

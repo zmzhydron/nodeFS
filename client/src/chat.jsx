@@ -8,7 +8,7 @@ import $ from "jquery"
 export default class Chat extends React.Component{
 	constructor(props){
 		super();
-		this.socket = io.connect('http://localhost:8080');
+		this.socket = io.connect('http://localhost:8080/chat');
 		this.state = {
 			autoScroll: true,
 			loginState: false,

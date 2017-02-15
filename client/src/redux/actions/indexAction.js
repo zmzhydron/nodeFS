@@ -22,4 +22,18 @@ export const requestRoot = obj => dispatch => {
 	})
 }
 
+export const getAccident = obj => dispatch => {
+	return $.ajax({
+		url: "/api/readFiles",
+		type: 'POST',
+		data: { path: obj},
+		success: function(res){
+			dispatch({
+				type: "UPDATE_ACCIDENT",
+				value: res
+			})
+		}
+	})
+}
+
 

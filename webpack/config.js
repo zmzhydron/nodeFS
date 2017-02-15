@@ -4,14 +4,14 @@ var pkg = require('../package.json');
 var peizhi = require("./peizhi");
 
 
-peizhi.entry.app.unshift("webpack-dev-server/client?http://localhost:3000/", "webpack/hot/dev-server");
+peizhi.entry.app.unshift("webpack-dev-server/client?http://192.168.2.91:3000/", "webpack/hot/dev-server");
 var server = new WebpackDevServer(webpack(peizhi),{
 	hot: true,
 	inline: true,
 	contentBase: "client/",
 	publicPath: "/src/",
 	stats: { colors: true, hot: true },
-	proxy: {"/api/*": { target:"http://localhost:8080", secure: false } }
+	proxy: {"/api/*": { target:"http://192.168.2.91:8080", secure: false } }
 });
 var port = pkg.config.devPort;
 var host = pkg.config.devHost;

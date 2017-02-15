@@ -11,16 +11,17 @@ body {
 		height: 30px;
 	}
 }
-.tableListCtn table{
+.normaltable{
 	border-top: solid 1px silver;
 	border-left: solid 1px silver;
-}
-.fileItems{
-	td{
+	td, th{
 		padding:5px;
 		border-bottom: solid 1px silver;
 		border-right: solid 1px silver;
 	}
+}
+.fileItems{
+
 }
 .fileItems.title{
 	font-size:20px;
