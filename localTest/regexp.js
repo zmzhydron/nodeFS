@@ -1,14 +1,13 @@
 'use strict'
-var fs = require('fs');
-var a = "zhangmingzhi"
-var b = '@mz';
-/(zhangming)/.test(a);
-console.log(RegExp.$1);
-console.log(b.replace(/(mz)/, RegExp.$1));
 
-var aa = {
-	name: "zmz"
+var me = {
+	name : "zmz"
 }
-var processfn = name => {
-	return name+"fuckyou";
+for(var s = 0;s < 10 && me.name !== 'shabi'; s++){
+	if(s === 2){
+		// me.name = 'shabi'
+	}
+	setTimeout( item => {
+		console.log(item)
+	},1000,s)
 }

@@ -22,7 +22,7 @@ var chat = {
 		.of('/chat')
 		.on('connection', function (socket) {
 			chat.functor(socket);
-			console.log(socket)
+			// console.log(socket)
 			userCount++;
 			emitter.emit("userCountChange", {userCount: userCount});
 		});

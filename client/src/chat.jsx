@@ -23,7 +23,7 @@ export default class Chat extends React.Component{
 			this.loginState = true;
 		})
 		this.socket.on("userSumChange", resp => {
-			console.log("userSumChange", resp.userCount);
+			// console.log("userSumChange", resp.userCount);
 			this.setState({
 				totalUser: parseInt(resp.userCount)
 			})

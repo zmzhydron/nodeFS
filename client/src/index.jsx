@@ -22,10 +22,11 @@ import Accident from "./carAccident.jsx"
 	}
  	render(){
 		let { indexProps: { me, rootValue }, indexProps, actions } = this.props;
+		
 		return (
 			<div>
 				<h1>My name is zhangmingzhi, and this is file operating system!</h1>
-				<Chat {...indexProps} />
+				{/*<Chat {...indexProps} />*/}
 				{/*<Player {...indexProps} />*/}
 				<ControlBar {...indexProps} actions = {actions}/>
 				<Accident {...indexProps} actions = {actions}/>
