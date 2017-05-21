@@ -3,6 +3,8 @@ let initialState = {
 	rootValue: "shit",
 	currentPath: 'C:/Users/Administrator/Desktop',
 	accidents: [],
+	newCar: "GOLF GTI",
+	price: "400k",
 	playSrc: "",
 }
 
@@ -20,6 +22,18 @@ var indexReducer = reducerGenerator({
 		let { value } = action;
 		return Object.assign({}, state, {
 			me: value+" hehe"
+		})
+	},
+	TESTMIDDLEWARE: (state,action) => {
+		let { value } = action;
+		return Object.assign({}, state, {
+			newCar: value
+		})
+	},
+	TESTMIDDLEWARETWO: (state,action) => {
+		let { value } = action;
+		return Object.assign({}, state, {
+			price: value
 		})
 	},
 	ADD_ROOTPATH: (state, action) =>{

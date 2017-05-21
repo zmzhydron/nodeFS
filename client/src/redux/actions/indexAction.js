@@ -5,10 +5,13 @@ var ActionWrapper = type => value =>{
 		value: value
 	}
 }
+export const testone = ActionWrapper("TESTMIDDLEWARE")
+export const testtwo = ActionWrapper("TESTMIDDLEWARETWO")
 export const test = ActionWrapper("TEST");
 export const changePath = ActionWrapper("CHANGE_PATH");
 export const setPlaySrc = ActionWrapper("SET_PLAY_SRC");
 export const requestRoot = obj => dispatch => {
+
 	return $.ajax({
 		url: "/api/getFiles",
 		type: 'POST',
@@ -22,8 +25,13 @@ export const requestRoot = obj => dispatch => {
 	})
 }
 
-export const getAccident = obj => dispatch => {
-	return $.ajax({
+export const getAccident = obj => (dispatch,a,b,c) => {
+	// console.log(obj);
+	// console.log(a)
+	// console.log(b);
+	// console.log(c)
+	// console.log("$$$$$$$$$$$$")
+		$.ajax({
 		url: "/api/readFiles",
 		type: 'POST',
 		data: { path: obj},

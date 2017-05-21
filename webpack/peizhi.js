@@ -1,6 +1,5 @@
 var path = require("path");
 var webpack = require("webpack");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
 	entry: {
 		app: [
@@ -19,7 +18,10 @@ module.exports = {
 	},
 	plugins	: [
 		new webpack.HotModuleReplacementPlugin(),
-		
+		new webpack.ProvidePlugin({
+			$: "jquery",
+			jQuery: "jquery"
+		})
 	],
 	module: {
 		loaders: [

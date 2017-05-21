@@ -9,19 +9,34 @@ import * as css from "./src/css/index.scss"
 // require("css/index.scss")
 
 let start = store => next => action =>{
-	console.log(store, "store")
-	console.log(action, "action")
+	let { type, value } = action;
+	if(type === 'TESTMIDDLEWARE'){
+		action.value = "AMG GT";
+		console.log(store.getState().index.price, "1")
+	}
 	next(action)
 }
 let one = store => next => action =>{
-	console.log(1111111111,action)
-	// next(action)
-}
-let two = store => next => action =>{
-	console.log(22222222)
+	let { type, value } = action;
+	if(type === 'TESTMIDDLEWARE'){
+		action.value += ' S'
+		console.log(store.getState().index.price, "2")
+	}
 	next(action)
 }
-let middlewares = [start, one, two]
+let two = store => next => action =>{
+	let { type, value } = action;
+	if(type === 'TESTMIDDLEWARE'){
+		action.value += ' S'
+		console.log(store.getState().index.price, "3")
+		store.dispatch({
+			type: "TESTMIDDLEWARETWO",
+			value: "1M"
+		})
+	}
+	next(action)
+}
+let middlewares = [start, one, two];
 const createStoreWithMidderware = applyMiddleware(ReduxThunk, ...middlewares)(createStore);
 
 let store = createStoreWithMidderware(reducers)

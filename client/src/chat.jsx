@@ -4,7 +4,7 @@
 	
 */
 import React from "react"
-import $ from "jquery"
+// import $ from "jquery"
 export default class Chat extends React.Component{
 	constructor(props){
 		super();
