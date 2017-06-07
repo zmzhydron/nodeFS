@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style media="screen">
+    img{
+      height: 100px;
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <img src="12-5.png"/>
+  <input type="file" id='asdf' />
+</body>
+<script src="jq.js" charset="utf-8"></script>
+<script type="text/javascript">
+  window.onload = function(){
+    $("#asdf").on("change", function(e){
+      var file = e.target.files[0];
+      var bobo = new Blob([file], {type: "image/jpeg"});
+      var bobourl = window.URL.createObjectURL(bobo);
+      $("body").append(`<img src=${bobourl} />`);
+    })
+  }
+</script>
+</html>
