@@ -11,7 +11,7 @@ import * as css from "./src/css/index.scss"
 let start = store => next => action =>{
 	let { type, value } = action;
 	if(type === 'TESTMIDDLEWARE'){
-		action.value = "AMG GT";
+		action.value = "AMG GT ";
 		console.log(store.getState().index.price, "1")
 	}
 	next(action)
@@ -19,7 +19,7 @@ let start = store => next => action =>{
 let one = store => next => action =>{
 	let { type, value } = action;
 	if(type === 'TESTMIDDLEWARE'){
-		action.value += ' S'
+		action.value += 'R'
 		console.log(store.getState().index.price, "2")
 	}
 	next(action)
@@ -27,10 +27,11 @@ let one = store => next => action =>{
 let two = store => next => action =>{
 	let { type, value } = action;
 	if(type === 'TESTMIDDLEWARE'){
-		action.value += ' S'
+		action.value += 'S'
 		console.log(store.getState().index.price, "3")
 		store.dispatch({
 			type: "TESTMIDDLEWARETWO",
+			// type: "TESTMIDDLEWARE",
 			value: "1M"
 		})
 	}

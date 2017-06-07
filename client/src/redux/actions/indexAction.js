@@ -1,4 +1,3 @@
-import $ from "jquery"
 var ActionWrapper = type => value =>{
 	return {
 		type: type,
