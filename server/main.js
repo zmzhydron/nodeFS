@@ -86,6 +86,14 @@ app.post("/api/query", function(req,res){
 		queryname: queryname
 	});
 })
+app.post("/api/queryAndupdate", function(req,res){
+	var collname = req.body.collname || 'zmz';
+	var queryname = req.body.queryname;
+	dbfn.queryAndupdate(globalDb,res, {
+		collname: collname,
+		queryname: queryname
+	});
+})
 
 chat.start(io);
 player.start(io);

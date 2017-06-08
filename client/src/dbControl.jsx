@@ -75,6 +75,18 @@ export default class App extends React.Component{
 			}
 		})
 	}
+	queryAndupdate = () => {
+		$.ajax({
+			url: '/api/queryAndupdate',
+			type: 'post',
+			data: {
+				collname: "zmz",
+			},
+			success: function(res){
+				console.log(res);
+			}
+		})
+	}
 	render(){
 		return (
 			<div>
@@ -83,6 +95,7 @@ export default class App extends React.Component{
 				<button onClick={this.getCollections}>getCollections</button>
 				<button onClick={this.addCollection}>addCollection One</button>
 				<button onClick={this.query}>querys One</button>
+				<button onClick={this.queryAndupdate}>queryAndupdate</button>
 			</div>
 		)
 	}
