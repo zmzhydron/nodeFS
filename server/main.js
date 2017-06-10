@@ -12,7 +12,8 @@ var files = require("./file.js");
 var mongodb = require("mongodb");
 var moserver = mongodb.Server;
 var mongoclient = mongodb.MongoClient;
-var dbfn = require("./db/db.js");
+// var dbfn = require("./db/db.js");
+var dbfn = require("./db/mongoose.js");
 console.log('__dirname',__dirname);
 
 
@@ -59,7 +60,7 @@ app.post("/api/connectDb", function(req, res){
 	res.send(globalDb);
 })
 
-app.post("/api/testDb", function(req,res){
+app.post("/api/getCollections", function(req,res){
 	dbfn.getCollections(globalDb,res);
 })
 app.post("/api/insera", function(req,res){
