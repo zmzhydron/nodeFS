@@ -95,6 +95,8 @@ app.post("/api/queryAndupdate", function(req,res){
 		queryname: queryname
 	});
 })
-
+app.post("/api/addCar", function(req,res){
+	dbfn.addCar(globalDb,res, req);
+})
 chat.start(io);
 player.start(io);
