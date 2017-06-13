@@ -8,19 +8,16 @@ var mongoclient = mongodb.MongoClient;
 var Schema = require("./schema.js");
 var oneNameSchema = Schema.onename;
 var carSchema = Schema.car;
-var oneName = mongoose.model("oneName", oneNameSchema, "zmz");
-var carschemainstance;
-carschemainstance = mongoose.model("carSchema", carSchema, "car");
+var car_col = mongoose.model("Car", carSchema);
 mongoose.connect('mongodb://zmz:zmz@127.0.0.1:27017/zmz');
 // mongoose.connection.on("open", () => {
 // 	console.log(" createConnection ")
 // })
-var queryname = oneName.find({});
 module.exports = {
 	getCollections: (dbs, res) => {
 		// mongoose.connect('mongodb://localhost/test');
-		query = carschemainstance.find({});
-		// query.where('uuid').gt(1)
+		query = car_col.find({});
+		// query.where("acceleration").lt(4)
 		query.exec( (err, results) => {
 			if(err){
 				console.log(`query error`)
@@ -31,22 +28,35 @@ module.exports = {
 
 	},
 	addCollections: (dbs, res) => {
-		// mongoose.connect('mongodb://localhost/test');
-		var newname = new oneName({
-			name: "sjb",
-			age: 29
-		})
-		newname.save( (err, results) => {
+		res.send("empty request")
+	},
+	updateCar: (dbs, res, data) => {
+		var updateSeq = {
+			$set: {
+				door: 2,
+				driveType: 'fr',
+				price: '22W'
+			}
+		}
+		query = car_col.find({});
+		query.where("acceleration").gt(5)
+		query.exec( (err, results) => {
 			if(err){
-				console.log(`chuangjian shibai`)
+				console.log(`query error`)
 			}else{
-				console.log(`chuangjian chenggong`)
-				res.send(results);
+				results.forEach( (item, index) => {
+					item.update(updateSeq, (err, r) => {
+						if(err){
+							console.log("cha zhao shibai" ,err)
+						}else{
+							res.send(r);
+						}
+					})
+				})
 			}
 		})
 	},
 	addCar: (dbs, res, data) => {
-		console.log(data.body.price)
 		var carName = data.body.carName;
 		var fuelType = data.body.fuelType;
 		var driveType = data.body.driveType;
@@ -55,15 +65,16 @@ module.exports = {
 		var gearbox = data.body.gearbox;
 		var gearNumber = data.body.gearNumber;
 		var acceleration = data.body.acceleration;
-		var door = data.body.door;
-		
-		var newcar = new carschemainstance({
+		var price = data.body.price;
+		var door = data.body.door;		
+		var newcar = new car_col({
 			carName: carName,
 			fuelType: fuelType,
 			driveType: driveType,
 			bhp: bhp,
 			torque: torque,
 			gearbox: gearbox,
+			price: price,
 			gearNumber: gearNumber,
 			acceleration: acceleration,
 			door: door

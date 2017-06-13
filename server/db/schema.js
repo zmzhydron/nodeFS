@@ -15,5 +15,6 @@ module.exports = {
 		gearNumber: String,
 		acceleration: String,
 		door: String,
+		price: String
 	})
 }

@@ -89,10 +89,10 @@ export default class App extends React.Component{
 	}
 	subCars = e => {
 		var fuelType = $("input[name=fueltype]:checked").val();
-		var door = $("input[name=fueltype]:checked").val();
-		var driveType = $("input[name=fueltype]:checked").val();
+		var door = $("input[name=door]:checked").val();
+		var driveType = $("input[name=driveType]:checked").val();
 		var carName = $("#carName").val();
-		var bhp = $("#carName").val();
+		var bhp = $("#bhp").val();
 		var torque = $("#torque").val();
 		var gearbox = $("#gearbox").val();
 		var gearNumber = $("#gearNumber").val();
@@ -112,6 +112,18 @@ export default class App extends React.Component{
 				gearNumber: gearNumber,
 				acceleration: acceleration,
 				price: price
+			},
+			success: function(res){
+				console.log(res);
+			}
+		})
+	}
+	updateCar = e => {
+		$.ajax({
+			url: '/api/updateCar',
+			type: 'post',
+			data: {
+				bhp: 999
 			},
 			success: function(res){
 				console.log(res);
@@ -165,6 +177,7 @@ export default class App extends React.Component{
 						</div>
 						<div>
 							<button onClick={this.subCars}>提交</button>
+							<button onClick={this.updateCar}>updateCar</button>
 						</div>
 					</div>
 				</div>
