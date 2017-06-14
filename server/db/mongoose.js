@@ -18,10 +18,10 @@ module.exports = {
 		// mongoose.connect('mongodb://localhost/test');
 		query = car_col.find({});
 		// query.where("acceleration").lt(4)
-		query.exec( (err, results) => {
-			if(err){
+		query.exec((err, results) => {
+			if (err) {
 				console.log(`query error`)
-			}else{
+			} else {
 				res.send(results);
 			}
 		})
@@ -31,28 +31,68 @@ module.exports = {
 		res.send("empty request")
 	},
 	updateCar: (dbs, res, data) => {
+		// var updateSeq = {
+		// 	$set: {
+		// 		door: 2,
+		// 		driveType: 'fr',
+		// 		price: '22.5w'
+		// 	}
+		// }
 		var updateSeq = {
 			$set: {
 				door: 2,
 				driveType: 'fr',
-				price: '22W'
+				price: '44.5W'
 			}
 		}
 		query = car_col.find({});
-		query.where("acceleration").gt(5)
-		query.exec( (err, results) => {
-			if(err){
+		query.where("acceleration").gt(5);
+		// query.exec((err, results) => {
+		// 	if (err) {
+		// 		console.log(`query error`)
+		// 	} else {
+		// 		res.send(`update success `);
+		// 	}
+		// })
+		query.exec((err, results) => {
+			if (err) {
 				console.log(`query error`)
-			}else{
-				results.forEach( (item, index) => {
+			} else {
+				console.log(results)
+				// res.send(results);
+				// results.update(updateSeq, (err, r) => {
+				// 	if (err) {
+				// 		console.log("cha zhao shibai", err)
+				// 	} else {
+				// 		res.send(r);
+				// 	}
+				// })
+				results.forEach((item, index) => {
 					item.update(updateSeq, (err, r) => {
-						if(err){
-							console.log("cha zhao shibai" ,err)
-						}else{
+						if (err) {
+							console.log("cha zhao shibai", err)
+						} else {
 							res.send(r);
 						}
 					})
 				})
+			}
+		})
+	},
+	deleteCar: (dbs, res, data) => {
+		var id = data.body.id;
+		var index = data.body.index;
+		var q1 = car_col.remove();
+		q1.where("_id", id);
+		q1.exec((err, results) => {
+			if (err) {
+				res.send(err)
+			} else {
+				q2 = car_col.find();
+				q2.exec((err, results) => {
+					res.send(results)
+				})
+
 			}
 		})
 	},
@@ -66,7 +106,7 @@ module.exports = {
 		var gearNumber = data.body.gearNumber;
 		var acceleration = data.body.acceleration;
 		var price = data.body.price;
-		var door = data.body.door;		
+		var door = data.body.door;
 		var newcar = new car_col({
 			carName: carName,
 			fuelType: fuelType,
@@ -79,16 +119,16 @@ module.exports = {
 			acceleration: acceleration,
 			door: door
 		})
-		newcar.save( (err, results) => {
-			if(err){
+		newcar.save((err, results) => {
+			if (err) {
 				console.log(`chuangjian shibai`)
-			}else{
+			} else {
 				console.log(`chuangjian 111 chenggong`)
 				res.send(results);
 			}
 		})
 	},
 	exp: 1,
-	query:1,
+	query: 1,
 	queryAndupdate: 1
 }

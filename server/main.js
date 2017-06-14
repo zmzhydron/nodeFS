@@ -101,5 +101,8 @@ app.post("/api/addCar", function(req,res){
 app.post("/api/updateCar", function(req,res){
 	dbfn.updateCar(globalDb,res, req);
 })
+app.post("/api/deleteCar", function(req,res){
+	dbfn.deleteCar(globalDb,res, req);
+})
 chat.start(io);
 player.start(io);

@@ -3,37 +3,29 @@
 	控制面板
 */
 import React from "react"
-export default class App extends React.Component{
-	constructor(props){
+export default class App extends React.Component {
+	constructor(props) {
 		super();
+		this.state = {
+			showADDCar: true,
+			cars: []
+		}
 	}
-	componentWillMount(){
+	componentWillMount() {
 
 	}
-	componentWillReceiveProps(){
+	componentWillReceiveProps() {
 
 	}
-	componentWillUnMount(){
+	componentWillUnMount() {
 
 	}
-	componentWillUpdate(){
+	componentWillUpdate() {
 
 	}
-	componentDidMount(){
+	componentDidMount() {
 	}
-	componentDidUpdate(){
-	}
-	connect = () => {
-		$.ajax({
-			url: '/api/getCollections',
-			type: 'post',
-			data: {
-				name: "zmz",
-			},
-			success: function(res){
-				console.log(res);
-			}
-		})
+	componentDidUpdate() {
 	}
 	getCollections = () => {
 		$.ajax({
@@ -42,52 +34,14 @@ export default class App extends React.Component{
 			data: {
 				name: "zmz",
 			},
-			success: function(res){
-				console.log(res);
+			success: res => {
+				this.setState({
+					cars: res
+				})
 			}
 		})
 	}
-	addCollection = () => {
-		$.ajax({
-			url: '/api/addCollection',
-			type: 'post',
-			data: {
-				name: "zmz",
-				initCol: {
-					name: "zhangmingzhi",
-					age: "去你妈的"
-				}
-			},
-			success: function(res){
-				console.log(res);
-			}
-		})
-	}
-	query = () => {
-		$.ajax({
-			url: '/api/query',
-			type: 'post',
-			data: {
-				collname: "zmz",
-			},
-			success: function(res){
-				console.log(res);
-			}
-		})
-	}
-	queryAndupdate = () => {
-		$.ajax({
-			url: '/api/queryAndupdate',
-			type: 'post',
-			data: {
-				collname: "zmz",
-			},
-			success: function(res){
-				console.log(res);
-			}
-		})
-	}
-	subCars = e => {
+	subCars = (_id,index) =>  e => {
 		var fuelType = $("input[name=fueltype]:checked").val();
 		var door = $("input[name=door]:checked").val();
 		var driveType = $("input[name=driveType]:checked").val();
@@ -113,74 +67,141 @@ export default class App extends React.Component{
 				acceleration: acceleration,
 				price: price
 			},
-			success: function(res){
+			success: function (res) {
 				console.log(res);
 			}
 		})
 	}
-	updateCar = e => {
+	updateCar = (id,index) => e => {
 		$.ajax({
 			url: '/api/updateCar',
 			type: 'post',
 			data: {
 				bhp: 999
 			},
-			success: function(res){
+			success: function (res) {
 				console.log(res);
 			}
 		})
 	}
-	render(){
+	deleteCar = (id,index) => e => {
+		$.ajax({
+			url: '/api/deleteCar',
+			type: 'post',
+			data: {
+				id,
+				index,
+			},
+			success: res =>  {
+				this.setState({
+					cars: res
+				})
+			}
+		})
+	}
+	showADDCar = e => {
+		this.setState({
+			showADDCar: !this.state.showADDCar
+		})
+	}
+	renderTableBtn = (_id, index) => {
+		return (
+			<div>
+				<button onClick={this.subCars(_id,index)}>add</button>
+				<button onClick={this.updateCar(_id,index)}>update</button>
+				<button onClick={this.deleteCar(_id,index)}>remove</button>
+			</div>
+		)
+	}
+	renderCars = () => {
+		let { cars, showADDCar } = this.state;
+		return cars.map((item, index) => {
+			let { _id, carName, fuelType, driveType, bhp, torque, gearbox, gearNumber, acceleration, door, price } = item;
+			return (
+				<tr key={index} data-id={_id}>
+					<td>{index + 1}</td>
+					<td>{carName}</td>
+					<td>{price}</td>
+					<td>{acceleration}</td>
+					<td>{fuelType}</td>
+					<td>{driveType}</td>
+					<td>{bhp}</td>
+					<td>{torque}</td>
+					<td>{gearbox}</td>
+					<td>{gearNumber}</td>
+					<td>{door}</td>
+					<td>{this.renderTableBtn(_id,index)}</td>
+				</tr>
+			)
+		})
+	}
+	render() {
+		let { showADDCar } = this.state;
 		return (
 			<div>
 				<h1>DB control panel</h1>
-				<button onClick={this.connect}>连接数据库</button>
-				<button onClick={this.getCollections}>getCollections</button>
-				<button onClick={this.addCollection}>addtest</button>
-				<button onClick={this.query}>querys One</button>
-				<button onClick={this.queryAndupdate}>queryAndupdate</button>
-				<div>
+				<button onClick={this.getCollections}>查询车辆</button>
+				<button onClick={this.showADDCar}>显示添加车辆</button>
+				<div style={{ display: showADDCar ? "block" : "none" }}>
 					<h2>自定义添加</h2>
-					<span>数据库名称：<input type="text"  defaultValue="zmz"/></span>
-					<span>集合名称：<input type="text" defaultValue="zmz"/></span>
+					<span>数据库名称：<input type="text" defaultValue="zmz" /></span>
+					<span>集合名称：<input type="text" defaultValue="zmz" /></span>
 					<div>
-						<span>车名：<input type="text" id="carName" defaultValue="zmz"/></span>
-						<span>price: <input type="text" id="price" defaultValue="140k"/></span>
+						<span>车名：<input type="text" id="carName" defaultValue="zmz" /></span>
+						<span>price: <input type="text" id="price" defaultValue="140k" /></span>
 						<div>驱动方式：
 							<label htmlFor="fr">2驱动</label>
-							<input type="radio" name="drivetype" id="fr" defaultValue="fr"/>
+							<input type="radio" name="drivetype" id="fr" defaultValue="fr" />
 							<label htmlFor="4wr">四驱</label>
-							<input type="radio" name="drivetype" id="4wr" defaultValue="4wr"/>
+							<input type="radio" name="drivetype" id="4wr" defaultValue="4wr" />
 							<label htmlFor="rr">后驱</label>
-							<input type="radio" name="drivetype" id="rr" defaultValue="rr"/>
+							<input type="radio" name="drivetype" id="rr" defaultValue="rr" />
 						</div>
 						<div>燃油方式：
 							<label htmlFor="gas">汽油</label>
-							<input type="radio" name="fueltype" id="gas" defaultValue="gas"/>
+							<input type="radio" name="fueltype" id="gas" defaultValue="gas" />
 							<label htmlFor="disel">柴油</label>
-							<input type="radio" name="fueltype" id="disel" defaultValue="disel"/>
+							<input type="radio" name="fueltype" id="disel" defaultValue="disel" />
 							<label htmlFor="hydrid">混动</label>
-							<input type="radio" name="fueltype" id="hydrid" defaultValue="hydrid"/>
+							<input type="radio" name="fueltype" id="hydrid" defaultValue="hydrid" />
 							<label htmlFor="eletric">纯电</label>
-							<input type="radio" name="fueltype" id="eletric" defaultValue="eletric"/>
+							<input type="radio" name="fueltype" id="eletric" defaultValue="eletric" />
 						</div>
-						<span>马力：<input type="text" id= "bhp" defaultValue="991"/></span>
-						<span>扭矩：<input type="text" id= "torque" defaultValue="500"/></span>
-						<span>变数箱：<input type="text" id= "gearbox" defaultValue="dct"/></span>
-						<span>档位：<input type="text" id= "gearNumber" defaultValue="9"/></span>
-						<span>百公里加速度：<input type="text" id= "acceleration" defaultValue="4.7"/></span>
+						<span>马力：<input type="text" id="bhp" defaultValue="991" /></span>
+						<span>扭矩：<input type="text" id="torque" defaultValue="500" /></span>
+						<span>变数箱：<input type="text" id="gearbox" defaultValue="dct" /></span>
+						<span>档位：<input type="text" id="gearNumber" defaultValue="9" /></span>
+						<span>百公里加速度：<input type="text" id="acceleration" defaultValue="4.7" /></span>
 						<div>门数：
 							<label htmlFor="2door">2门</label>
-							<input type="radio" name="door" id="2door" defaultValue="2door"/>
+							<input type="radio" name="door" id="2door" defaultValue="2door" />
 							<label htmlFor="4door">四门</label>
-							<input type="radio" name="door" id="4door" defaultValue="4door"/>
+							<input type="radio" name="door" id="4door" defaultValue="4door" />
 						</div>
 						<div>
 							<button onClick={this.subCars}>提交</button>
 							<button onClick={this.updateCar}>updateCar</button>
+							<button onClick={this.deleteCar}>删除没有价格的车</button>
 						</div>
 					</div>
 				</div>
+				<table className="cartable">
+					<tr>
+						<th>index</th>
+						<th>名称</th>
+						<th>价格</th>
+						<th>百公里加速</th>
+						<th>燃油类型</th>
+						<th>驱动类型</th>
+						<th>马力</th>
+						<th>扭矩</th>
+						<th>变数箱</th>
+						<th>档位</th>
+						<th>门数</th>
+						<th>操作</th>
+					</tr>
+					{this.renderCars()}
+				</table>
 			</div>
 		)
 	}
