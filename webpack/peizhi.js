@@ -3,9 +3,10 @@ var webpack = require("webpack");
 module.exports = {
 	entry: {
 		app: [
-			__dirname+"/../client/app.jsx"
+			path.join(__dirname,"/../client/app.jsx")
 		]
 	},
+	// entry: path.join(__dirname,"/../client/app.jsx"),
 	output: {
     path: path.resolve(__dirname, "hehe"),
     publicPath: "/src/",
@@ -20,9 +21,13 @@ module.exports = {
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.ProvidePlugin({
 			$: "jquery",
-			jQuery: "jquery"
+			jQuery: "jquery",
+			tools: __dirname+"./../client/src/tools/tools.js"
 		})
 	],
+	alias: {
+		"tools": __dirname+"./client/src/tools/tools.js"
+	},
 	module: {
 		loaders: [
 			{

@@ -6,6 +6,11 @@ let initialState = {
 	newCar: "GOLF GTI",
 	price: "400k",
 	playSrc: "",
+	ext: {
+		me: {
+			name: "zmz"
+		}
+	}
 }
 
 var reducerGenerator = obj => (state = initialState, action) => {
@@ -56,6 +61,10 @@ var indexReducer = reducerGenerator({
 		return Object.assign({}, state, {
 			accidents: action.value
 		})
+	},
+	TEST_EXTEND: (state, action) =>{
+		console.log(state.ext, " *************  ")
+		return state;
 	}
 })
 

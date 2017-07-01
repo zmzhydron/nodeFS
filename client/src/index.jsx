@@ -44,12 +44,12 @@ import Accident from "./carAccident.jsx"
 		let { dbon } = this.state;
 		let klassdba = dbon ? "hide" : ""
 		let klassdbb = dbon ? "" : "hide"
+				// 		<h1>My name is zhangmingzhi, and this is file operating system!</h1>
+				// <h3>{newCar} and the price is : {price}</h3>
+				// <button id="jquerytest">test middleware</button>
+				// <button id="dbtest" onClick={this.dbswitch}>db开关</button>
 		return (
 			<div>
-				<h1>My name is zhangmingzhi, and this is file operating system!</h1>
-				<h3>{newCar} and the price is : {price}</h3>
-				<button id="jquerytest">test middleware</button>
-				<button id="dbtest" onClick={this.dbswitch}>db开关</button>
 				<div className = {klassdba}>
 					{/*<Chat {...indexProps} />*/}
 					{/*<Player {...indexProps} />*/}

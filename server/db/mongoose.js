@@ -25,19 +25,26 @@ module.exports = {
 				res.send(results);
 			}
 		})
-
+	},
+	queryMycar: (dbs, res) => {
+		query = car_col.find();
+		query.where("acceleration")
+		// .lt(5)
+		// .gte("torque",700)
+		.and([{bhp: {$lt:600}},{torque: {$gte: 300}},{torque:{$lt:500}}])
+		.where("driveType","fr")
+		query.exec((err, results) => {
+			if (err) {
+				console.log(`query error`)
+			} else {
+				res.send(results);
+			}
+		})
 	},
 	addCollections: (dbs, res) => {
 		res.send("empty request")
 	},
 	updateCar: (dbs, res, data) => {
-		// var updateSeq = {
-		// 	$set: {
-		// 		door: 2,
-		// 		driveType: 'fr',
-		// 		price: '22.5w'
-		// 	}
-		// }
 		var updateSeq = {
 			$set: {
 				door: 2,
@@ -47,26 +54,10 @@ module.exports = {
 		}
 		query = car_col.find({});
 		query.where("acceleration").gt(5);
-		// query.exec((err, results) => {
-		// 	if (err) {
-		// 		console.log(`query error`)
-		// 	} else {
-		// 		res.send(`update success `);
-		// 	}
-		// })
 		query.exec((err, results) => {
 			if (err) {
 				console.log(`query error`)
 			} else {
-				console.log(results)
-				// res.send(results);
-				// results.update(updateSeq, (err, r) => {
-				// 	if (err) {
-				// 		console.log("cha zhao shibai", err)
-				// 	} else {
-				// 		res.send(r);
-				// 	}
-				// })
 				results.forEach((item, index) => {
 					item.update(updateSeq, (err, r) => {
 						if (err) {
@@ -123,8 +114,14 @@ module.exports = {
 			if (err) {
 				console.log(`chuangjian shibai`)
 			} else {
-				console.log(`chuangjian 111 chenggong`)
-				res.send(results);
+				var q1 = car_col.find();
+				q1.exec( (err, re) => {
+					if(err){
+						res.send("查询失败")
+					}else{
+						res.send(re);
+					}
+				})
 			}
 		})
 	},

@@ -1,9 +1,10 @@
+var express = require("express")
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var bodyParser = require('body-parser');
 var fs = require("fs");
-
+var path = require("path")
 var chat = require("./chat.js");
 var player = require("./player.js");
 var files = require("./file.js");
@@ -26,6 +27,9 @@ console.log('__dirname',__dirname);
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(bodyParser.json());
+console.log( path.join(__dirname, "../client"), "  ************  ");
+app.use('/src', express.static(path.join(__dirname, "../buildSrc")))
+app.use(express.static(path.join(__dirname, "../client")))
 
 server.listen("8080", function(){});
 
@@ -103,6 +107,10 @@ app.post("/api/updateCar", function(req,res){
 })
 app.post("/api/deleteCar", function(req,res){
 	dbfn.deleteCar(globalDb,res, req);
+})
+app.post("/api/queryMycar", function(req,res){
+	console.log(1)
+	dbfn.queryMycar(globalDb,res, req);
 })
 chat.start(io);
 player.start(io);

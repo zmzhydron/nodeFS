@@ -3,19 +3,23 @@
 	控制面板
 */
 import React from "react"
+// import { tools as fuck }from "tools.js"
 export default class App extends React.Component {
 	constructor(props) {
 		super();
 		this.state = {
 			showADDCar: true,
-			cars: []
+			cars: [],
+			ext: {}
 		}
 	}
 	componentWillMount() {
 
 	}
-	componentWillReceiveProps() {
-
+	componentWillReceiveProps(newProps) {
+		this.setState({
+			ext: $.extend(true, {}, newProps.indexProps.ext)
+		})
 	}
 	componentWillUnMount() {
 
@@ -41,14 +45,14 @@ export default class App extends React.Component {
 			}
 		})
 	}
-	subCars = (_id,index) =>  e => {
+	subCars = e => {
 		var fuelType = $("input[name=fueltype]:checked").val();
 		var door = $("input[name=door]:checked").val();
 		var driveType = $("input[name=driveType]:checked").val();
 		var carName = $("#carName").val();
 		var bhp = $("#bhp").val();
 		var torque = $("#torque").val();
-		var gearbox = $("#gearbox").val();
+		var gearbox = $("input[name=gearbox]:checked").val();
 		var gearNumber = $("#gearNumber").val();
 		var acceleration = $("#acceleration").val();
 		var price = $("#price").val();
@@ -67,8 +71,10 @@ export default class App extends React.Component {
 				acceleration: acceleration,
 				price: price
 			},
-			success: function (res) {
-				console.log(res);
+			success: res =>  {
+				this.setState({
+					cars: res
+				})
 			}
 		})
 	}
@@ -99,6 +105,20 @@ export default class App extends React.Component {
 			}
 		})
 	}
+	queryCars = e => {
+		$.ajax({
+			url: '/api/queryMycar',
+			type: 'post',
+			data:{},
+			success: res =>  {
+				console.log(res);
+				this.setState({
+					
+					cars: res
+				})
+			}
+		})
+	}
 	showADDCar = e => {
 		this.setState({
 			showADDCar: !this.state.showADDCar
@@ -107,7 +127,6 @@ export default class App extends React.Component {
 	renderTableBtn = (_id, index) => {
 		return (
 			<div>
-				<button onClick={this.subCars(_id,index)}>add</button>
 				<button onClick={this.updateCar(_id,index)}>update</button>
 				<button onClick={this.deleteCar(_id,index)}>remove</button>
 			</div>
@@ -135,17 +154,25 @@ export default class App extends React.Component {
 			)
 		})
 	}
+	testExtend = () => {
+		let { actions: { testExtend: fn = () => {} } } = this.props; 
+		let { ext: a } = this.state;
+		var b = $.extend({}, a);
+		b.me.name = 'sjb';
+		console.log(a);
+		fn();
+	}
 	render() {
 		let { showADDCar } = this.state;
+		console.log(tools)
+		// console.log(tools.hi());
 		return (
 			<div>
-				<h1>DB control panel</h1>
+				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>
 				<button onClick={this.getCollections}>查询车辆</button>
 				<button onClick={this.showADDCar}>显示添加车辆</button>
 				<div style={{ display: showADDCar ? "block" : "none" }}>
 					<h2>自定义添加</h2>
-					<span>数据库名称：<input type="text" defaultValue="zmz" /></span>
-					<span>集合名称：<input type="text" defaultValue="zmz" /></span>
 					<div>
 						<span>车名：<input type="text" id="carName" defaultValue="zmz" /></span>
 						<span>price: <input type="text" id="price" defaultValue="140k" /></span>
@@ -169,7 +196,14 @@ export default class App extends React.Component {
 						</div>
 						<span>马力：<input type="text" id="bhp" defaultValue="991" /></span>
 						<span>扭矩：<input type="text" id="torque" defaultValue="500" /></span>
-						<span>变数箱：<input type="text" id="gearbox" defaultValue="dct" /></span>
+						<div>变数箱：
+							<label htmlFor="manuel">手动</label>
+							<input type="radio" name="gearbox" id="manuel" value="manuel" />
+							<label htmlFor="sequen">序列</label>
+							<input type="radio" name="gearbox" id="sequen" value="sequen" />
+							<label htmlFor="auto">自动</label>
+							<input type="radio" name="gearbox" id="auto" value="auto" />
+						</div>
 						<span>档位：<input type="text" id="gearNumber" defaultValue="9" /></span>
 						<span>百公里加速度：<input type="text" id="acceleration" defaultValue="4.7" /></span>
 						<div>门数：
@@ -179,12 +213,11 @@ export default class App extends React.Component {
 							<input type="radio" name="door" id="4door" defaultValue="4door" />
 						</div>
 						<div>
-							<button onClick={this.subCars}>提交</button>
-							<button onClick={this.updateCar}>updateCar</button>
-							<button onClick={this.deleteCar}>删除没有价格的车</button>
 						</div>
 					</div>
 				</div>
+				<button onClick={this.subCars}>提交new car</button>
+				<button onClick={this.queryCars}>查询特定的车辆</button>
 				<table className="cartable">
 					<tr>
 						<th>index</th>

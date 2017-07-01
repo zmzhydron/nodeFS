@@ -9,6 +9,7 @@ export const testtwo = ActionWrapper("TESTMIDDLEWARETWO")
 export const test = ActionWrapper("TEST");
 export const changePath = ActionWrapper("CHANGE_PATH");
 export const setPlaySrc = ActionWrapper("SET_PLAY_SRC");
+export const testExtend = ActionWrapper("TEST_EXTEND");
 export const requestRoot = obj => dispatch => {
 
 	return $.ajax({
