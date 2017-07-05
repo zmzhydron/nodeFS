@@ -3,7 +3,48 @@
 	控制面板
 */
 import React from "react"
-// import { tools as fuck }from "tools.js"
+
+let one = val => (resolve, reject) =>{
+	$.ajax({
+		url: '/api/one',
+		type: 'post',
+		data: {
+			name: "zmz",
+		},
+		success: res => {
+			let { status, url } = res
+			if(status === 'ok'){
+				resolve(url);
+			}else{
+				reject("reject by one");
+			}
+			
+		}
+	})
+}
+let two = val => (resolve, reject) =>{
+	$.ajax({
+		url: `/api/${val}`,
+		type: 'post',
+		data: {
+			name: "zmz",
+		},
+		success: res => {
+			let { status, url } = res
+			if(status === 'ok'){
+				resolve(url);
+			}else{
+				reject('reject by two');
+			}
+			
+		}
+	})
+}
+
+
+function pro(val, callback){
+	return new Promise(callback(val))
+}
 export default class App extends React.Component {
 	constructor(props) {
 		super();
@@ -32,17 +73,36 @@ export default class App extends React.Component {
 	componentDidUpdate() {
 	}
 	getCollections = () => {
-		$.ajax({
-			url: '/api/getCollections',
-			type: 'post',
-			data: {
-				name: "zmz",
-			},
-			success: res => {
-				this.setState({
-					cars: res
-				})
-			}
+		let tool = tools.tools;
+		let final = val => (resolve, reject) =>{
+			$.ajax({
+				url: `/api/${val}`,
+				type: 'post',
+				data: {
+					name: "zmz",
+				},
+				success: res => {
+					let { status, data, } = res
+					if(status === 'ok'){
+						resolve(data);
+					}else{
+						reject(res);
+					}
+					
+				}
+			})
+		}
+		function *gen(val){
+			var a = yield pro(val,one)
+			var b = yield pro(a,two)
+			var c = yield pro(b,final)
+		}
+		tool.zoo(gen, 'zmz').then( val => {
+			this.setState({
+				cars: val
+			})
+		}).catch( val => {
+			console.log(` final value is ${val}`)
 		})
 	}
 	subCars = e => {
@@ -113,7 +173,6 @@ export default class App extends React.Component {
 			success: res =>  {
 				console.log(res);
 				this.setState({
-					
 					cars: res
 				})
 			}
@@ -164,8 +223,6 @@ export default class App extends React.Component {
 	}
 	render() {
 		let { showADDCar } = this.state;
-		console.log(tools)
-		// console.log(tools.hi());
 		return (
 			<div>
 				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>

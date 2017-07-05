@@ -22,7 +22,10 @@ module.exports = {
 			if (err) {
 				console.log(`query error`)
 			} else {
-				res.send(results);
+				res.send({
+					status: "ok",
+					data: results
+				});
 			}
 		})
 	},

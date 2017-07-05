@@ -112,5 +112,19 @@ app.post("/api/queryMycar", function(req,res){
 	console.log(1)
 	dbfn.queryMycar(globalDb,res, req);
 })
+
+app.post("/api/one", function(req,res){
+	res.send({
+		status: "false",
+		url: "two"
+	})
+})
+app.post("/api/two", function(req,res){
+	res.send({
+		status: "ok",
+		url: "getCollections"
+	})
+})
+
 chat.start(io);
 player.start(io);

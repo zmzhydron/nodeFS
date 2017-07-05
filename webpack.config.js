@@ -26,6 +26,9 @@ module.exports = {
       }
     })
   ],
+  // alias: {
+  //   "tools": __dirname+"./client/src/tools/tools.js"
+  // },
   module: {
     loaders: [
       {
