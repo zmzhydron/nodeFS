@@ -1,23 +1,23 @@
 var express = require("express")
-var app = require('express')();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
-var bodyParser = require('body-parser');
-var fs = require("fs");
+var multer  = require('multer')
+var upload = multer({ dest: 'shitbird/' })
+var app = require('express')()
+var server = require('http').Server(app)
+var io = require('socket.io')(server)
+var bodyParser = require('body-parser')
+var fs = require("fs")
 var path = require("path")
-var chat = require("./chat.js");
-var player = require("./player.js");
-var files = require("./file.js");
-
+var chat = require("./chat.js")
+var player = require("./player.js")
+var files = require("./file.js")
+var multiparty = require('multiparty')
+var util = require('util');
 //mongodb connect
-var mongodb = require("mongodb");
+var mongodb = require("mongodb")
 var moserver = mongodb.Server;
 var mongoclient = mongodb.MongoClient;
 // var dbfn = require("./db/db.js");
-var dbfn = require("./db/mongoose.js");
-console.log('__dirname',__dirname);
-
-
+var dbfn = require("./db/mongoose.js")
 /*
 	@zmz 17-2-2 在客户端加载socket.io的时候，需要外链引入js，这个外链的js就是在express和socketIO 合并启动后添加到了服务器的静态文件中
 	但是前面“/socket.io/socket.io.js”这段代码的路径是相对的，前面默认还有服务器的地址，这里我们监听的是localhost:8080，
@@ -25,8 +25,6 @@ console.log('__dirname',__dirname);
 	导致“/socket.io/socket.io.js”前面加载的是webapck服务器地址，让其找不到资源，导致加载失败；
 */
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.use(bodyParser.json());
 console.log( path.join(__dirname, "../client"), "  ************  ");
 app.use('/src', express.static(path.join(__dirname, "../buildSrc")))
 app.use(express.static(path.join(__dirname, "../client")))
@@ -115,7 +113,7 @@ app.post("/api/queryMycar", function(req,res){
 
 app.post("/api/one", function(req,res){
 	res.send({
-		status: "false",
+		status: "ok",
 		url: "two"
 	})
 })
@@ -123,6 +121,20 @@ app.post("/api/two", function(req,res){
 	res.send({
 		status: "ok",
 		url: "getCollections"
+	})
+})
+//upload.single('fuckyoutoo') 用于取得上传的form表单中用于储存文件的字段名称，
+//并把上传文件的相关信息添加到req对象中
+//这时候，文件已经上传成功了，路径为 var upload = multer({ dest: 'shitbird/' })中的路径
+app.post("/api/upload", upload.single('fuckyoutoo'), function(req,res){
+	var ps = path.join(__dirname, "../shitbird");
+	console.log(req.file);
+	//如果前台在form.append中使用了第三个参数，fielname，那么multer会默认使用第三个参数而不是随机生成名称。
+	fs.rename(ps+"/"+req.file.filename, ps+"/"+req.file.originalname, function(err){
+		if(err){
+			res.send("noooo")		
+		}
+		res.send('yessssssssss')
 	})
 })
 

@@ -8,7 +8,9 @@ var tools = {
 			var g = gen(value);
 			function core(g,value){
 				var r = g.next(value);
+				console.log(r);
 				if(r.done){
+					console.log(value)
 					resolve(value);
 				}else{
 					r.value.then( val => {

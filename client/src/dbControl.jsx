@@ -49,7 +49,7 @@ export default class App extends React.Component {
 	constructor(props) {
 		super();
 		this.state = {
-			showADDCar: true,
+			showADDCar: false,
 			cars: [],
 			ext: {}
 		}
@@ -93,11 +93,21 @@ export default class App extends React.Component {
 			})
 		}
 		function *gen(val){
+			// let cc = confirm("azmz");
+			// if(cc){
+			// 	console.log(cc)
+			// }else{
+			// 	console.log("aaa")
+			// 	// return Promise.resolve("false");
+			// 	return []
+			// }
 			var a = yield pro(val,one)
 			var b = yield pro(a,two)
 			var c = yield pro(b,final)
 		}
 		tool.zoo(gen, 'zmz').then( val => {
+			console.log(val)
+			val = val ? val : [];
 			this.setState({
 				cars: val
 			})
@@ -218,13 +228,29 @@ export default class App extends React.Component {
 		let { ext: a } = this.state;
 		var b = $.extend({}, a);
 		b.me.name = 'sjb';
-		console.log(a);
 		fn();
+	}
+	upload = e =>{
+		let forms = new FormData();
+		forms.append("fuckyoutoo", e.target.files[0], "hehe.jpg");
+		forms.append("fuckyou", 'fuckyoubitch');
+		console.log(forms);
+		$.ajax({
+			url: "/api/upload",
+			type: 'post',
+			contentType : false,
+			processData : false, 
+			data: forms,
+			success: function(val){
+				console.log(val, `by uploading this <thing>		</thing>`)
+			}
+		})
 	}
 	render() {
 		let { showADDCar } = this.state;
 		return (
 			<div>
+				<input type="file" onChange={this.upload}/>
 				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>
 				<button onClick={this.getCollections}>查询车辆</button>
 				<button onClick={this.showADDCar}>显示添加车辆</button>
@@ -234,40 +260,41 @@ export default class App extends React.Component {
 						<span>车名：<input type="text" id="carName" defaultValue="zmz" /></span>
 						<span>price: <input type="text" id="price" defaultValue="140k" /></span>
 						<div>驱动方式：
-							<label htmlFor="fr">2驱动</label>
 							<input type="radio" name="drivetype" id="fr" defaultValue="fr" />
-							<label htmlFor="4wr">四驱</label>
+							<label htmlFor="fr">2驱动</label>
 							<input type="radio" name="drivetype" id="4wr" defaultValue="4wr" />
-							<label htmlFor="rr">后驱</label>
+							<label htmlFor="4wr">四驱</label>
 							<input type="radio" name="drivetype" id="rr" defaultValue="rr" />
+							<label htmlFor="rr">后驱</label>
 						</div>
 						<div>燃油方式：
-							<label htmlFor="gas">汽油</label>
 							<input type="radio" name="fueltype" id="gas" defaultValue="gas" />
-							<label htmlFor="disel">柴油</label>
+							<label htmlFor="gas">汽油</label>
 							<input type="radio" name="fueltype" id="disel" defaultValue="disel" />
-							<label htmlFor="hydrid">混动</label>
+							<label htmlFor="disel">柴油</label>
 							<input type="radio" name="fueltype" id="hydrid" defaultValue="hydrid" />
-							<label htmlFor="eletric">纯电</label>
+							<label htmlFor="hydrid">混动</label>
 							<input type="radio" name="fueltype" id="eletric" defaultValue="eletric" />
+							<label htmlFor="eletric">纯电</label>
 						</div>
 						<span>马力：<input type="text" id="bhp" defaultValue="991" /></span>
 						<span>扭矩：<input type="text" id="torque" defaultValue="500" /></span>
 						<div>变数箱：
-							<label htmlFor="manuel">手动</label>
 							<input type="radio" name="gearbox" id="manuel" value="manuel" />
-							<label htmlFor="sequen">序列</label>
+							<label htmlFor="manuel">手动</label>
 							<input type="radio" name="gearbox" id="sequen" value="sequen" />
-							<label htmlFor="auto">自动</label>
+							<label htmlFor="sequen">序列</label>
 							<input type="radio" name="gearbox" id="auto" value="auto" />
+							<label htmlFor="auto">自动</label>
 						</div>
 						<span>档位：<input type="text" id="gearNumber" defaultValue="9" /></span>
 						<span>百公里加速度：<input type="text" id="acceleration" defaultValue="4.7" /></span>
 						<div>门数：
-							<label htmlFor="2door">2门</label>
 							<input type="radio" name="door" id="2door" defaultValue="2door" />
-							<label htmlFor="4door">四门</label>
+							<label htmlFor="2door">2门</label>
 							<input type="radio" name="door" id="4door" defaultValue="4door" />
+							<label htmlFor="4door">四门</label>
+
 						</div>
 						<div>
 						</div>
