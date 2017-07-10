@@ -1,1 +1,12 @@
 supervisor -w server server/main.js
+
+// "config": { //原始的
+//   "devHost": "192.168.2.91",
+//   "devPort": 3000,
+//   "devProxy": "192.168.2.91:8080"
+// },
+// "config": { //家
+//   "devHost": "localhost",
+//   "devPort": 3000,
+//   "devProxy": "localhost:8080"
+// },
