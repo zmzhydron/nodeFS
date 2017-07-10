@@ -9,6 +9,11 @@ var Schema = require("./schema.js");
 var oneNameSchema = Schema.onename;
 var carSchema = Schema.car;
 var car_col = mongoose.model("Car", carSchema);
+var car2 = ""
+// car2 = mongoose.model("zmz");
+console.log("@@@@@@@@@@@@@@@@@@@@")
+console.log(car2)
+console.log("@@@@@@@@@@@@@@@@@@@@")
 mongoose.connect('mongodb://zmz:zmz@127.0.0.1:27017/zmz');
 // mongoose.connection.on("open", () => {
 // 	console.log(" createConnection ")
@@ -22,7 +27,10 @@ module.exports = {
 			if (err) {
 				console.log(`query error`)
 			} else {
-				res.send(results);
+				res.send({
+					status: "ok",
+					data: results
+				});
 			}
 		})
 	},
