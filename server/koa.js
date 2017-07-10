@@ -3,33 +3,29 @@
 var koa = require("koa")
 const app = new koa();
 
-app.use(function* one(next){
-	this.set("one", "zhangmingzhi")
-	this.query.name = "sjb"
-	yield next;
-	console.log("1111111111")
-	this.query.name = "sjb@"
-	this.body = this.url+"@@@"
+app.use(async (o, next) =>{
+	o.set("one", "zhangmingzhi")
+	o.query.name = "sjb"
+	this.bitch = "kendra lust"
+	await next()
+	o.body = `${this.bitch} : ${this.power} : ${this.type}`
 })
-app.use(function* two(next){
-	this.set("two", "is")
-	this.query.age = "30";
-	if(this.query.name === 'sjb'){
-		console.log(this.query.name, " *&************ ");
-		// this.body ="提前回来啦"
+app.use(async (o, next) =>{
+	o.set("two", "is")
+	o.query.age = "30";
+	this.power = "doggle"
+	if(o.query.name === 'sjb'){
+		console.log(o.query.name, " *&************ ");
+		o.body ="只要one里不设置o.body，我就要返回"
 	}else{
+		await next()
 	}
-	yield next;
-	console.log("22222222222")
-	this.body ="提前回来啦"
+	o.body ="只要one里不设置o.body，我就要返回"
 
 })
-app.use(function* three(next){
-	this.set("three", "best")
-	// console.log(this);
-	console.log("*************************************************", this.url)
-	console.log(this.body)
-	this.body = this.query.name;
-	console.log("333333333333")
+app.use(async (o, next) =>{
+	o.set("three", "best")
+	this.type = "ass";
+	o.body = o.query.name;
 })
 app.listen(8081)
