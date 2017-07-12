@@ -224,11 +224,18 @@ export default class App extends React.Component {
 		})
 	}
 	testExtend = () => {
-		let { actions: { testExtend: fn = () => {} } } = this.props; 
-		let { ext: a } = this.state;
-		var b = $.extend({}, a);
-		b.me.name = 'sjb';
-		fn();
+		$.ajax({
+			url: `api/hello?name=zmz&age=29`,
+			success: val =>{
+				console.log(val)
+			}
+		})
+		$.ajax({
+			url: `api/rr?name=zmz&age=30`,
+			success: val =>{
+				console.log(`${val}!!`)
+			}
+		})
 	}
 	upload = e =>{
 		let forms = new FormData();
@@ -248,12 +255,29 @@ export default class App extends React.Component {
 	}
 	render() {
 		let { showADDCar } = this.state;
+		//<table className="cartable">
+			<tr>
+				<th>index</th>
+				<th>名称</th>
+				<th>价格</th>
+				<th>百公里加速</th>
+				<th>燃油类型</th>
+				<th>驱动类型</th>
+				<th>马力</th>
+				<th>扭矩</th>
+				<th>变数箱</th>
+				<th>档位</th>
+				<th>门数</th>
+				<th>操作</th>
+			</tr>
+			{this.renderCars()}
+		//</table>
 		return (
 			<div>
 				<input type="file" onChange={this.upload}/>
 				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>
-				<button onClick={this.getCollections}>查询车辆</button>
-				<button onClick={this.showADDCar}>显示添加车辆</button>
+				<button onClick={this.getCollections}>查询</button>
+				<button onClick={this.showADDCar}>显示添加</button>
 				<div style={{ display: showADDCar ? "block" : "none" }}>
 					<h2>自定义添加</h2>
 					<div>
@@ -301,24 +325,8 @@ export default class App extends React.Component {
 					</div>
 				</div>
 				<button onClick={this.subCars}>提交new car</button>
-				<button onClick={this.queryCars}>查询特定的车辆</button>
-				<table className="cartable">
-					<tr>
-						<th>index</th>
-						<th>名称</th>
-						<th>价格</th>
-						<th>百公里加速</th>
-						<th>燃油类型</th>
-						<th>驱动类型</th>
-						<th>马力</th>
-						<th>扭矩</th>
-						<th>变数箱</th>
-						<th>档位</th>
-						<th>门数</th>
-						<th>操作</th>
-					</tr>
-					{this.renderCars()}
-				</table>
+				<button onClick={this.queryCars}>查询特定</button>
+
 			</div>
 		)
 	}

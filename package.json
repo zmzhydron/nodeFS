@@ -10,9 +10,9 @@
     "start": "node ./webpack/config"
   },
   "config": {
-    "devHost": "192.168.2.91",
-    "devPort": 3000,
-    "devProxy": "192.168.2.91:8080"
+    "devHost": "localhost",
+    "devPort": 3002,
+    "devProxy": "localhost:8080"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,8 @@
     "express": "^4.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "jquery": "^3.1.1",
+    "koa": "^2.3.0",
+    "koa-router": "^7.2.1",
     "lodash": "^4.17.3",
     "mongodb": "^2.2.27",
     "mongoose": "^4.10.5",
