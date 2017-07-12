@@ -128,7 +128,7 @@ app.post("/api/two", function(req,res){
 //这时候，文件已经上传成功了，路径为 var upload = multer({ dest: 'shitbird/' })中的路径
 app.post("/api/upload", upload.single('fuckyoutoo'), function(req,res){
 	var ps = path.join(__dirname, "../shitbird");
-	console.log(req.file);
+	console.log(req.body);
 	//如果前台在form.append中使用了第三个参数，fielname，那么multer会默认使用第三个参数而不是随机生成名称。
 	fs.rename(ps+"/"+req.file.filename, ps+"/"+req.file.originalname, function(err){
 		if(err){
