@@ -233,7 +233,7 @@ export default class App extends React.Component {
 		$.ajax({
 			url: `api/rr?name=zmz&age=30`,
 			success: val =>{
-				console.log(`${val}!!`)
+				console.log(`${val} RR`)
 			}
 		})
 	}
