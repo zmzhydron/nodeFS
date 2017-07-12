@@ -230,6 +230,12 @@ export default class App extends React.Component {
 				console.log(val)
 			}
 		})
+		$.ajax({
+			url: `api/rr?name=zmz&age=30`,
+			success: val =>{
+				console.log(`${val}!!`)
+			}
+		})
 	}
 	upload = e =>{
 		let forms = new FormData();
