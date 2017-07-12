@@ -10,6 +10,7 @@ app.use(router.routes()).use(router.allowedMethods())
 
 app.use(async(o,next) => {
 	o.body = `i am zmz, and i say: `;
+	await next();
 })
 
 
