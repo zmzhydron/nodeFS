@@ -12,24 +12,24 @@ var upload = multer({ dest: path.join(__dirname, "../shitbird")})
 app.use(router.routes()).use(router.allowedMethods())
 
 router.use("/", async (o, next) =>{
-	o.body += `${o.pos}`; 
+	o.body += `${this.pos}`; 
 	console.log(6)
-	// await next();
+	await next();
 	console.log(9)
 })
 
 router.get("/api/rr",async (o, next) =>{
 	console.log(7)
 	o.pos = 'ride'
-	console.log(o.body, " ******** ")
+	console.log(this.pos, " ******** ")
 	o.body = `why???`;
-	// await next();
+	await next();
 	console.log(8)
 })
 
 app.use(async(o,next) => {
 	o.body = `i am zmz, and i say:`;
-	o.pos = 'doggy'
+	this.pos = 'doggy'
 	console.log(" ################# ", o.url)
 	console.log(1)
 	await next();
