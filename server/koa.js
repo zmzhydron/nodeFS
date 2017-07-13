@@ -14,21 +14,23 @@ app.use(router.routes()).use(router.allowedMethods())
 router.use("/", async (o, next) =>{
 	o.body += `${o.pos}`; 
 	console.log(6)
-	await next();
+	// await next();
 	console.log(9)
 })
 
 router.get("/api/rr",async (o, next) =>{
 	console.log(7)
 	o.pos = 'ride'
-	o.body += `${o.pos}`;
-	await next();
+	console.log(o.body, " ******** ")
+	o.body = `why???`;
+	// await next();
 	console.log(8)
 })
 
 app.use(async(o,next) => {
 	o.body = `i am zmz, and i say:`;
 	o.pos = 'doggy'
+	console.log(" ################# ", o.url)
 	console.log(1)
 	await next();
 	console.log(5)
