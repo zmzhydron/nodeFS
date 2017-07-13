@@ -3,7 +3,8 @@
 var P1 = function(val){
 	return new Promise( (resolve, reject) => {
 		setTimeout( val => {
-			resolve(`P1 ARE ${val}`)
+			// reject(`P1 ARE ${val} reject`)
+			resolve("ok")
 		},400, val)
 	})
 }
@@ -41,6 +42,8 @@ function co(gen,startval){
 				rv.then( vl => {
 					val = vl;
 					innerCore(g);
+				}).catch( val => {
+					reject(val)
 				})
 				
 			}
@@ -62,6 +65,10 @@ function co(gen,startval){
 }
 function *gen(val){
 	var a = yield P1(val);
+	console.log(a);
+	if(a === 'ok'){
+		return false;
+	}
 	// var b = yield P2(a);
 	var b = yield a+"十几块吧";
 	var c = yield P3(b);
@@ -70,6 +77,8 @@ function *gen(val){
 var cc = co(gen, "zmz");
 cc.then( val => {
 	console.log(val)
+}).catch( val => {
+	console.log(` reject ${val}`)
 })
 // console.log(typeof '11')
 // console.log(1 instanceof Number)

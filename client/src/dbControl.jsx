@@ -239,7 +239,7 @@ export default class App extends React.Component {
 	}
 	upload = e =>{
 		let forms = new FormData();
-		forms.append("fuckyoutoo", e.target.files[0], "hehe.jpg");
+		forms.append("fuckyoutoo", e.target.files[0]);
 		forms.append("fuckyou", 'fuckyoubitch');
 		console.log(forms);
 		$.ajax({
