@@ -19,20 +19,25 @@ mongoose.connect('mongodb://zmz:zmz@127.0.0.1:27017/zmz');
 // 	console.log(" createConnection ")
 // })
 module.exports = {
-	getCollections: (dbs, res) => {
-		// mongoose.connect('mongodb://localhost/test');
-		query = car_col.find({});
+	getCollections: val => {
+		return async function getAllCars(o,next){
+			query = car_col.find({});
+			o.body = await new Promise( (resolve, reject) => {
+				query.exec((err, results) => {
+					if (err) {
+						console.log(`query error`)
+					} else {
+						resolve({
+							status: "ok",
+							data: results
+						});
+					}
+				})
+			})
+		}
+		
 		// query.where("acceleration").lt(4)
-		query.exec((err, results) => {
-			if (err) {
-				console.log(`query error`)
-			} else {
-				res.send({
-					status: "ok",
-					data: results
-				});
-			}
-		})
+
 	},
 	queryMycar: (dbs, res) => {
 		query = car_col.find();

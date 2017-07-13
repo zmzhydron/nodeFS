@@ -105,14 +105,23 @@ export default class App extends React.Component {
 			var b = yield pro(a,two)
 			var c = yield pro(b,final)
 		}
-		tool.zoo(gen, 'zmz').then( val => {
-			console.log(val)
-			val = val ? val : [];
-			this.setState({
-				cars: val
-			})
-		}).catch( val => {
-			console.log(` final value is ${val}`)
+		// tool.zoo(gen, 'zmz').then( val => {
+		// 	console.log(val)
+		// 	val = val ? val : [];
+		// 	this.setState({
+		// 		cars: val
+		// 	})
+		// }).catch( val => {
+		// 	console.log(` final value is ${val}`)
+		// })
+		$.ajax({
+			url: "api/getCollections",
+			success: (val) =>{
+				console.log(`>>>>`,val)
+				this.setState({
+					cars: val.data
+				})
+			}
 		})
 	}
 	subCars = e => {
@@ -255,23 +264,7 @@ export default class App extends React.Component {
 	}
 	render() {
 		let { showADDCar } = this.state;
-		//<table className="cartable">
-			<tr>
-				<th>index</th>
-				<th>名称</th>
-				<th>价格</th>
-				<th>百公里加速</th>
-				<th>燃油类型</th>
-				<th>驱动类型</th>
-				<th>马力</th>
-				<th>扭矩</th>
-				<th>变数箱</th>
-				<th>档位</th>
-				<th>门数</th>
-				<th>操作</th>
-			</tr>
-			{this.renderCars()}
-		//</table>
+
 		return (
 			<div>
 				<input type="file" onChange={this.upload}/>
@@ -318,7 +311,7 @@ export default class App extends React.Component {
 							<label htmlFor="2door">2门</label>
 							<input type="radio" name="door" id="4door" defaultValue="4door" />
 							<label htmlFor="4door">四门</label>
-
+							
 						</div>
 						<div>
 						</div>
@@ -326,7 +319,23 @@ export default class App extends React.Component {
 				</div>
 				<button onClick={this.subCars}>提交new car</button>
 				<button onClick={this.queryCars}>查询特定</button>
-
+				<table className="cartable">
+					<tr>
+						<th>index</th>
+						<th>名称</th>
+						<th>价格</th>
+						<th>百公里加速</th>
+						<th>燃油类型</th>
+						<th>驱动类型</th>
+						<th>马力</th>
+						<th>扭矩</th>
+						<th>变数箱</th>
+						<th>档位</th>
+						<th>门数</th>
+						<th>操作</th>
+					</tr>
+					{this.renderCars()}
+				</table>
 			</div>
 		)
 	}
