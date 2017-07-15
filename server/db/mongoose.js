@@ -6,38 +6,45 @@ var mongoclient = mongodb.MongoClient;
 // mongoose.connect('mongodb://localhost/test');
 
 var Schema = require("./schema.js");
+var koatools = require("../koa-components/koa-tools.js")
 var oneNameSchema = Schema.onename;
 var carSchema = Schema.car;
 var car_col = mongoose.model("Car", carSchema);
 var car2 = ""
-// car2 = mongoose.model("zmz");
-console.log("@@@@@@@@@@@@@@@@@@@@")
-console.log(car2)
-console.log("@@@@@@@@@@@@@@@@@@@@")
+
 mongoose.connect('mongodb://zmz:zmz@127.0.0.1:27017/zmz');
-// mongoose.connection.on("open", () => {
-// 	console.log(" createConnection ")
-// })
 module.exports = {
 	getCollections: val => {
+		// let r 
 		return async function getAllCars(o,next){
 			query = car_col.find({});
 			o.body = await new Promise( (resolve, reject) => {
 				query.exec((err, results) => {
+					// reject("错误11啦")
+					throw new Error("去屎吧")
 					if (err) {
-						console.log(`query error`)
+
 					} else {
-						resolve({
-							status: "ok",
-							data: results
-						});
+						resolve(koatools.success(results));
 					}
 				})
-			})
-		}
-		
-		// query.where("acceleration").lt(4)
+			})	
+			// try{
+			// 	o.body = await new Promise( (resolve, reject) => {
+			// 		query.exec((err, results) => {
+			// 			reject("错误啦")
+			// 			// throw new Error("去屎吧")
+			// 			if (err) {
 
+			// 			} else {
+			// 				resolve(koatools.success(results));
+			// 			}
+			// 		})
+			// 	})	
+			// }catch(e){
+			// 	// o.body = koatools.err(e,o,true);
+			// }
+		}
 	},
 	queryMycar: (dbs, res) => {
 		query = car_col.find();

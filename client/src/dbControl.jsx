@@ -118,9 +118,14 @@ export default class App extends React.Component {
 			url: "api/getCollections",
 			success: (val) =>{
 				console.log(`>>>>`,val)
-				this.setState({
-					cars: val.data
-				})
+				if(val.errorCode){
+					this.setState({
+						cars: val.data
+					})
+				}
+			},
+			error: val => {
+				console.log("error:", val)
 			}
 		})
 	}
@@ -237,12 +242,18 @@ export default class App extends React.Component {
 			url: `api/hello?name=zmz&age=29`,
 			success: val =>{
 				console.log(val)
+			},
+			error: val => {
+				console.log(val ," RR ERORR")
 			}
 		})
 		$.ajax({
 			url: `api/rr?name=zmz&age=30`,
 			success: val =>{
-				console.log(`${val} RR`)
+				console.log(val, 'RR')
+			},
+			error: val => {
+				console.log(val ," RR ERORR")
 			}
 		})
 	}
