@@ -19,5 +19,18 @@ module.exports = {
 				})
 			})
 		}
+	},
+	download: function(){
+		return async function download(o,next){
+			o.body = await new Promise( (resolve, reject) => {
+				var src = path.join(__dirname,"../../localtest/12-5.png");
+				var rs = fs.createReadStream(src);
+				o.set({
+					'Content-Type': 'application/octet-stream',
+					'Content-Disposition': `attachment;filename=123.png`
+				})
+				resolve(rs);
+			})
+		}
 	}
 }

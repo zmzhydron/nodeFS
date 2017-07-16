@@ -20,8 +20,8 @@ module.exports = {
 			query = car_col.find({});
 			o.body = await new Promise( (resolve, reject) => {
 				query.exec((err, results) => {
-					// reject("错误11啦")
-					throw new Error("去屎吧")
+					reject("错误11啦")
+					// throw new Error("去屎吧")
 					if (err) {
 
 					} else {

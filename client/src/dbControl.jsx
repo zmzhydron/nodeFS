@@ -240,6 +240,10 @@ export default class App extends React.Component {
 	testExtend = () => {
 		$.ajax({
 			url: `api/hello?name=zmz&age=29`,
+			type: 'POST',
+			data: {
+				skill: `fullstackengineer`
+			},
 			success: val =>{
 				console.log(val)
 			},
@@ -273,6 +277,19 @@ export default class App extends React.Component {
 			}
 		})
 	}
+	download = e => {
+		let downloadF = $("#downloadF")[0];
+		if(downloadF){
+
+		}else{
+			$("body").append(`<form action="/api/download?age=29" id="downloadF">
+				<input type="hidden" value="zhangmingzhi" name="name"/>
+			</form> `)
+		}
+		downloadF = $("#downloadF")[0]
+		downloadF.submit();
+		console.log(downloadF);
+	}
 	render() {
 		let { showADDCar } = this.state;
 
@@ -280,6 +297,7 @@ export default class App extends React.Component {
 			<div>
 				<input type="file" onChange={this.upload}/>
 				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>
+				<button onClick={this.download}>下载</button>
 				<button onClick={this.getCollections}>查询</button>
 				<button onClick={this.showADDCar}>显示添加</button>
 				<div style={{ display: showADDCar ? "block" : "none" }}>

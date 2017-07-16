@@ -18,14 +18,27 @@ var tools = {
 	},
 	test: function (){
 		return async function test(o, next){
-			return await new Promise( (resolve, reject) => {
+			// var a;
+			// try{
+			// 	return await new Promise( (resolve, reject) => {
+			// 		throw new Error(" test throw error")
+			// 		reject("test reject");
+			// 		// resolve(" test resolve")
+			// 		o.pos = " aaaaaaaaaa "
+			// 		next();
+			// 	})
+			// }catch(e){
+			// 	console.log(e, "  ********************* ")
+			// 	next();
+			// }
+			// return a;
+			await new Promise( (resolve, reject) => {
 				// throw new Error(" test throw error")
-				reject( " test reject");
+				// reject("test reject");
 				resolve(" test resolve")
-				o.pos = " aaaaaaaaaa "
-				next();
-				
+				o.pos = " aaaaaaaaaa ";
 			})
+			await next();
 
 		}
 	}
