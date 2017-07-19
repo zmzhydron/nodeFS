@@ -26,7 +26,7 @@ class Write extends Writable{
 		this.datas.push(chunk.toString());
 		if(chunk.toString() === 'm'){
 			// next(throw new Error("fuckyoubitch"))
-			callback(new Error('故意报错'))
+			callback(new Error('故意报错!!'))
 			// callback()
 		}else{
 			callback();	
