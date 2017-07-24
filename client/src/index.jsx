@@ -54,7 +54,7 @@ import Accident from "./carAccident.jsx"
 					{/*<Chat {...indexProps} />*/}
 					{/*<Player {...indexProps} />*/}
 					<ControlBar {...indexProps} actions = {actions}/>
-					<Accident {...indexProps} actions = {actions}/>
+					{/*<Accident {...indexProps} actions = {actions}/>*/}
 					{/*<TableList {...this.props}/>*/}
 				</div>
 				<div className = {klassdbb}>

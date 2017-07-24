@@ -12,17 +12,17 @@ export const setPlaySrc = ActionWrapper("SET_PLAY_SRC");
 export const testExtend = ActionWrapper("TEST_EXTEND");
 export const requestRoot = obj => dispatch => {
 
-	return $.ajax({
-		url: "/api/getFiles",
-		type: 'POST',
-		data: obj,
-		success: function(res){
-			dispatch({
-				type: "ADD_ROOTPATH",
-				value: res
-			})
-		}
-	})
+	// return $.ajax({
+	// 	url: "/api/getFiles",
+	// 	type: 'POST',
+	// 	data: obj,
+	// 	success: function(res){
+	// 		dispatch({
+	// 			type: "ADD_ROOTPATH",
+	// 			value: res
+	// 		})
+	// 	}
+	// })
 }
 
 export const getAccident = obj => (dispatch,a,b,c) => {
@@ -31,17 +31,17 @@ export const getAccident = obj => (dispatch,a,b,c) => {
 	// console.log(b);
 	// console.log(c)
 	// console.log("$$$$$$$$$$$$")
-		$.ajax({
-		url: "/api/readFiles",
-		type: 'POST',
-		data: { path: obj},
-		success: function(res){
-			dispatch({
-				type: "UPDATE_ACCIDENT",
-				value: res
-			})
-		}
-	})
+	// 	$.ajax({
+	// 	url: "/api/readFiles",
+	// 	type: 'POST',
+	// 	data: { path: obj},
+	// 	success: function(res){
+	// 		dispatch({
+	// 			type: "UPDATE_ACCIDENT",
+	// 			value: res
+	// 		})
+	// 	}
+	// })
 }
 
 

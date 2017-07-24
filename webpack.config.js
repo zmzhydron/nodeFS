@@ -2,33 +2,22 @@ var path = require("path")
 var webpack = require("webpack")
 var ExtractTextPlugin = require("extract-text-webpack-plugin")
 module.exports = {
-  entry: path.join(__dirname,"./client/app.jsx"),
+  entry: path.resolve(__dirname,"./hehe/zmz.js"),
   output: {
-    path: path.resolve(__dirname, "buildSrc"),
-    publicPath: "/src/",
-    filename: "zmz.js"
+    path: path.resolve(__dirname, "./haha"),
+    filename: "haha.js"
   },
-  // devtool: 'eval-source-map',
-  devServer: {
-    hot: true,
-    inline: true
-  },
-  plugins : [
-    // new webpack.HotModuleReplacementPlugin(),
-    new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery",
-      tools: path.join(__dirname,"./client/src/tools/tools.js")
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    })
-  ],
-  // alias: {
-  //   "tools": __dirname+"./client/src/tools/tools.js"
-  // },
+  // plugins : [
+  //   new webpack.ProvidePlugin({
+  //     $: "jquery",
+  //     jQuery: "jquery"
+  //   }),
+  //   new webpack.optimize.UglifyJsPlugin({
+  //     compress: {
+  //       warnings: false
+  //     }
+  //   })
+  // ],
   module: {
     loaders: [
       {

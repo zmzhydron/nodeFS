@@ -241,6 +241,7 @@ export default class App extends React.Component {
 		$.ajax({
 			url: `api/hello?name=zmz&age=29`,
 			type: 'POST',
+			timeout: 0,
 			data: {
 				skill: `fullstackengineer`
 			},
@@ -248,11 +249,13 @@ export default class App extends React.Component {
 				console.log(val)
 			},
 			error: val => {
-				console.log(val ," RR ERORR")
+				console.log(val ," ERORR")
 			}
 		})
 		$.ajax({
 			url: `api/rr?name=zmz&age=30`,
+			timeout: 600000,
+			async: true,
 			success: val =>{
 				console.log(val, 'RR')
 			},

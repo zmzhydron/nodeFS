@@ -34,9 +34,10 @@ var tools = {
 			// return a;
 			await new Promise( (resolve, reject) => {
 				// throw new Error(" test throw error")
+				o.pos = " doggy ";
 				// reject("test reject");
 				resolve(" test resolve")
-				o.pos = " aaaaaaaaaa ";
+				
 			})
 			await next();
 

@@ -18,12 +18,26 @@ async function a(){
 	// 	throw new Error("only"); //throw new Error也是一样
 	// 	console.log(buchunzaidezhi) //故意报错也一样
 	// })
-	return await new Promise( (resolve, reject) => {
-		reject(`hello async await reject`)
+try{
+	r = await new Promise( (resolve, reject) => {
+		// resolve(`hello async await resolve`)
 		throw new Error("only"); //throw new Error也是一样
 		console.log(errror)
 	})
-	// return r;
+}catch(e){
+
+}
+	// r = await new Promise( (resolve, reject) => {
+	// 	// reject(`hello async await reject`)
+	// 	throw new Error("only"); //throw new Error也是一样
+	// 	console.log(errror)
+	// })
+	r = await new Promise( (resolve, reject) => {
+		resolve(`hello async await resolve`)
+		throw new Error("only"); //throw new Error也是一样
+		console.log(errror)
+	})
+	return r;
 }
 // return r;
 // var r = await new Promise( (resolve, reject) => {

@@ -89,23 +89,67 @@ rs.on("data", (data) => {
 })
 // rs.pipe(tra)
 tra.on("data", data => {
-	console.log(data.toString(), " tra ")
 	ws.write(data.toString())
 })
 tra.on('finish', (err, data) => {
 	// console.log(tra)
-	console.log(`tra.on('finish'`)
+	// console.log(`tra.on('finish'`)
 })
 rs.on("end", (err,data) => {
 	if(err){
-		console.log('!!!!!!!!!!')
 	}else{
-		console.log(" end ");	
 		ws.end();
 		tra.end();
 	}
 })
 // rs.pipe(ws)
 ws.on("finish", (err, data) =>{
-	console.log(ws.datas," ~~~~~~~~ ")
+	// console.log(ws.datas," ~~~~~~~~ ")
 })
+
+var num = `1,008,275,639,649.71`;
+var bbb = 10082751649.7;
+
+var asdf = function(num){
+	num = parseFloat(num);
+	var mblist = [
+	    { key: "GB", value: 1024 },
+	    { key: "TB", value: 1024 * 1024 },
+	    { key: "PB", value: 1024 * 1024 * 1024 },
+	    { key: "EB", value: 1000 * 1024 * 1024 * 1024 }
+	]
+	
+	if (num > 10000) {
+			let rtv;
+	    mblist.forEach(item => {
+	        let r = num / item.value;
+	        if (r >= 1 && r < 10000 && !rtv) {
+	            rtv = {
+	                val: r.toFixed(1),
+	                key: item.key
+	            }
+	        }
+	    })
+	    return `${rtv.val}${rtv.key}`
+	}else{
+		return num+"MB";
+	}
+}
+function hehe(_s){
+  let reg1 = /\B(?=(\d{3})+$)/gi;
+  let reg2 = /\B(?=(\d{3})+\D)/gi;
+  let s = _s + "";
+  try {
+      if (reg2.test(s)) {
+          return s.replace(reg2, ",")
+      } else if (reg1.test(s)) {
+          return s.replace(reg1, ",")
+      }
+      return _s === Infinity ? 0 : _s;
+  } catch (e) {
+      return _s === Infinity ? 0 : _s;
+  }
+}
+console.log(hehe(`12314.5GB`))
+// console.log(asdf(bbb));
+// console.log(asdf(12345));
