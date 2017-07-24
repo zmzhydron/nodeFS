@@ -38,6 +38,8 @@ var buf = new Buffer(1024);
 fs.readFile('C:/Users/zmz/Desktop/particle.txt', (err, data) => {
    // console.log(data.toString());
 })
+var rawUrl = `C:\Users\zmz\Desktop\PIC\\2015年暑假成都`;
+var url = rawUrl.replace(/\\{1,}/g,"/")
 var desktop = 'C:/Users/zmz/Desktop';
 function proStat(src, filename){
    return new Promise((resolve, reject) => {
@@ -76,16 +78,16 @@ async function stats(data){
       costTime: endTime - startTime
    }
 }
-// fs.readdir(desktop, (err, data) => {
-//    stats(data).then( val => {
-//       var list = val.list;
-//       var costTime = val.costTime;
-//       console.log(list)
-//       console.log(costTime)
-//    }).catch(val => {
-//       console.log(val.toString())
-//    })
-// })
+fs.readdir(desktop, (err, data) => {
+   stats(data).then( val => {
+      var list = val.list;
+      var costTime = val.costTime;
+      console.log(list)
+      console.log(costTime)
+   }).catch(val => {
+      console.log(val.toString())
+   })
+})
 // fs.stat(`${desktop}/particle.txt`, (err, info) => {
 //    console.log(info);
 //    console.log(new Date().valueOf())

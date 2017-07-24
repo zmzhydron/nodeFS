@@ -11,7 +11,7 @@ var fs = require("fs");
 var koabody = require("koa-body")
 var upload = multer({ dest: path.join(__dirname, "../shitbird")})
 
-var mongoApi = require("./db/mongoose.js")
+// var mongoApi = require("./db/mongoose.js")
 
 app.use(async (o, next) =>{
 	this.pos = 'doggy';
@@ -40,13 +40,13 @@ router.get("/api/rr",async (o, next) =>{
 	await next();
 	// o.body += `>>>${this.pos}`; 
 })
-router.get("/api/getCollections",mongoApi.getCollections())
+// router.get("/api/getCollections",mongoApi.getCollections())
 
 router.get("/api/download",koas.download())
 app.use(async(o,next) => {
-	o.body = `i am zmz, and i say:`;
+	// o.body = `i am zmz, and i say:`;
 	await next();
-	o.body += " :D"
+	// o.body += " :D"
 })
 
 router.post("/api/upload", upload.single("fuckyoutoo"), koas.upload())
@@ -57,7 +57,7 @@ app.use( async (o, next) =>{
 	}else{
 		this.outfit = 'black lace'
 	}
-	// console.log(aaa)
+	console.log(aaa)
 	o.body += `kendra lust wear ${this.outfit} and suck it down >>> ${o.pos} style`;
 })
 

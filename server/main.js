@@ -17,7 +17,7 @@ var mongodb = require("mongodb")
 var moserver = mongodb.Server;
 var mongoclient = mongodb.MongoClient;
 // var dbfn = require("./db/db.js");
-var dbfn = require("./db/mongoose.js")
+// var dbfn = require("./db/mongoose.js")
 /*
 	@zmz 17-2-2 在客户端加载socket.io的时候，需要外链引入js，这个外链的js就是在express和socketIO 合并启动后添加到了服务器的静态文件中
 	但是前面“/socket.io/socket.io.js”这段代码的路径是相对的，前面默认还有服务器的地址，这里我们监听的是localhost:8080，
@@ -26,10 +26,10 @@ var dbfn = require("./db/mongoose.js")
 */
 app.use(bodyParser.urlencoded({ extended: false }));
 console.log( path.join(__dirname, "../client"), "  ************  ");
-app.use('/src', express.static(path.join(__dirname, "../buildSrc")))
+app.use('/src/', express.static(path.join(__dirname, "../buildSrc")))
 app.use(express.static(path.join(__dirname, "../client")))
 
-server.listen("8080", function(){});
+server.listen("3009", function(){});
 
 var globalDb = ""; //初始化的全球db对象;
 
@@ -44,23 +44,23 @@ app.post("/api/readFiles" , function(req, res){
   var path = req.body.path;
   res.send(files.readContent(path));
 })
-app.post("/api/connectDb", function(req, res){
-	var callback = function(err,db){
-		if(err){
-			console.log(" lianjie shibai !")
-			console.log(err);
-		}else{
-			console.log(" linejie cheng gong!!")
-			globalDb = db;
-		}
-	}
-	var body = req.body;
-	var name = body.name || "zmz",
-			pwd = body.pwd || "zmz",
-			dbname = body.dbname || "zmz";
-	mongoclient.connect(`mongodb://${name}:${pwd}@127.0.0.1:27017/${dbname}`, callback);
-	res.send(globalDb);
-})
+// app.post("/api/connectDb", function(req, res){
+// 	var callback = function(err,db){
+// 		if(err){
+// 			console.log(" lianjie shibai !")
+// 			console.log(err);
+// 		}else{
+// 			console.log(" linejie cheng gong!!")
+// 			globalDb = db;
+// 		}
+// 	}
+// 	var body = req.body;
+// 	var name = body.name || "zmz",
+// 			pwd = body.pwd || "zmz",
+// 			dbname = body.dbname || "zmz";
+// 	mongoclient.connect(`mongodb://${name}:${pwd}@127.0.0.1:27017/${dbname}`, callback);
+// 	res.send(globalDb);
+// })
 
 app.post("/api/getCollections", function(req,res){
 	dbfn.getCollections(globalDb,res);
@@ -138,5 +138,5 @@ app.post("/api/upload", upload.single('fuckyoutoo'), function(req,res){
 	})
 })
 
-chat.start(io);
-player.start(io);
+// chat.start(io);
+// player.start(io);
