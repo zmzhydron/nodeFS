@@ -1,3 +1,4 @@
+// new stream test
 var { Readable, Writable, Duplex, Transform } = require("stream")
 var ary = [1,2,3,4,4,5,6,6,'z','m','z','#'];
 var me = 'zhangmingzhi';
