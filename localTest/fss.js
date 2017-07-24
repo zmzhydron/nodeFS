@@ -38,8 +38,9 @@ var buf = new Buffer(1024);
 fs.readFile('C:/Users/zmz/Desktop/particle.txt', (err, data) => {
    // console.log(data.toString());
 })
-var rawUrl = `C:\Users\zmz\Desktop\PIC\\2015年暑假成都`;
-var url = rawUrl.replace(/\\{1,}/g,"/")
+var rawUrl = 'C:\Users\zmz\Desktop\PIC\LG';
+var url = 'C:/Users/zmz/Desktop/PIC/LG';
+console.log(`C:\Users\zmz\Desktop\PIC\LG`,"  ****************  ")
 var desktop = 'C:/Users/zmz/Desktop';
 function proStat(src, filename){
    return new Promise((resolve, reject) => {
@@ -54,79 +55,32 @@ function proStat(src, filename){
       })
    })
 }
-async function stats(data){
+async function stats(parentUrl,data){
    var startTime = new Date().valueOf();
    var list1 = [];
    var list = []
    for(let s = 0; s < data.length; s++){
-      let src = `${desktop}/${data[s]}`
-      let r = await proStat(src, data[s])
+      let src = `${parentUrl}/${data[s]}`
+      let r =  proStat(src, data[s])
       list.push(r);
    }
-   // data.forEach( item => {
-   //    let src = `${desktop}/${item}`
-   //    let r = await proStat(src, item)
-   //    list.push(r);
-   // })
-   // for(let j = 0; j < list.length; j++){
-   //    let r = await list[j];
-   //    list1.push(r);
-   // }
+   for(let j = 0; j < list.length; j++){
+      let r = await list[j];
+      list1.push(r);
+   }
    var endTime = new Date().valueOf();
    return {
       list: list,
       costTime: endTime - startTime
    }
 }
-fs.readdir(desktop, (err, data) => {
-   stats(data).then( val => {
+fs.readdir(url, (err, data) => {
+   stats(url,data).then( val => {
       var list = val.list;
       var costTime = val.costTime;
-      console.log(list)
+      // console.log(list)
       console.log(costTime)
    }).catch(val => {
       console.log(val.toString())
    })
 })
-// fs.stat(`${desktop}/particle.txt`, (err, info) => {
-//    console.log(info);
-//    console.log(new Date().valueOf())
-// })
-
-// async function hehe(){
-//    var a = [1,2,3,4,5];
-//    // return await new Promise( (resolve, reject) => {
-//    //    resolve(a+"@")
-//    // })
-//    var b = [];
-//    // for(let s = 0; s<a.length; s++){
-//    //    var r = await new Promise( (resolve, reject) => {
-//    //       resolve(a[s]+"@")
-//    //    })
-//    //    b.push(r);
-//    // }
-//    // return b;
-//    a.forEach( item => {
-//       var r = await new Promise( (resolve, reject) => {
-//          resolve(item+"@")
-//       })
-//       return b.push(r);
-//    })
-//    return b;
-   
-// }
-// hehe().then(val => { console.log(val)})
-// var me = Buffer.from("张明之");
-// console.log(me.toString("hex"))
-// console.log(me.toString("base64"))
-// console.log(me.toString("utf8"))
-
-// var aaa = [1,2,3,4,5];
-// for(let s of aaa.values()){
-//    console.log(s)
-// }
-for (let [index, value] of [1,2].entries()) {
-  console.log(index, value);
-}
-console.log(__filename.replace(/\\/g,"/"))
-console.log(require.main)
