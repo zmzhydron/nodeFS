@@ -48,9 +48,7 @@ app.use(async(o,next) => {
 	await next();
 	// o.body += " :D"
 })
-
 router.post("/api/upload", upload.single("fuckyoutoo"), koas.upload())
-
 app.use( async (o, next) =>{
 	if(o.isrr){
 		o.outfit = "nothing"	
@@ -63,6 +61,4 @@ app.use( async (o, next) =>{
 
 	o.body += `kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`;
 })
-
-
 app.listen(8081)

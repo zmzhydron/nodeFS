@@ -2,6 +2,7 @@ var fs = require("fs");
 var buf = new Buffer(1024);
 var path = require("path")
 
+
 // fs.open('‪C:/Users/zmz/Desktop/particle.txt', 'r+', function(err, fd) {
 //    if (err) {
 //        return console.error(err);
@@ -75,16 +76,16 @@ async function stats(parentUrl,data){
       costTime: endTime - startTime
    }
 }
-fs.readdir(url, (err, data) => {
-   stats(url,data).then( val => {
-      var list = val.list;
-      var costTime = val.costTime;
-      console.log(`${list.length} of photos`)
-      console.log(costTime)
-   }).catch(val => {
-      console.log(val.toString())
-   })
-})
+// fs.readdir(url, (err, data) => {
+//    stats(url,data).then( val => {
+//       var list = val.list;
+//       var costTime = val.costTime;
+//       console.log(`${list.length} of photos`)
+//       console.log(costTime)
+//    }).catch(val => {
+//       console.log(val.toString())
+//    })
+// })
 // var r = fs.symlinkSync("C:/Users/zmz/Desktop/PIC/LG/20140702_171657.jpg", `C:/Users/zmz/Desktop/222.jpg`);
 // console.log(r);
 // try{
@@ -93,9 +94,10 @@ fs.readdir(url, (err, data) => {
 // }catch(e){
 //    console.log(e);
 // }
-var dir = path.relative(path.resolve(__dirname, "../client/src"), "C:/Users/zmz/Desktop/Github/nodeFS/photolist/20140709_062212.jpg");
-console.log(dir, "  *******************  ")
+// var dir = path.relative(path.resolve(__dirname, "../client/src"), "C:/Users/zmz/Desktop/Github/nodeFS/photolist/20140709_062212.jpg");
+// console.log(dir, "  *******************  ")
 
 // var rrr = fs.linkSync("C:/Users/zmz/Desktop/PIC/LG/20140702_171657.jpg", `C:/Users/zmz/Desktop/222.jpg`);
 
 // console.log(rrr);
+
