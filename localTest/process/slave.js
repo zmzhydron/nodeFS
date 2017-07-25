@@ -21,9 +21,10 @@ process.on("message", (data, obj) => {
 	}
 })
 var wr = new WR();
-var cr = fs.createReadStream('C:/hehe.txt');
+var cr = fs.createReadStream('C:/zmzNode/hehe.txt');
 cr.on('data', (chunk) => {
 	var r = wr.write(chunk);
+	console.log(chunk.toString());
 	if(!r){
 		cr.pause();
 	}

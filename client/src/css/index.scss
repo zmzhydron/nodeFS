@@ -1,4 +1,5 @@
 body {
+	background-color: silver;
 }
 .serverBar{
 	padding: 10px;
@@ -81,5 +82,15 @@ body {
 	}
 	td{
 		text-align: center;
+	}
+}
+.photowall{
+	display: flex;
+	flex-flow: row wrap;
+	height: 550px;
+	width: 900px;
+	img{
+		width: 160px;
+		height: 90px;
 	}
 }

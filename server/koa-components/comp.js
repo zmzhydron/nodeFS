@@ -1,5 +1,8 @@
 var path = require("path")
-var fs = require("fs");
+var fs = require("fs")
+var childProcess = require("child_process")
+
+var photoprocess;
 
 module.exports = {
 	lusting: (o, next) => {
@@ -31,6 +34,31 @@ module.exports = {
 				})
 				resolve(rs);
 			})
+		}
+	},
+	getPhoto: function(){
+		return async function getPhoto(o,next){
+			if(!photoprocess){
+				photoprocess = childProcess.fork(path.resolve(__dirname,'../childProcess/getFile.js'))
+			}
+			console.log(photoprocess.pid)
+			let { start, end } = o.request.body
+			photoprocess.send({
+				type: 'request',
+				start,
+				end,
+			})
+			o.body = await new Promise( (resolve, reject) => {
+				photoprocess.on("message", msg => {
+					let { data: list = [], total = 0, morePhoto = 0 } = msg;
+					resolve({
+						list,
+						total,
+						morePhoto,
+					})
+				})	
+			})
+			// await next();
 		}
 	}
 }

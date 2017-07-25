@@ -3,7 +3,7 @@
 var koa = require("koa")
 var router = require("koa-router")()
 var app = new koa();
-var koas = require("./koa-components/1.js")
+var koas = require("./koa-components/comp.js")
 var koatools = require("./koa-components/koa-tools.js")
 var multer = require("koa-multer")
 var path = require("path")
@@ -27,8 +27,8 @@ app.use(async (o, next) =>{
 })
 app.use(koabody())
 app.use(async (o,next) => {
-	throw new Error("去屎吧")
-	console.log(o.query,o.querystring, o.body.skill,"  queryyyyyyyyyyyyyyy ")
+	// throw new Error("去屎吧")
+	console.log(o.query,o.querystring, o.body,"  queryyyyyyyyyyyyyyy ")
 	// o.throw(500, 'name required'); //也可以绕过第一个错误处理的方法；
 	await next();
 })
@@ -42,6 +42,7 @@ router.get("/api/rr",async (o, next) =>{
 // router.get("/api/getCollections",mongoApi.getCollections())
 
 router.get("/api/download",koas.download())
+router.post("/api/getPhoto",koas.getPhoto())
 app.use(async(o,next) => {
 	// o.body = `i am zmz, and i say:`;
 	await next();

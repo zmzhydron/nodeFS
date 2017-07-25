@@ -14,8 +14,9 @@ slave1.send("i am master")
 slave1.send("net", server1)
 let msgCount = 0;
 slave1.on("message", data=>{
-	fs.appendFile("C:/haha.txt", data, err => {
+	fs.appendFile("C:/zmzNode/haha.txt", data, err => {
 		if(err){
+			console.log(err)
 		}
 	})
 	msgCount++;

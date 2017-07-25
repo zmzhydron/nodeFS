@@ -4,6 +4,8 @@
 */
 import React from "react"
 
+const ptbase = `C:/Users/zmz/Desktop/PIC/T`;
+
 let one = val => (resolve, reject) =>{
 	$.ajax({
 		url: '/api/one',
@@ -18,7 +20,6 @@ let one = val => (resolve, reject) =>{
 			}else{
 				reject("reject by one");
 			}
-			
 		}
 	})
 }
@@ -51,8 +52,10 @@ export default class App extends React.Component {
 		this.state = {
 			showADDCar: false,
 			cars: [],
-			ext: {}
+			ext: {},
+			photoStartIndex: 0,
 		}
+		this.startIndex = 0;
 	}
 	componentWillMount() {
 
@@ -293,16 +296,54 @@ export default class App extends React.Component {
 		downloadF.submit();
 		console.log(downloadF);
 	}
+	getPhoto = e => {
+		this.setState({
+			photoBtnDisable: "disabled"
+		})
+		let { photoStartIndex = 0, photolist = [] } = this.state;
+		$.ajax({
+			url: "/api/getPhoto",
+			type: 'post',
+			data: {
+				start: photoStartIndex,
+				limit: 5,
+			},
+			success: (val) =>{
+				let { list, total, morePhoto = 0 } = val;
+				morePhoto = parseInt(morePhoto);
+				if(morePhoto === 1){
+					this.setState({
+						photoBtnDisable: "",
+						photolist: [...photolist, ...list],
+						photoStartIndex: photoStartIndex + 5 > total ? photoStartIndex + (total - photoStartIndex) : photoStartIndex + 5,
+					})
+				}
+			}
+		})
+	}
+	renderPhotos = () => {
+		let { photolist = [] } = this.state;
+		return photolist.map( (item, index) => {
+			let src = {};
+			return (
+				<img src={item} key={index}></img>
+			)
+		})
+	}
 	render() {
-		let { showADDCar } = this.state;
+		let { showADDCar, photoBtnDisable = '' } = this.state;
 
 		return (
 			<div>
 				<input type="file" onChange={this.upload}/>
 				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>
+				<button disabled={photoBtnDisable} onClick={this.getPhoto}>getPhoto</button>
 				<button onClick={this.download}>下载</button>
 				<button onClick={this.getCollections}>查询</button>
 				<button onClick={this.showADDCar}>显示添加</button>
+				<div className="photowall">
+					{this.renderPhotos()}
+				</div>
 				<div style={{ display: showADDCar ? "block" : "none" }}>
 					<h2>自定义添加</h2>
 					<div>
