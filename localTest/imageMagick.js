@@ -86,8 +86,26 @@ function *getGifPic(src, gifname, des){
 	return all;
 }
 
-zoo(getGifPic, src1, 'GG', dst1).then( val => {
-	console.log(` convert gif success`)
-}).catch( val => {
-	console.log(` convert gif failed :${ val} `)
+// zoo(getGifPic, src1, 'GG', dst1).then( val => {
+// 	console.log(` convert gif success`)
+// }).catch( val => {
+// 	console.log(` convert gif failed :${ val} `)
+// })
+
+// NorthWest, North, NorthEast, West, Center,
+//                      East, SouthWest, South, or SouthEast
+gm(`${src1}/text.jpg`)
+.stroke("#e33100")
+.resize(400,400)
+.drawLine(-20,-20,200,200)
+.font("Helvetica.ttf", 96)
+.drawText(1,200, "zhangmingzhi")
+.rotate("orange", -90)
+// .blur(100,10)
+.write(`${src1}/newT.jpg`, (err, data) => {
+	if(err){
+		console.log(err)
+	}else{
+		console.log('ok')		
+	}
 })

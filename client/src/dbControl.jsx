@@ -311,7 +311,8 @@ export default class App extends React.Component {
 			success: (val) =>{
 				let { list, total, morePhoto = 0 } = val;
 				morePhoto = parseInt(morePhoto);
-				if(morePhoto === 1){
+				console.log(val)
+				if(list.length){
 					this.setState({
 						photoBtnDisable: "",
 						photolist: [...photolist, ...list],
@@ -324,15 +325,15 @@ export default class App extends React.Component {
 	renderPhotos = () => {
 		let { photolist = [] } = this.state;
 		return photolist.map( (item, index) => {
-			let src = {};
+			let { resizeSrc, originSrc } = item;
 			return (
-				<img src={item} key={index}></img>
+				<img src={resizeSrc} data-originsrc={originSrc} key={index}></img>
 			)
 		})
 	}
 	render() {
 		let { showADDCar, photoBtnDisable = '' } = this.state;
-
+		// photoBtnDisable = '';
 		return (
 			<div>
 				<input type="file" onChange={this.upload}/>

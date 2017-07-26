@@ -54,7 +54,6 @@ module.exports = {
 					resolve({
 						list,
 						total,
-						morePhoto,
 					})
 				})	
 			})
