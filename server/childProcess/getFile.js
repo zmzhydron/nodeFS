@@ -12,20 +12,17 @@ function statOrReizeFile(resizeSrc, src, filename){
 			if(err){
 				//创建resize 图片
 				gm(src).resize(160,90).write(resizeSrc, (err, data) => {
+					let msg = '', status = 1;
 					if(err){
-						resolve({
-							status: 0,
-							msg: "resize error",
-							resizeSrc,
-							originSrc: src,
-						})
-					}else{
-						resolve({
-							status: 1,
-							resizeSrc,
-							originSrc: src,
-						})
+						status = 0,
+						msg = "resize error",
 					}
+					resolve({
+						status,
+						msg,
+						resizeSrc,
+						originSrc: src,
+					})
 				})
 				//创建图片引用;
 				fs.symlink(src, server_url+"/"+filename, (err, data) => {
