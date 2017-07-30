@@ -87,10 +87,57 @@ body {
 .photowall{
 	display: flex;
 	flex-flow: row wrap;
+	overflow: scroll;
 	height: 550px;
 	width: 900px;
-	img{
-		width: 160px;
-		height: 90px;
+	.singleImg{
+		height: 220px;
+		width: 200px;
+		display: flex;
+		flex-flow: column nowrap;
+		border: solid 1px orange;
+		position: relative;
+		.singleImgDis{
+			display: flex;
+			flex-flow: column nowrap;
+			align-items: center;
+			justify-content: center;
+			height: 200px;
+			width: 200px;
+			>div{
+				// background-size: contain;
+				// background-repeat: no-repeat;
+			}
+		}
+		.singleImgName{
+			font-size: 16px;
+			white-space: nowrap;
+			width: 200px;
+			text-overflow: ellipsis;
+			text-align: center;
+			background: white;
+			position: absolute;
+			bottom: 0px;
+			left: 0px;
+		}
 	}
+}
+.popShow{
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	// margin-left: -450px;
+	// margin-top: -225px;
+	background-color: rgba(211,21,21,0.8);
+	background-size: contain;
+	background-repeat: no-repeat;
+	z-index: 1;
+	>button{
+		position: absolute;
+		right: 0px;
+		top: 0px;
+	}
+}
+.popShow.hide{
+	display: 	none;
 }

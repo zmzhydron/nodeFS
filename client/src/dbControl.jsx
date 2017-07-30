@@ -5,6 +5,8 @@
 import React from "react"
 
 const ptbase = `C:/Users/zmz/Desktop/PIC/T`;
+const popHeight = 800;
+const popWidth = 800;
 
 let one = val => (resolve, reject) =>{
 	$.ajax({
@@ -325,10 +327,29 @@ export default class App extends React.Component {
 	renderPhotos = () => {
 		let { photolist = [] } = this.state;
 		return photolist.map( (item, index) => {
-			let { resizeSrc, originSrc } = item;
+			let { resizeSrc, originSrc, infos: { name }, infos,  } = item;
+			resizeSrc = resizeSrc.replace(/\\/g,"/");
+			let imgStyle = this.resizeImage(infos, resizeSrc, 200);
+			let { width, height } = imgStyle;
+			imgStyle = { width, height }
 			return (
-				<img src={resizeSrc} data-originsrc={originSrc} key={index}></img>
+				<div className="singleImg" onClick={this.popPhoto(item)} key={index}>
+					<div className="singleImgDis">
+						<img style={imgStyle} src={resizeSrc} />
+					</div>
+					<div className="singleImgName">{name}</div>
+				</div>
 			)
+		})
+	}
+	popPhoto = obj => e => { 
+		let { resizeSrc, originSrc: src, infos: { width, height, }, infos,  } = obj;
+		console.log(obj, " ************  ")
+		src = src.replace(/\\/g,"/");
+		this.setState({
+			popShow: true,
+			popSrc: src,
+			imgInfos: infos
 		})
 	}
 	inferno = () => {
@@ -349,12 +370,32 @@ export default class App extends React.Component {
 			})
 		},10);
 	}
+	closePopup = e => {
+		this.setState({
+			popShow: false
+		})
+	}
+	resizeImage = (infos, src, max) => {
+		let { width, height, } = infos;
+		let w = width >= height ? max : (width / height * max);
+		let h = width >= height ? (height / width * max) : max;
+		return {
+			backgroundImage: `url(${src})`,
+			height: Math.floor(h),
+			width: Math.floor(w),
+		}
+	}
 	render() {
 		// this.inferno();
-		let { showADDCar, photoBtnDisable = '' } = this.state;
+		let { showADDCar, photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {} } = this.state;
 		// photoBtnDisable = '';
+		let popStyle = this.resizeImage(imgInfos,popSrc, 650);
+		popStyle = {...popStyle, marginLeft: -(popStyle.width / 2), marginTop: -(popStyle.height / 2) }
 		return (
 			<div>
+				<div className={popShow ? `popShow` : `popShow hide`} style={popStyle} >
+					<button onClick={this.closePopup}>X</button>
+				</div>
 				<input type="file" onChange={this.upload}/>
 				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>
 				<button disabled={photoBtnDisable} onClick={this.getPhoto}>getPhoto</button>
