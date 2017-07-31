@@ -1,47 +1,23 @@
 var fs = require("fs")
 var path = require("path")
 var gm = require('gm').subClass({imageMagick: true})
-
-// const url = "C:/Users/zmz/Desktop/PIC/T"; //work
-const url = "C:/Users/Administrator/Desktop/imgcopys"; // home
+const url = "C:/Users/zmz/Desktop/PIC/T"; //work
+// const url = "C:/Users/Administrator/Desktop/imgcopys"; // home
 const server_url = path.resolve(__dirname,"../../client/photolist")
 
-function getPicInfos(infos, callbacks = () => {}){
-	return function(err, data){
-		if(err){
-			infos = {};
-		}else{
-			console.log(`identify`,data);
-			let { size: { width, height, }, Filesize, Properties, } = data;
-			//exif:DateTime, exif:Model 为Properties的属性，需要用Properties["exif:DateTime"]来获取
-			//exif:DateTime为照片创建时间
-			//exif:Model 为拍摄机型
-			//Filesize 为照片大小
-			//size 为尺寸
-			// console.log(size, Properties["exif:DateTime"]);
-			infos = {
-				dateTime: Properties["exif:DateTime"],
-				model: Properties["exif:Model"],
-				size: Filesize,
-				width,
-				height,
-				name: data.path.split("/").slice(-1)[0]
-			}
-		}
-		callbacks(infos)
-	}
-}
+var startt;
 
 function statOrReizeFile(resizeSrc, src, originSrc, filename){
-	return new Promise( (resolve, reject) => {
+	let key = filename.split(".")[0];
+	//获取缩小后的图片
+	var resizeInfo = {};
+	startt = new Date().valueOf();
+	var resizePro = new Promise( (resolve, reject) => {
 		fs.stat(resizeSrc, (err, data) => {
 			let status = 1;
-			let infos = {};
 			if(err){
 				//创建resize 图片
-				gm(src)
-				.identify(getPicInfos(infos))
-				.resize(160,90).write(resizeSrc, (err, data) => {
+				gm(src).resize(160,90).write(resizeSrc, (err, data) => {
 					let msg = '', status = 1;
 					if(err){
 						status = 0;
@@ -51,8 +27,8 @@ function statOrReizeFile(resizeSrc, src, originSrc, filename){
 						status,
 						msg,
 						resizeSrc,
-						infos,
 						originSrc,
+						key,
 					})
 				})
 				//创建图片引用;
@@ -64,18 +40,17 @@ function statOrReizeFile(resizeSrc, src, originSrc, filename){
 					}
 				})
 			}else{
-				gm(src)
-				.identify(getPicInfos(infos, (infos) => {
-					resolve({
-						infos,
-						status,
-						resizeSrc,
-						originSrc,
-					})
-				}))
+				resolve({
+					status,
+					resizeSrc,
+					originSrc,
+					key,
+				})
 			}
 		})
 	})
+	//获取原始图片信息
+	return Promise.all([resizePro]);
 }
 function readDir(src){
 	return new Promise( (resolve, reject) => {
@@ -88,8 +63,15 @@ function readDir(src){
 		})
 	})
 }
+let infoData;
 function getresizePic(list, obj){
 	let { start, limit, url, server_url, } = obj;
+	if(!infoData){
+		infoData = fs.readFileSync(server_url+"/info.json");
+		console.log(JSON.parse(infoData));
+		infoData = JSON.parse(infoData);
+	}
+
 	return new Promise( (resolve, reject) => {
 		let rtvlist = [];
 		list.slice(start, start + limit).forEach( (item, index) => {
@@ -101,20 +83,20 @@ function getresizePic(list, obj){
 		})
 		Promise.all(rtvlist).then( val => {
 			resolve(val.map( item => {
-				let { resizeSrc, originSrc, infos } = item;
+				console.log("cost", new Date().valueOf() - startt);
+				let { resizeSrc, originSrc, key } = item[0];
 				return {
 					resizeSrc,
 					originSrc,
-					infos,
+					infos: infoData[key]
 				}
 			}))
 		}).catch( val => {})
 	})
 }
-async function geyPic(obj){
+async function getPic(obj){
 	let { start, limit, url, server_url, } = obj;
 	var imglist = await readDir(url);
-	console.log(start, imglist.length, " >>>>>>>>>>")
 	if(start >= imglist.length){
 		return {
 			list: [],
@@ -137,7 +119,7 @@ process.on("message", msg => {
 	}catch(e){
 		fs.mkdirSync(server_url);
 	}
-	geyPic({ start, limit, server_url, url,}).then( val => {
+	getPic({ start, limit, server_url, url,}).then( val => {
 		let { list, leng } = val;
 		process.send({
 			data: list.map( item => {

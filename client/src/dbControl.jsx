@@ -327,11 +327,12 @@ export default class App extends React.Component {
 	renderPhotos = () => {
 		let { photolist = [] } = this.state;
 		return photolist.map( (item, index) => {
-			let { resizeSrc, originSrc, infos: { name }, infos,  } = item;
+			let { resizeSrc, originSrc, infos = {}, } = item;
+			let { name = "" } = infos;
 			resizeSrc = resizeSrc.replace(/\\/g,"/");
 			let imgStyle = this.resizeImage(infos, resizeSrc, 200);
 			let { width, height } = imgStyle;
-			imgStyle = { width, height }
+			imgStyle = { width, height, }
 			return (
 				<div className="singleImg" onClick={this.popPhoto(item)} key={index}>
 					<div className="singleImgDis">

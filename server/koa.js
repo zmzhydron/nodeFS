@@ -10,7 +10,10 @@ var fs = require("fs");
 var koabody = require("koa-body")
 var upload = multer({ dest: path.join(__dirname, "../shitbird")})
 var cluster = require("cluster")
-var os = require("os")
+var os = require("os");
+
+
+
 
 let workerList = [];
 if(cluster.isMaster){
@@ -20,12 +23,17 @@ if(cluster.isMaster){
 	cluster.on("listening", (worker, address) => {
 		console.log('listening: worker ' + worker.process.pid +', Address: '+address.address+":"+address.port);
 	})
-	workerList.forEach( worker => {
+	workerList.forEach( (worker,index) => {
+		if(index === 0){
+
+		}
 		worker.send(`from master with love to you ${worker.id}`)
 		worker.on("message", data => {
 			console.log(` my worker : ${worker.id} give me a message : ${data}`)
 		})
 	})
+	//初始化infos
+	koas.getFileInofs();
 }else{
 	var app = new koa();
 	// var mongoApi = require("./db/mongoose.js")

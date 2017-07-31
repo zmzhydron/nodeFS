@@ -3,6 +3,7 @@ var fs = require("fs")
 var childProcess = require("child_process")
 
 var photoprocess;
+var infoProcess;
 
 module.exports = {
 	lusting: (o, next) => {
@@ -59,5 +60,15 @@ module.exports = {
 			})
 			// await next();
 		}
+	},
+	getFileInofs: function(){
+		if(!infoProcess){
+			infoProcess = childProcess.fork(path.resolve(__dirname,'../childProcess/getFileInfo.js'))
+		}
+		console.log(infoProcess.pid)
+		infoProcess.send("gogo")
+		infoProcess.on("message", msg => {
+			console.log("get ALL infos success bitch!", msg)
+		})
 	}
 }
