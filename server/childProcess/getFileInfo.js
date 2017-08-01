@@ -16,39 +16,120 @@ function readDir(src){
 		})
 	})
 }
-function getAllInfos(list){
-	let listPros = list.map( item => {
-		return new Promise( (resolve, reject) => {
-			gm(`${url}/${item}`).identify( (err,data) => {
+function getinfo(src){
+	return new Promise( (resolve, reject) => {
+		gm(`${url}/${src}`).identify( (err,data) => {
+			if(err){
+				resolve({})
+			}else{
+				let { size: { width, height, }, Filesize, Properties, } = data;
+				let name = data.path.split("/").slice(-1)[0];
+				let key = name.split(".")[0];
+				//exif:DateTime, exif:Model 为Properties的属性，需要用Properties["exif:DateTime"]来获取
+				//exif:DateTime为照片创建时间
+				//exif:Model 为拍摄机型
+				//Filesize 为照片大小
+				//size 为尺寸
+				resolve({
+					dateTime: Properties["exif:DateTime"],
+					model: Properties["exif:Model"],
+					size: Filesize,
+					width,
+					height,
+					name,
+					key,
+					origin: data,
+				})
+			}
+		})
+	})
+}
+function processCore(item){
+	return new Promise( (resolve, reject) => {
+		let key = item.split(".")[0];
+		let resizeName = item;
+		if(/(\.)/.test(resizeName)){
+			resizeName = item.replace(/(\.)/, "_resize500"+RegExp.$1);
+		}
+		let resizeSrc = server_url+"/"+resizeName,
+				src = url+"/"+item,
+				originSrc = server_url+"/"+item;
+		var resizePro = new Promise( (resolve, reject) => {
+			fs.stat(resizeSrc, (err, data) => {
+				let status = 1;
 				if(err){
-					resolve({})
+					//创建resize 图片
+					gm(src).resize(160,90).write(resizeSrc, (err, data) => {
+						let msg = '', status = 1;
+						if(err){
+							status = 0;
+							msg = "resize error";
+						}
+						resolve({
+							status,
+							msg,
+							resizeSrc,
+							originSrc,
+							key,
+						})
+					})
 				}else{
-					let { size: { width, height, }, Filesize, Properties, } = data;
-					let name = data.path.split("/").slice(-1)[0];
-					let key = name.split(".")[0];
-					//exif:DateTime, exif:Model 为Properties的属性，需要用Properties["exif:DateTime"]来获取
-					//exif:DateTime为照片创建时间
-					//exif:Model 为拍摄机型
-					//Filesize 为照片大小
-					//size 为尺寸
 					resolve({
-						dateTime: Properties["exif:DateTime"],
-						model: Properties["exif:Model"],
-						size: Filesize,
-						width,
-						height,
-						name,
+						status,
+						resizeSrc,
+						originSrc,
 						key,
-						origin: data,
 					})
 				}
 			})
 		})
+		var getinfoPro = getinfo(item);
+		var syncimg = new Promise( (resolve, reject) => {
+			//创建图片引用;
+			fs.symlink(src, server_url+"/"+item, (err, data) => {
+				let status = 'failed'
+				if(!err){
+					status = `ok`
+				}
+				resolve(status);
+			})
+		})
+		Promise.all([getinfoPro,resizePro,syncimg]).then( val => {
+			resolve(val[0])
+		});
 	})
-	return Promise.all(listPros).then( val => {
-		return val.map( item => {
-			console.log(item)
-			return item;
+}
+function processImgs(list){
+	let chunk = 5;
+	//拆分list为3个一个数组的二位数组;
+	let subList = Array.from({
+		length: parseInt(list.length / chunk) + (list.length % chunk > 0 ? 1 : 0)
+	}).map( (item, index) => {
+		let next = index+1; 
+		return [...list.slice(index*chunk, next*chunk)]
+	})
+	function readSingleChunk(list, index){
+		let innerList = list.map(processCore);
+		return new Promise( (resolve, reject) => {
+			Promise.all(innerList).then( val => {
+				console.log(`chunk ${index} is finished`, val.length);
+				resolve(val) 
+			})
+		})
+	}
+	async function readImageChunk(list){
+		let r = [];
+		for(let s = 0; s<list.length; s++){
+			r.push(await readSingleChunk(list[s], s));
+		}
+		// console.log(r);
+		return r.reduce( (a,b) => {
+			return [...a,...b]
+		},[]); 
+	}
+	return new Promise( (resolve, reject) => {
+		readImageChunk(subList).then( val => {
+			resolve(val);
 		})
 	})
 }
@@ -74,7 +155,6 @@ process.on("message", data => {
 		fs.mkdirSync(server_url);
 	}
 	getAllBitch(url).then( val => {
-		console.log(val, " ********************  ")
 		process.send(val) 
 	})
 })
@@ -84,9 +164,9 @@ async function getAllBitch(url){
 		fs.statSync(server_url+"/info.json");
 	}catch(e){
 
-		var files = await readDir(url);
-		var list = await getAllInfos(files);
-		r = await writetoFile(list)
 	}
+	var files = await readDir(url);
+	var list = await processImgs(files);
+	r = await writetoFile(list)
 	return r;
 }

@@ -9,6 +9,7 @@ import ControlBar from "./controlBar.jsx"
 import Player from "./player.jsx"
 import Chat from "./chat.jsx"
 import DbControl from "./dbControl.jsx"
+import PhotoWall from "./photoWall.jsx"
 
 import Accident from "./carAccident.jsx"
 
@@ -57,9 +58,10 @@ import Accident from "./carAccident.jsx"
 					{/*<Accident {...indexProps} actions = {actions}/>*/}
 					{/*<TableList {...this.props}/>*/}
 				</div>
-				<div className = {klassdbb}>
+{/*				<div className = {klassdbb}>
 					<DbControl {...this.props}/>
-				</div>
+				</div>*/}
+				<PhotoWall />
 			</div>
 		)
 	}

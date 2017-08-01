@@ -4,10 +4,6 @@
 */
 import React from "react"
 
-const ptbase = `C:/Users/zmz/Desktop/PIC/T`;
-const popHeight = 800;
-const popWidth = 800;
-
 let one = val => (resolve, reject) =>{
 	$.ajax({
 		url: '/api/one',
@@ -57,7 +53,6 @@ export default class App extends React.Component {
 			ext: {},
 			photoStartIndex: 0,
 		}
-		this.startIndex = 0;
 	}
 	componentWillMount() {
 
