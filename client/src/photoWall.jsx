@@ -34,6 +34,17 @@ export default class Photowall extends React.Component{
 			}
 		})
 	}
+	initPhotos = e => {
+		$.ajax({
+			url: "/api/initPhotos",
+			type: 'post',
+			data: {
+			},
+			success: (val) =>{
+				console.log(val, " initPhotos")
+			}
+		})
+	}
 	renderPhotos = () => {
 		let { photolist = [] } = this.state;
 		return photolist.map( (item, index) => {
@@ -105,6 +116,16 @@ export default class Photowall extends React.Component{
 			popStyle: {width:w, height:h, marginLeft: -(w / 2), marginTop: -(h / 2),}
 		}
 	}
+	componentDidMount(){
+		var socket = io("http://localhost:8088");
+		let _v;
+		socket.on("haha", msg => {
+			console.log(msg);
+			_v = msg;
+			socket.emit("fuckyou", _v)
+		})
+
+	}
 	render(){
 		let { photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {}, angle = 0 } = this.state;
 		let { imgStyle } = this.calcStyles(this.resizeImage(imgInfos,popSrc, 650))
@@ -113,6 +134,7 @@ export default class Photowall extends React.Component{
 			<div>
 				<div className={popShow ? `popShow` : `popShow hide`}>
 					<div className="showBigPIC" style={imgStyle}></div>
+					
 					<div className="ctxbar">
 						<button onClick={this.rotate(90)}>→</button>
 						<button onClick={this.rotate(-90)}>←</button>
@@ -121,6 +143,7 @@ export default class Photowall extends React.Component{
 					</div>
 				</div>
 				<button disabled={photoBtnDisable} onClick={this.getPhoto}>getPhoto</button>
+				<button disabled={photoBtnDisable} onClick={this.initPhotos}>initPhotos</button>
 				<div className="photowall">
 					{this.renderPhotos()}
 				</div>

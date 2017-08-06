@@ -70,5 +70,8 @@ module.exports = {
 		infoProcess.on("message", msg => {
 			console.log("get ALL infos success bitch!", msg)
 		})
+	},
+	socketOne: function(){
+		// var io = require('socket.io')(server)
 	}
 }

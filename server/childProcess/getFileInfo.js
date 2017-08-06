@@ -1,8 +1,8 @@
 var fs = require("fs")
 var path = require("path")
 var gm = require('gm').subClass({imageMagick: true})
-const url = "C:/Users/zmz/Desktop/PIC/T"; //work
-// const url = "C:/Users/Administrator/Desktop/imgcopys"; // home
+// const url = "C:/Users/zmz/Desktop/PIC/T"; //work
+const url = "C:/Users/Administrator/Desktop/imgcopys"; // home
 const server_url = path.resolve(__dirname,"../../client/photolist")
 
 function readDir(src){
@@ -149,15 +149,20 @@ function writetoFile(list){
 	})
 }
 process.on("message", data => {
+	sortPhoto();
+})
+function sortPhoto(){
 	try{
 		fs.statSync(server_url);
 	}catch(e){
 		fs.mkdirSync(server_url);
 	}
 	getAllBitch(url).then( val => {
-		process.send(val) 
+		process.send({
+			status: 'ok',
+		}) 
 	})
-})
+}
 async function getAllBitch(url){
 	var r = "ok";
 	try{
