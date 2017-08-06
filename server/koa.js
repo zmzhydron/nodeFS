@@ -1,6 +1,7 @@
 'use strict'
 
 var koa = require("koa")
+var http = require("http");
 var router = require("koa-router")()
 var koas = require("./koa-components/comp.js")
 var koatools = require("./koa-components/koa-tools.js")
@@ -36,18 +37,7 @@ if(cluster.isMaster){
 	// koas.getFileInofs();
 }else{
 	var app = new koa();
-	var io = new socketIO(8088);
-	io.on("connection", socket => {
-		console.log('a user connected');
-		let val = 0;
-		setInterval( () => {
-			socket.emit("haha", "haha: @"+val+"_id:"+socket.id)
-			val++;
-		},1000)
-		socket.on("fuckyou", msg => {
-			console.log(msg, " suckit!!")
-		})
-	})
+
 	// var mongoApi = require("./db/mongoose.js")
 	app.use(async (o, next) =>{
 		try{
@@ -107,7 +97,24 @@ if(cluster.isMaster){
 
 		o.body += `kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`;
 	})
-	app.listen(8081);
-
+	var htp = app.listen(8081);
+	console.log()
+	console.log("*************************",htp)
+	console.log()
+	console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@",app)
+	// var htp = http.createServer(app.callback()).listen(8081)
+	// var io = new socketIO(8088);
+	var io = socketIO(htp)
+	io.on("connection", socket => {
+		console.log('a user connected');
+		let val = 0;
+		setInterval( () => {
+			socket.emit("haha", "haha: @"+val+"_id:"+socket.id)
+			val++;
+		},1000)
+		socket.on("fuckyou", msg => {
+			// console.log(msg, " suckit!!")
+		})
+	})
 }
 

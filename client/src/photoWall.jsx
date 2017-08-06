@@ -117,7 +117,7 @@ export default class Photowall extends React.Component{
 		}
 	}
 	componentDidMount(){
-		var socket = io("http://localhost:8088");
+		var socket = io("http://localhost:8081");
 		let _v;
 		socket.on("haha", msg => {
 			console.log(msg);
