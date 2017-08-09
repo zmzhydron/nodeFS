@@ -65,10 +65,10 @@ module.exports = {
 		if(!infoProcess){
 			infoProcess = childProcess.fork(path.resolve(__dirname,'../childProcess/getFileInfo.js'))
 		}
-		console.log(infoProcess.pid)
+		console.log(infoProcess.pid, "infoProcess.pid")
 		infoProcess.send("gogo")
 		infoProcess.on("message", msg => {
-			console.log("get ALL infos success bitch!", msg)
+			console.log(`comps.js,`,msg);
 		})
 	},
 	socketOne: function(){

@@ -117,14 +117,13 @@ export default class Photowall extends React.Component{
 		}
 	}
 	componentDidMount(){
-		var socket = io("http://localhost:8081");
-		let _v;
-		socket.on("haha", msg => {
-			console.log(msg);
-			_v = msg;
-			socket.emit("fuckyou", _v)
-		})
-
+		// var socket = io("http://localhost:8081");
+		// let _v;
+		// socket.on("haha", msg => {
+		// 	console.log(msg);
+		// 	_v = msg;
+		// 	socket.emit("fuckyou", _v)
+		// })
 	}
 	render(){
 		let { photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {}, angle = 0 } = this.state;

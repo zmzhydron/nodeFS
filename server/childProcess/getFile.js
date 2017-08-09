@@ -4,7 +4,6 @@ var gm = require('gm').subClass({imageMagick: true})
 const url = "C:/Users/zmz/Desktop/PIC/T"; //work
 // const url = "C:/Users/Administrator/Desktop/imgcopys"; // home
 const server_url = path.resolve(__dirname,"../../client/photolist")
-
 var startt;
 
 function statOrReizeFile(resizeSrc, src, originSrc, filename){
@@ -17,6 +16,7 @@ function statOrReizeFile(resizeSrc, src, originSrc, filename){
 			let status = 1;
 			if(err){
 				//创建resize 图片
+				console.log(`getFile.js, fs.stat error!!!`)
 				gm(src).resize(160,90).write(resizeSrc, (err, data) => {
 					let msg = '', status = 1;
 					if(err){
@@ -40,6 +40,7 @@ function statOrReizeFile(resizeSrc, src, originSrc, filename){
 					}
 				})
 			}else{
+				console.log(`getFile.js, fs.stat sucess!!!`)
 				resolve({
 					status,
 					resizeSrc,
@@ -68,7 +69,7 @@ function getresizePic(list, obj){
 	let { start, limit, url, server_url, } = obj;
 	if(!infoData){
 		infoData = fs.readFileSync(server_url+"/info.json");
-		console.log(JSON.parse(infoData));
+		// console.log(JSON.parse(infoData));
 		infoData = JSON.parse(infoData);
 	}
 
@@ -83,7 +84,7 @@ function getresizePic(list, obj){
 		})
 		Promise.all(rtvlist).then( val => {
 			resolve(val.map( item => {
-				console.log("cost", new Date().valueOf() - startt);
+				// console.log("cost", new Date().valueOf() - startt);
 				let { resizeSrc, originSrc, key } = item[0];
 				return {
 					resizeSrc,

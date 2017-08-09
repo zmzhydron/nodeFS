@@ -1,8 +1,8 @@
 var fs = require("fs")
 var path = require("path")
 var gm = require('gm').subClass({imageMagick: true})
-// const url = "C:/Users/zmz/Desktop/PIC/T"; //work
-const url = "C:/Users/Administrator/Desktop/imgcopys"; // home
+const url = "C:/Users/zmz/Desktop/PIC/T"; //work
+// const url = "C:/Users/Administrator/Desktop/imgcopys"; // home
 const server_url = path.resolve(__dirname,"../../client/photolist")
 
 function readDir(src){
@@ -100,8 +100,8 @@ function processCore(item){
 	})
 }
 function processImgs(list){
-	let chunk = 5;
-	//拆分list为3个一个数组的二位数组;
+	let chunk = 2;
+	//拆分list为2个一个数组的二位数组;
 	let subList = Array.from({
 		length: parseInt(list.length / chunk) + (list.length % chunk > 0 ? 1 : 0)
 	}).map( (item, index) => {
@@ -112,7 +112,10 @@ function processImgs(list){
 		let innerList = list.map(processCore);
 		return new Promise( (resolve, reject) => {
 			Promise.all(innerList).then( val => {
-				console.log(`chunk ${index} is finished`, val.length);
+				process.send({
+					status: "1",
+					msg: `chunk ${index} of ${subList.length} is finished`
+				})
 				resolve(val) 
 			})
 		})
@@ -159,8 +162,14 @@ function sortPhoto(){
 	}
 	getAllBitch(url).then( val => {
 		process.send({
-			status: 'ok',
+			status: '2', //表示全部完成,
+			msg: 'all is done'
 		}) 
+	}).catch(val => {
+		process.send({
+			status: '0', //表示报错未完成
+			msg: val.message ? val.message : val+""
+		})
 	})
 }
 async function getAllBitch(url){

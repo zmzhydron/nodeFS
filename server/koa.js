@@ -1,5 +1,4 @@
 'use strict'
-
 var koa = require("koa")
 var http = require("http");
 var router = require("koa-router")()
@@ -7,6 +6,7 @@ var koas = require("./koa-components/comp.js")
 var koatools = require("./koa-components/koa-tools.js")
 var multer = require("koa-multer")
 var path = require("path")
+var net = require('net')
 var fs = require("fs");
 var koabody = require("koa-body")
 var upload = multer({ dest: path.join(__dirname, "../shitbird")})
@@ -14,30 +14,46 @@ var cluster = require("cluster")
 var os = require("os");
 var socketIO = require('socket.io');
 
+function convertip(ip, len){
+	let ipstr = "";
+	ip.split("").forEach( item => {
+		let num = parseInt(item);
+		if(!isNaN(num)){
+			ipstr += num;
+		}
+	})
+	return ipstr % len;
+}
 
-
-let workerList = [];
 if(cluster.isMaster){
 	os.cpus().forEach( (item, index) => {
-		workerList.push(cluster.fork());
+		cluster.fork()
 	})
 	cluster.on("listening", (worker, address) => {
-		console.log('listening: worker ' + worker.process.pid +', Address: '+address.address+":"+address.port);
+		console.log('listening: worker ' + worker.process.pid +', port: '+address.port);
 	})
-	workerList.forEach( (worker,index) => {
-		if(index === 0){
-
-		}
-		worker.send(`from master with love to you ${worker.id}`)
-		worker.on("message", data => {
-			console.log(` my worker : ${worker.id} give me a message : ${data}`)
-		})
+	cluster.on("exit", (worker, code, signal) => {
+		setTimeout( () => {
+			console.log(`worker : ${worker.process.id}, index: ${index} 重启`)
+			worker.fork();
+		},1000);
 	})
-	//初始化infos
+	// for(let id in cluster.workers){
+		// let _worker = cluster.workers[id];
+		// _worker.send(`from master with love to you ${id}`)
+		// _worker.on("message", data => {
+		// 	console.log(` my worker : ${_worker.process.id} give me a message : ${data}`)
+		// })
+	// }
+	net.createServer({ pauseOnConnect: true }, conn => {
+		let workerID = convertip(conn.remoteAddress, os.cpus().length);
+		console.log(workerID, " @@@@@@@@@@@@@  ")
+		cluster.workers[workerID].send("sticky-session", conn);
+	}).listen(8081)
+	// console.log(workerList[0])
 	// koas.getFileInofs();
 }else{
 	var app = new koa();
-
 	// var mongoApi = require("./db/mongoose.js")
 	app.use(async (o, next) =>{
 		try{
@@ -48,7 +64,6 @@ if(cluster.isMaster){
 			await next();
 		}catch(err){
 			o.response.status = 500;
-			// console.log(err);
 			o.body = {
 				errorCode: 0,
 				message: err+" >> "+o.outfit+ " >> "+o.url
@@ -97,24 +112,34 @@ if(cluster.isMaster){
 
 		o.body += `kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`;
 	})
-	var htp = app.listen(8081);
-	console.log()
-	console.log("*************************",htp)
-	console.log()
-	console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@",app)
-	// var htp = http.createServer(app.callback()).listen(8081)
-	// var io = new socketIO(8088);
-	var io = socketIO(htp)
-	io.on("connection", socket => {
-		console.log('a user connected');
-		let val = 0;
-		setInterval( () => {
-			socket.emit("haha", "haha: @"+val+"_id:"+socket.id)
-			val++;
-		},1000)
-		socket.on("fuckyou", msg => {
-			// console.log(msg, " suckit!!")
-		})
+	var server = app.listen(0);
+	var io = socketIO(server);
+	process.on("message", (msg, handler) => {
+		if(msg !== "sticky-session"){
+			console.log("koa.js, cluster socket.io need font-facing server response first!!!")
+			return;
+		}
+		server.emit("connection", handler);
+		handler.resume();
 	})
+	// io.on("connection", socket => {
+	// 	let val = 0;
+	// 	setInterval( () => {
+	// 		socket.emit("haha", "haha: @"+val+"_id:"+socket.id)
+	// 		val++;
+	// 	},1000)
+	// 	socket.on("fuckyou", msg => {
+	// 		// console.log(msg, " suckit!!")
+	// 	})
+	// })
+	// htp.on("connection", data => {
+	// 	// console.log(data)
+	// 	console.log(' a user just connect ')
+	// })
+	// console.log()
+	// console.log("*************************",htp)
+	// console.log()
+	// console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@",app)
+	// let socketList = {};
 }
 
