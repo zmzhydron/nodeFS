@@ -122,16 +122,16 @@ if(cluster.isMaster){
 		server.emit("connection", handler);
 		handler.resume();
 	})
-	// io.on("connection", socket => {
-	// 	let val = 0;
-	// 	setInterval( () => {
-	// 		socket.emit("haha", "haha: @"+val+"_id:"+socket.id)
-	// 		val++;
-	// 	},1000)
-	// 	socket.on("fuckyou", msg => {
-	// 		// console.log(msg, " suckit!!")
-	// 	})
-	// })
+	io.on("connection", socket => {
+		let val = 0;
+		setInterval( () => {
+			socket.emit("haha", "haha: @"+val+"_id:"+socket.id)
+			val++;
+		},1000)
+		socket.on("fuckyou", msg => {
+			// console.log(msg, " suckit!!")
+		})
+	})
 	// htp.on("connection", data => {
 	// 	// console.log(data)
 	// 	console.log(' a user just connect ')
