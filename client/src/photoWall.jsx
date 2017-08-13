@@ -6,6 +6,7 @@ export default class Photowall extends React.Component{
 		this.state = {
 			photoStartIndex: 0,
 			angle: 0,
+			progress: {},
 		}
 	}
 	getPhoto = e => {
@@ -119,16 +120,41 @@ export default class Photowall extends React.Component{
 	componentDidMount(){
 		var socket = io("http://localhost:8081");
 		let _v;
-		socket.on("haha", msg => {
-			console.log(msg);
-			_v = msg;
+		socket.on("haha", message => {
+			console.log(JSON.parse(message));
+			let obj = JSON.parse(message);
+			let { cur, total, msg, } = JSON.parse(message);
+			this.setState({
+				progress: {
+					cur,
+					total,
+					msg,
+				}
+			})
+			_v = message;
 			socket.emit("fuckyou", _v)
 		})
+	}
+	calProgress = () => {
+		const width = 500;
+		let max = 0;
+		let { progress: { cur: procur, total: prototal,} } = this.state;
+		let r = (procur - max )/prototal;
+		r = r > 1 ? 1 : r;
+		if( r >  1){
+			max	 = procur;
+			r = 1;
+		}
+		r = isNaN(r) ? 0 : r;
+		return parseInt(r * 100) + "%";
+
 	}
 	render(){
 		let { photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {}, angle = 0 } = this.state;
 		let { imgStyle } = this.calcStyles(this.resizeImage(imgInfos,popSrc, 650))
 		console.log(angle, "  angle  ")
+		
+		let percent = this.calProgress();
 		return (
 			<div>
 				<div className={popShow ? `popShow` : `popShow hide`}>
@@ -143,6 +169,14 @@ export default class Photowall extends React.Component{
 				</div>
 				<button disabled={photoBtnDisable} onClick={this.getPhoto}>getPhoto</button>
 				<button disabled={photoBtnDisable} onClick={this.initPhotos}>initPhotos</button>
+				<div className="progressBarCtn">
+					<div className="infos"></div>
+					<div className="bar">
+						<div className="progress" style={{width: percent}}>
+							<span className="percentage">{percent}</span>
+						</div>
+					</div>
+				</div>
 				<div className="photowall">
 					{this.renderPhotos()}
 				</div>

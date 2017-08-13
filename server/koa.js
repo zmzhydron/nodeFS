@@ -125,7 +125,12 @@ if(cluster.isMaster){
 	io.on("connection", socket => {
 		let val = 0;
 		setInterval( () => {
-			socket.emit("haha", "haha: @"+val+"_id:"+socket.id)
+			let obj = JSON.stringify({
+				cur: val,
+				total: 30,
+				msg: "haha: @"+val+"_id:"+socket.id
+			})
+			socket.emit("haha", obj);
 			val++;
 		},1000)
 		socket.on("fuckyou", msg => {

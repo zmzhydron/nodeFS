@@ -149,3 +149,24 @@ body {
 .popShow.hide{
 	display: 	none;
 }
+.progressBarCtn{
+
+	.bar{
+		width: 500px;
+		border: solid 1px green;
+		background-color: gray;
+		position: relative;
+		height: 50px;
+		.progress{
+			position: absolute;
+			background: purple;
+			width: 70%;
+			height: 50px;
+			overflow: hidden;
+			.percentage{
+				position: absolute;
+				right: 0px;
+			}
+		}
+	}
+}
