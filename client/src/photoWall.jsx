@@ -130,12 +130,12 @@ export default class Photowall extends React.Component{
 			console.log("********heartbeat*********")
 			console.log(dataObj);
 			if(dataObj && Object.keys(dataObj).length){
-				let { cur, total } = dataObj;
-
-				this.setState({
-					progress: dataObj
-				})
-
+				let { cur, total, status } = dataObj;
+				if(status === '1'){
+					this.setState({
+						progress: dataObj
+					})	
+				}
 			}
 		})
 	}
