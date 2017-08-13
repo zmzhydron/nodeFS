@@ -50,10 +50,9 @@ if(cluster.isMaster){
 		console.log(workerID, " @@@@@@@@@@@@@  ")
 		cluster.workers[workerID].send("sticky-session", conn);
 	}).listen(8081)
-	// console.log(workerList[0])
-	// koas.getFileInofs();
 }else{
 	var app = new koa();
+	var soc;
 	// var mongoApi = require("./db/mongoose.js")
 	app.use(async (o, next) =>{
 		try{
@@ -61,6 +60,7 @@ if(cluster.isMaster){
 				console.log(` message from abouv : ${data}`)
 			})
 			process.send(`${cluster.worker.id} is Process your requrst`)
+			o.io = soc; //bind socket to koa request instances
 			await next();
 		}catch(err){
 			o.response.status = 500;
@@ -93,7 +93,7 @@ if(cluster.isMaster){
 
 	router.get("/api/download",koas.download())
 	router.post("/api/getPhoto",koas.getPhoto())
-	// router.post("/api/initPhotos",koas.initPhotos())
+	router.post("/api/initPhotos",koas.initPhotos())
 	app.use(async(o,next) => {
 		// o.body = `i am zmz, and i say:`;
 		await next();
@@ -103,14 +103,14 @@ if(cluster.isMaster){
 	app.use( async (o, next) =>{
 		if(o.isrr){
 			o.outfit = "nothing"	
+			this.two = 'hight heels'
 			// console.log(o)
 			// console.log(this)
 		}else{
 			o.outfit = 'black lace'
 		}
-		// console.log(aaa)
 
-		o.body += `kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`;
+		o.body = ` ^^ ${this.two} kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`;
 	})
 	var server = app.listen(0);
 	var io = socketIO(server);
@@ -122,29 +122,27 @@ if(cluster.isMaster){
 		server.emit("connection", handler);
 		handler.resume();
 	})
+	
 	io.on("connection", socket => {
 		let val = 0;
 		setInterval( () => {
-			let obj = JSON.stringify({
-				cur: val,
-				total: 30,
-				msg: "haha: @"+val+"_id:"+socket.id
-			})
-			socket.emit("haha", obj);
+			// let obj = JSON.stringify({
+			// 	cur: val,
+			// 	total: 30,
+			// 	msg: "haha: @"+val+"_id:"+socket.id
+			// })
+			// socket.emit("haha", obj);
 			val++;
 		},1000)
-		socket.on("fuckyou", msg => {
-			// console.log(msg, " suckit!!")
+		let obj = JSON.stringify({
+			cur: val,
+			total: 30,
+			msg: "haha: @"+val+"_id:"+socket.id
+		})
+		socket.emit("haha", obj);
+		socket.on("setSoc", msg => {
+			soc = socket;
 		})
 	})
-	// htp.on("connection", data => {
-	// 	// console.log(data)
-	// 	console.log(' a user just connect ')
-	// })
-	// console.log()
-	// console.log("*************************",htp)
-	// console.log()
-	// console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@",app)
-	// let socketList = {};
 }
 

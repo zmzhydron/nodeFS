@@ -38,6 +38,7 @@ function getinfo(src){
 					height,
 					name,
 					key,
+					type: "readInfo",
 					origin: data,
 				})
 			}
@@ -68,6 +69,7 @@ function processCore(item){
 						resolve({
 							status,
 							msg,
+							type:"resize",
 							resizeSrc,
 							originSrc,
 							key,
@@ -91,7 +93,10 @@ function processCore(item){
 				if(!err){
 					status = `ok`
 				}
-				resolve(status);
+				resolve({
+					status,
+					type: "syncimg"
+				});
 			})
 		})
 		Promise.all([getinfoPro,resizePro,syncimg]).then( val => {
@@ -114,7 +119,9 @@ function processImgs(list){
 			Promise.all(innerList).then( val => {
 				process.send({
 					status: "1",
-					msg: `chunk ${index} of ${subList.length} is finished`
+					msg: `chunk ${index} of ${subList.length} is finished`,
+					cur: index,
+					total: subList.length
 				})
 				resolve(val) 
 			})
@@ -125,7 +132,6 @@ function processImgs(list){
 		for(let s = 0; s<list.length; s++){
 			r.push(await readSingleChunk(list[s], s));
 		}
-		// console.log(r);
 		return r.reduce( (a,b) => {
 			return [...a,...b]
 		},[]); 

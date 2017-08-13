@@ -58,7 +58,7 @@ import Accident from "./carAccident.jsx"
 					{/*<Accident {...indexProps} actions = {actions}/>*/}
 					{/*<TableList {...this.props}/>*/}
 				</div>
-{/*				<div className = {klassdbb}>
+				{/*<div className = {klassdbb}>
 					<DbControl {...this.props}/>
 				</div>*/}
 				<PhotoWall />

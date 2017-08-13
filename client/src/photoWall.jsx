@@ -1,5 +1,5 @@
 import React from "react"
-
+let socket;
 export default class Photowall extends React.Component{
 	constructor(props) {
 		super();
@@ -10,6 +10,7 @@ export default class Photowall extends React.Component{
 		}
 	}
 	getPhoto = e => {
+		socket.emit("setSoc", '')
 		this.setState({
 			photoBtnDisable: "disabled"
 		})
@@ -36,9 +37,10 @@ export default class Photowall extends React.Component{
 		})
 	}
 	initPhotos = e => {
+		socket.emit("setSoc", '')
 		$.ajax({
 			url: "/api/initPhotos",
-			type: 'post',
+			type: 'POST',
 			data: {
 			},
 			success: (val) =>{
@@ -118,21 +120,23 @@ export default class Photowall extends React.Component{
 		}
 	}
 	componentDidMount(){
-		var socket = io("http://localhost:8081");
+		socket = io("http://localhost:8081");
 		let _v;
-		socket.on("haha", message => {
-			console.log(JSON.parse(message));
-			let obj = JSON.parse(message);
-			let { cur, total, msg, } = JSON.parse(message);
-			this.setState({
-				progress: {
-					cur,
-					total,
-					msg,
-				}
-			})
-			_v = message;
-			socket.emit("fuckyou", _v)
+		socket.on("soc", data => {
+			console.log(data, "soc give you a message, and her's id")
+		})
+		socket.on("heartbeat", data => {
+			var dataObj = JSON.parse(data);
+			console.log("********heartbeat*********")
+			console.log(dataObj);
+			if(dataObj && Object.keys(dataObj).length){
+				let { cur, total } = dataObj;
+
+				this.setState({
+					progress: dataObj
+				})
+
+			}
 		})
 	}
 	calProgress = () => {
@@ -153,7 +157,6 @@ export default class Photowall extends React.Component{
 		let { photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {}, angle = 0 } = this.state;
 		let { imgStyle } = this.calcStyles(this.resizeImage(imgInfos,popSrc, 650))
 		console.log(angle, "  angle  ")
-		
 		let percent = this.calProgress();
 		return (
 			<div>

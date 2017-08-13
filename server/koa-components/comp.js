@@ -42,34 +42,54 @@ module.exports = {
 			if(!photoprocess){
 				photoprocess = childProcess.fork(path.resolve(__dirname,'../childProcess/getFile.js'))
 			}
-			console.log(photoprocess.pid)
+			console.log("comps.js: "+photoprocess.pid)
 			let { start, end } = o.request.body
 			photoprocess.send({
 				type: 'request',
 				start,
 				end,
 			})
+			var ioError = '@@';
+			if(o.io){
+				o.io.emit("soc", `@@@@@@@@@@@ ${o.io.id}`)
+			}else{
+				ioError = "$$$"
+			}
 			o.body = await new Promise( (resolve, reject) => {
 				photoprocess.on("message", msg => {
 					let { data: list = [], total = 0, morePhoto = 0 } = msg;
 					resolve({
 						list,
 						total,
+						ioError,
 					})
 				})	
 			})
 			// await next();
 		}
 	},
-	getFileInofs: function(){
-		if(!infoProcess){
-			infoProcess = childProcess.fork(path.resolve(__dirname,'../childProcess/getFileInfo.js'))
+	initPhotos: function(){
+		return async function(o,next){
+			if(!infoProcess){
+				infoProcess = childProcess.fork(path.resolve(__dirname,'../childProcess/getFileInfo.js'))
+			}
+			console.log(infoProcess.pid, "infoProcess.pid")
+			infoProcess.send("gogo")
+			o.body = await new Promise((resolve, reject) => {
+				infoProcess.on("message", data => {
+					let { status, msg } = data;
+					data.socID = o.io.id;
+					o.io.emit("heartbeat", JSON.stringify(data))
+					if(status === "1"){
+
+					}else if(status === '2'){
+						resolve("initPhotos done")
+					}else{
+
+					}
+				})
+			})
 		}
-		console.log(infoProcess.pid, "infoProcess.pid")
-		infoProcess.send("gogo")
-		infoProcess.on("message", msg => {
-			console.log(`comps.js,`,msg);
-		})
 	},
 	socketOne: function(){
 		// var io = require('socket.io')(server)
