@@ -10,7 +10,7 @@ export default class Photowall extends React.Component{
 		}
 	}
 	getPhoto = e => {
-		socket.emit("setSoc", '')
+		// socket.emit("setSoc", '')
 		this.setState({
 			photoBtnDisable: "disabled"
 		})
@@ -37,7 +37,7 @@ export default class Photowall extends React.Component{
 		})
 	}
 	initPhotos = e => {
-		socket.emit("setSoc", '')
+		// socket.emit("setSoc", '')
 		$.ajax({
 			url: "/api/initPhotos",
 			type: 'POST',
@@ -138,6 +138,10 @@ export default class Photowall extends React.Component{
 				}
 			}
 		})
+		socket.emit("setSoc", '')
+		socket.on("m3", data => {
+			console.log(data, " m3 message")
+		})
 	}
 	calProgress = () => {
 		const width = 500;
@@ -151,7 +155,33 @@ export default class Photowall extends React.Component{
 		}
 		r = isNaN(r) ? 0 : r;
 		return parseInt(r * 100) + "%";
-
+	}
+	testExtend = () => {
+		$.ajax({
+			url: `api/hello?name=zmz&age=29`,
+			type: 'POST',
+			timeout: 0,
+			data: {
+				skill: `fullstackengineer`
+			},
+			success: val =>{
+				console.log(val)
+			},
+			error: val => {
+				console.log(val ," ERORR")
+			}
+		})
+		// $.ajax({
+		// 	url: `api/rr?name=zmz&age=30`,
+		// 	timeout: 600000,
+		// 	async: true,
+		// 	success: val =>{
+		// 		console.log(val, 'RR')
+		// 	},
+		// 	error: val => {
+		// 		console.log(val ," RR ERORR")
+		// 	}
+		// })
 	}
 	render(){
 		let { photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {}, angle = 0 } = this.state;
@@ -172,6 +202,7 @@ export default class Photowall extends React.Component{
 				</div>
 				<button disabled={photoBtnDisable} onClick={this.getPhoto}>getPhoto</button>
 				<button disabled={photoBtnDisable} onClick={this.initPhotos}>initPhotos</button>
+				<button onClick={this.testExtend}>testExtend</button>
 				<div className="progressBarCtn">
 					<div className="infos"></div>
 					<div className="bar">

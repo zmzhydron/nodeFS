@@ -1,10 +1,8 @@
 var path = require("path")
 var fs = require("fs")
 var childProcess = require("child_process")
-
 var photoprocess;
 var infoProcess;
-
 module.exports = {
 	lusting: (o, next) => {
 		console.log(o)
