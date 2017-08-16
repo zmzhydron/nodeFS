@@ -183,6 +183,42 @@ export default class Photowall extends React.Component{
 		// 	}
 		// })
 	}
+	sendEmail = e => {
+		$.ajax({
+			url: `api/sendEmail`,
+			type: 'POST',
+			timeout: 0,
+			data: {
+				title: "message from nodejs",
+				content: "yo man, wup?",
+				to: "zmzhydron@163.com"
+			},
+			success: val =>{
+				console.log(val)
+			},
+			error: val => {
+				console.log(val ," ERORR")
+			}
+		})
+	}
+	trax = e => {
+		let form = new FormData()
+		let file = this.refs.files.files[0];
+		form.append("hehe", file)
+		$.ajax({
+			url: `api/trax`,
+			type: 'POST',
+			data: form,
+			contentType : false,
+			processData : false, 
+			success: val =>{
+				console.log(val)
+			},
+			error: val => {
+				console.log(val ," ERORR")
+			}
+		})
+	}
 	render(){
 		let { photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {}, angle = 0 } = this.state;
 		let { imgStyle } = this.calcStyles(this.resizeImage(imgInfos,popSrc, 650))
@@ -203,6 +239,11 @@ export default class Photowall extends React.Component{
 				<button disabled={photoBtnDisable} onClick={this.getPhoto}>getPhoto</button>
 				<button disabled={photoBtnDisable} onClick={this.initPhotos}>initPhotos</button>
 				<button onClick={this.testExtend}>testExtend</button>
+				<button onClick={this.sendEmail}>sendEmail</button>
+				<div>
+					<input type="file" ref="files"/>
+					<button onClick={this.trax}>trax</button>
+				</div>
 				<div className="progressBarCtn">
 					<div className="infos"></div>
 					<div className="bar">

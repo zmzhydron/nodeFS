@@ -51,7 +51,9 @@ function gogo(){
 	router.get("/api/download",koas.download())
 	router.post("/api/getPhoto",koas.getPhoto())
 	router.post("/api/initPhotos",koas.initPhotos())
-	router.post("/api/upload", upload.single("fuckyoutoo"), koas.upload())
+	router.post("/api/sendEmail",koas.sendEmail())
+	router.post("/api/upload", upload.single("hehe"), koas.upload())
+	router.post("/api/trax", upload.single("hehe"), koas.trax())
 	app.use( async (o, next) =>{
 		if(o.isrr){
 			o.outfit = "nothing"	

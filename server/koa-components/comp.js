@@ -1,25 +1,41 @@
 var path = require("path")
 var fs = require("fs")
 var childProcess = require("child_process")
+var nodemailer = require("nodemailer")
 var photoprocess;
 var infoProcess;
-module.exports = {
+
+let emailServer = nodemailer.createTransport({
+    host: 'smtp.qq.com',
+    port: 465,
+    secure: true, // secure:true for port 465, secure:false for port 587
+    auth: {
+        user: '373027385@qq.com',
+        pass: 'hzqwlwoesoatbiid' //需要为授权码
+    }
+});
+
+var tools = {
 	lusting: (o, next) => {
 		console.log(o)
 		o.body = "fucking nice yeah!!!"
 	},
-	upload: function(){
-		return async function upload(o,next){
-			console.log(o.req.file);
-			let file = o.req.file;
-			o.body = await new Promise( (resolve, reject) => {
+	uploadCore: file => {
+		return new Promise( (resolve, reject) => {
 				fs.rename(file.path, file.destination+"\\"+file.originalname, err => {
 					if(err){
 						// reject("error bitch")
 					}
-					resolve(`current path @ : ${path.join(__dirname, "../shitbird")}`);
+					resolve({
+						path: path.resolve(__dirname, `../../shitbird/${file.originalname}`),
+						msg: `current path @ : ${path.join(__dirname, "../../shitbird")}`
+					});
 				})
 			})
+	},
+	upload: function(){
+		return async function upload(o,next){
+			o.body = await tools.uploadCore(o.req.file);
 		}
 	},
 	download: function(){
@@ -89,7 +105,94 @@ module.exports = {
 			})
 		}
 	},
+	sendEmail: function(){
+		return async function(o,next){
+			let { title, content, to, } = o.request.body;
+			console.log(title, content, to)
+			let mailOptions = {
+			    from: '"zhangmingzhi" <373027385@qq.com>', // sender address
+			    attachments: [
+			    	{
+			    		filename: 'stream.txt',
+			    		content : new Buffer("张明之buffers", 'utf-8')
+			    	},
+			    	{
+			    		filename: 'upload.txt',
+			    		path : "C:/Users/Administrator/Desktop/git/log.txt"
+			    	},
+			    	{
+			    		filename: 'cidImage.jpg',
+			    		path : "C:/Users/Administrator/Desktop/imgcopys/honda.jpg",
+			    		cid: "honda"
+			    	}
+			    ],
+			    to: 'zmzhydron@163.com', // list of receivers
+			    subject: 'subject one', // Subject line
+			    text: '~~~~~~~~~~~~~~', // plain text body
+			    html: `<div class="box_06_2"> 
+			    				<img src="cid:honda" />
+								  <ul class="list13 ulAll ul02" id="ul01"> 
+								    <li class="current"> 
+								     <div class="m_picTxt02 clearfix m_picTxtOne"> 
+								     <img src=""
+								      <div class="m_txt02"> 
+								       <h2><a href="http://pl.ifeng.com/a/20170816/51651709_0.shtml" target="_blank">北师大博士论文里的臭氧问题：没想象的那么荒诞</a></h2> 
+								       <div class="tu1"> 
+								        <a href="http://pl.ifeng.com/a/20170816/51651709_0.shtml" target="_blank" title=""><img src="http://d.ifengimg.com/w90_h90/p3.ifengimg.com/a/2017/0816/ecf9f1954916f87size41_w500_h298.jpg" width="90" height="90" title="北师大博士论文里的臭氧问题：没想象的那么荒诞" alt="北师大博士论文里的臭氧问题：没想象的" class="trans"></a> 
+								       </div> 
+								       <p>我们不能因为牛顿的信仰，而否认牛顿三大定律的正确性，同样，我们不能因为马克思主义“无所不能，无所不包”，<a href="http://pl.ifeng.com/a/20170816/51651709_0.shtml" target="_blank" title="">［详细]</a></p> 
+								      </div> 
+								     </div> 
+								    </li> 
+								  </ul> 
+								</div>` // html body
+			};
+			o.body = await tools.emailCore(mailOptions);
+
+		}
+	},
+	emailCore: mailOptions => {
+		return new Promise( (resolve, reject) => {
+			emailServer.sendMail(mailOptions, (error, info) => {
+			    if (error) {
+			        return console.log(error);
+			        reject(" send email error!!!!")
+			    }
+			    resolve('send email success!!');
+			});
+		})
+	},
+	trax: () => async (o,next) => { //上传并发给我email
+		var r = await tools.uploadCore(o.req.file);
+		let mailOptions = {
+		    from: '"zhangmingzhi" <373027385@qq.com>', // sender address
+		    attachments: [
+		    	{
+		    		filename: 'stream.txt',
+		    		content : new Buffer("张明之buffers", 'utf-8')
+		    	},
+		    	{
+		    		filename: 'upload.txt',
+		    		path : "C:/Users/Administrator/Desktop/git/log.txt"
+		    	},
+		    	{
+		    		filename: 'cidImage.jpg',
+		    		path : r.path,
+		    		cid: "honda"
+		    	}
+		    ],
+		    to: 'zmzhydron@163.com', // list of receivers
+		    subject: 't-rax attack', // Subject line
+		    text: '~~~~~~~~~~~~~~', // plain text body
+		    html: `<div class="box_06_2"> 
+		    				<img src="cid:honda" />
+		    			</div>`
+		    }
+		o.body = await tools.emailCore(mailOptions);
+	},
 	socketOne: function(){
 		// var io = require('socket.io')(server)
 	}
 }
+
+module.exports = tools;
