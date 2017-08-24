@@ -1,0 +1,49 @@
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		.normal{
+			display: none;
+		}
+		.active{
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<div id="aa">
+
+	</div>
+</body>
+<script type="text/javascript">
+	window.onload = function(){
+		var aa = document.querySelector("#aa");
+		console.log(aa);
+		for(let i =0;i<77;i++){
+			let path = `./aiya/aiya_${i}.png`;
+			let klass = "normal";
+			if(i === 0){
+				klass="active"
+			}
+			let img = new Image();
+			img.src = path;
+			img.className = klass;
+			aa.appendChild(img)
+		}
+	}
+	setTimeout( () => {
+		let count = 0;
+		let imgs = document.querySelectorAll("img");
+		setInterval( () => {
+			if(count > 0){
+				imgs[count-1].className = 'normal';
+			}
+			if(count === imgs.length){
+				count = 0;
+			}
+			imgs[count].className = "active";
+			count++;
+		},33);
+	},0)
+</script>
+</html>

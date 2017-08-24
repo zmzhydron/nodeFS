@@ -13,9 +13,11 @@ function gogo(){
 	var app = new koa();
 	var soc;
 	app.use(async (o, next) =>{
+		console.log("logingg")
+		// o.body = "hehe"
 		try{
-			o.io = soc; //bind socket to koa request instances
-			soc.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
+			// o.io = soc; //bind socket to koa request instances
+			// soc.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
 			await next();
 		}catch(err){
 			o.response.status = 500;

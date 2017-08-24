@@ -108,7 +108,6 @@ var tools = {
 	sendEmail: function(){
 		return async function(o,next){
 			let { title, content, to, } = o.request.body;
-			console.log(title, content, to)
 			let mailOptions = {
 			    from: '"zhangmingzhi" <373027385@qq.com>', // sender address
 			    attachments: [

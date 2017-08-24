@@ -1,19 +1,12 @@
 'use strict'
 var koa = require("koa")
 var http = require("http");
-var router = require("koa-router")()
-var koas = require("./koa-components/comp.js")
-var koatools = require("./koa-components/koa-tools.js")
-var multer = require("koa-multer")
 var path = require("path")
 var net = require('net')
 var fs = require("fs");
-var koabody = require("koa-body")
-var upload = multer({ dest: path.join(__dirname, "../shitbird")})
 var cluster = require("cluster")
 var os = require("os");
 var socketIO = require('socket.io');
-
 var koaSingle = require("./koa-thread.js");
 // var mongoApi = require("./db/mongoose.js")
 
@@ -50,11 +43,30 @@ if(cluster.isMaster){
 	// }
 	net.createServer({ pauseOnConnect: true }, conn => {
 		let workerID = convertip(conn.remoteAddress, os.cpus().length);
-		console.log(workerID, " koa.js: @@@@@@@@@@@@@  ")
+		// console.log(workerID, " koa.js: @@@@@@@@@@@@@  ")
 		cluster.workers[workerID].send("sticky-session", conn);
 	}).listen(8081)
 }else{
 	koaSingle();
+	/***********************************/
+
+	// var server = http.createServer( (req, res) => {
+	// 	res.write(`nihao :  ${ req.connection.remoteAddress}`)
+	// 	res.end();
+	// })
+	// server.listen(0);
+	// server.on("connection", req => {
+	// 	console.log(`server.on("connect", req => {`)
+	// })
+	// process.on('message', (msg, handler) => {
+	// 	console.log(msg, " $$$$$$$$$$$$$$$  ");
+	// 	if(msg === 'sticky-session'){
+	// 		server.emit("connection", handler);
+	// 	}
+	// })
+
+	/***********************************/
+
 	// var app = new koa();
 	// var soc;
 	// // 
