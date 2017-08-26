@@ -1,4 +1,4 @@
-1111//http://nodejs.cn/api/os.html
+hahahaha1111//http://nodejs.cn/api/os.html
 var os = require("os")
 var fs = require("fs")
 hehe
