@@ -1,7 +1,7 @@
 var fs = require("fs");
 var buf = new Buffer(1024);
 var path = require("path")
-// fuckyoutoo
+// fuckyoutoo ahah
 // fukcyou
 // fs.open('‪C:/Users/zmz/Desktop/particle.txt', 'r+', function(err, fd) {
 //    if (err) {
