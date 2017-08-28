@@ -2,7 +2,7 @@ var fs = require("fs");
 var buf = new Buffer(1024);
 var path = require("path")
 
-
+// fukcyou
 // fs.open('‪C:/Users/zmz/Desktop/particle.txt', 'r+', function(err, fd) {
 //    if (err) {
 //        return console.error(err);
