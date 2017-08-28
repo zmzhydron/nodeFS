@@ -5,14 +5,24 @@
   <title>Document</title>
   <style media="screen">
     img{
-      height: 100px;
-      width: 100px;
+      height: 200px;
+      width: 200px;
+    }
+    #hiddend{
+      display: block;
+      visibility: none;
+      position: absolute;
+      top: -1000px;
+      z-index: -10000;
+      width: auto;
+      height: auto;
     }
   </style>
 </head>
 <body>
   <img src="12-5.png"/>
   <input type="file" id='asdf' />
+  <canvas id="ca"></canvas>
 </body>
 <script src="jq.js" charset="utf-8"></script>
 <script type="text/javascript">
@@ -21,8 +31,48 @@
       var file = e.target.files[0];
       var bobo = new Blob([file], {type: "image/jpeg"});
       var bobourl = window.URL.createObjectURL(bobo);
-      $("body").append(`<img src=${bobourl} />`);
+      var img = new Image();
+      img.src = bobourl;
+      img.onload = function(){
+        //APPEND to canvas
+        // var hiddend = document.getElementById('hiddend');
+        var canvas = document.getElementById("ca");
+        img.id = "hiddend";
+        document.body.appendChild(img)
+        canvas.width = img.width;
+        canvas.height = img.height;
+        canvas.getContext("2d").drawImage(img,0,0,img.width,img.height)
+        var base64 = canvas.toDataURL(canvas,"image/png"); //转换为base64，用于blob创建
+        var parts = base64.split(';base64,');
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]) //解析base64回图片原始的代码
+        var uint8Array = new Uint8Array(raw.length); //得到原始代码的长度创建强类型的uintArray
+        for(let i = 0; i<raw.length;i++){
+          uint8Array[i] = raw.charCodeAt(i); //把源代码编译成uinitcode。
+        }
+        var blobs = new Blob([uint8Array],{type: contentType}); //创建blob
+        console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~`)
+        console.log(blobs)
+        var alink = document.createElement("a");
+        alink.href = URL.createObjectURL(blobs); //把blob转换成url字符串，用来指代blob资源；
+        alink.download ='fuckyou.png';
+        document.body.appendChild(alink);
+        alink.click();
+      }
+      // $("body").append(`<img id="hiddend" src=${bobourl} />`);
     })
+    let strs = "zhangmingzhi";
+    let strblob = new Blob([strs],{type: "text/plain"})
+    console.log(strblob);
+    let p = document.createElement("p");
+    var reader = new FileReader(); //blob 不能直接读取，需要使用FileReader实例来读取，这个读取操作是异步的，onload事件就是监听是否读取完成的事件
+    var blobsstr = reader.readAsText(strblob);
+    reader.onload = function(e){  
+      console.log(reader.result);
+      let r = reader.result;
+      p.innerHTML = r;
+    }
+    document.body.appendChild(p);
   }
 </script>
 </html>
