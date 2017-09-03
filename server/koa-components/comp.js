@@ -202,6 +202,22 @@ var tools = {
 
 		}
 	},
+	parseCookie: cookie => {
+		let obj = {};
+		if(!cookie){
+			return obj;
+		}
+		cookie.split(";").forEach( item => {
+			let pair = item.split("=");
+			obj[pair[0].trim()] = pair[1].trim();
+		})
+		return obj;
+	},
+	setCookie: (obj = {}) => {
+		return Object.keys(obj).map( item => {
+			return `${item}=${obj[item]}`
+		})
+	},
 	emailCore: mailOptions => {
 		return new Promise( (resolve, reject) => {
 			emailServer.sendMail(mailOptions, (error, info) => {

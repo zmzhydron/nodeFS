@@ -222,6 +222,28 @@ export default class App extends React.Component {
 			}
 		})
 	}
+	addCookies = () => {
+		$.ajax({
+			url: `api/addCookies?name=zmz&age=30`,
+			success: val =>{
+				console.log(val, 'addCookies')
+			},
+			error: val => {
+				console.log(val ," RR ERORR")
+			}
+		})
+	}
+	removeCookies = () => {
+		$.ajax({
+			url: `api/removeCookies?name=zmz&age=30`,
+			success: val =>{
+				console.log(val, 'removeCookies')
+			},
+			error: val => {
+				console.log(val ," RR ERORR")
+			}
+		})	
+	}
 	upload = e =>{
 		let forms = new FormData();
 		forms.append("fuckyoutoo", e.target.files[0]);
@@ -265,7 +287,10 @@ export default class App extends React.Component {
 					<button onClick={this.closePopup}>X</button>
 				</div>
 				<input type="file" onChange={this.upload}/>
-				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>
+				<h1>DB control panel <button onClick={this.testExtend}>test extends</button>
+					<button onClick={this.addCookies}>add Cookies</button>
+					<button onClick={this.removeCookies}>remove Cookies</button>
+				</h1>
 				<button onClick={this.download}>下载</button>
 				<button onClick={this.getCollections}>查询</button>
 				<button onClick={this.showADDCar}>显示添加</button>

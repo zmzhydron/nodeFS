@@ -21,7 +21,7 @@ function gogo(){
 			o.io = soc; //bind socket to koa request instances
 			soc.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
 			await next();
-			o.body.style = `talor`;
+			o.body.cok = koas.parseCookie(o.request.headers.cookie)
 			console.log("这菊花应该不会执行啦。")
 		}catch(err){
 			o.response.status = 500;
@@ -45,6 +45,26 @@ function gogo(){
 	router.get("/api/rr", async (o, next) =>{
 		o.pos = 'ride';
 		o.isrr = true;
+		await next();
+	})
+	router.get("/api/addCookies", async (o, next) =>{
+		o.response.set("Set-Cookie", koas.setCookie({
+			name:"zhangmingzhi",
+			age: 29,
+			sex: "male",
+			adds: "chengdushiyanshi",
+			isMarired: true,
+			son: "goudan"
+		}))
+		await next();
+	})
+	router.get("/api/removeCookies", async (o, next) =>{
+		let date = new Date();
+		date.setUTCFullYear(1111);
+		o.response.set("Set-Cookie", koas.setCookie({
+			Expires: date.toUTCString(),
+			['Max-Age']: -1
+		}))
 		await next();
 	})
 	router.get("/api/",koabody, async (o, next) =>{
