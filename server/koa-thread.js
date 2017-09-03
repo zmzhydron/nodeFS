@@ -8,17 +8,21 @@ var fs = require("fs");
 var koabody = require("koa-body")
 var upload = multer({ dest: path.join(__dirname, "../shitbird")})
 var socketIO = require('socket.io');
+var mongoApi = require("./db/mongoose.js")
 
 function gogo(){
 	var app = new koa();
 	var soc;
+	app.on("error", val => {
+		console.log(val, "APP 级别报错才会出现");
+	})
 	app.use(async (o, next) =>{
-		console.log("logingg")
-		// o.body = "hehe"
 		try{
-			// o.io = soc; //bind socket to koa request instances
-			// soc.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
+			o.io = soc; //bind socket to koa request instances
+			soc.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
 			await next();
+			o.body.style = `talor`;
+			console.log("这菊花应该不会执行啦。")
 		}catch(err){
 			o.response.status = 500;
 			o.body = {
@@ -32,6 +36,7 @@ function gogo(){
 		// throw new Error("去屎吧")
 		// o.throw(500, 'name required'); //也可以绕过第一个错误处理的方法；
 		console.log(o.query,o.querystring, o.request.body,"  queryyyyyyyyyyyyyyy ")
+
 		o.skill = o.request.body.skill || "sleep";
 		await next();
 	})
@@ -45,11 +50,12 @@ function gogo(){
 	router.get("/api/",koabody, async (o, next) =>{
 		o.pos = 'ride';
 		o.isrr = true;
-		console.log(o.query,o.querystring, o.request.body, o.body,"  ~~~~~~~~~~~~~~~~~~ ")
 		await next();
 	})
-	// router.get("/api/getCollections",mongoApi.getCollections())
-
+	router.get("/api/getCollections",mongoApi.querys())
+	router.post("/api/addCar",mongoApi.addCar())
+	router.post("/api/queryMycar",mongoApi.queryMycar())
+	router.post("/api/deleteCar",mongoApi.deleteCar())
 	router.get("/api/download",koas.download())
 	router.post("/api/getPhoto",koas.getPhoto())
 	router.post("/api/initPhotos",koas.initPhotos())
@@ -57,12 +63,14 @@ function gogo(){
 	router.post("/api/upload", upload.single("hehe"), koas.upload())
 	router.post("/api/trax", upload.single("hehe"), koas.trax())
 	app.use( async (o, next) =>{
+		console.log("2222")
 		if(o.isrr){
 			o.outfit = "nothing"	
 		}else{
 			o.outfit = 'black lace'
 		}
-		o.body = ` ^^kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`;
+		o.body = {name: ` ^^kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`}
+		// await next();
 	})
 	var server = app.listen(0);
 	var io = socketIO(server);

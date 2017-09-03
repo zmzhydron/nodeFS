@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<div id="a"></div>
+</body>
+<script type="text/javascript">
+const str = `如果 currentObserver 不为空，将 object + key -> currentObserver 的映射记录到 observers 对象中。同时为 currentObserver.observedKeys 添加当前的映射引用，当 unobserve 时，需要读取 observer.observedKeys 属性，将 observers 中所有此 observer 的依赖关系删除。
+
+最后，如果 get 取的值不是对象(typeof obj !== "object")，那么是基本类型，直接返回即可。如果是对象，那么：
+
+如果在 proxies 存在，直接返回 proxy 引用。eg： const name = obj.name，这时 name 变量也是一个代理，其依赖也可追踪。
+如果在 proxies 不存在，将这个对象重新按照如上流程处理一遍，这就是惰性代理，比如访问到 a.b.c，那么会分别将 a b c 各走一遍 get 处理，这样无论其中哪一环，都是代理对象，可追踪，相反，如果 a 对象还存在其他字段，因为没有被访问到，所以不会进行处理，其值也不是代理，因为没有访问的对象也没必要追踪。如果 currentObserver 不为空，将 object + key -> currentObserver 的映射记录到 observers 对象中。同时为 currentObserver.observedKeys 添加当前的映射引用，当 unobserve 时，需要读取 observer.observedKeys 属性，将 observers 中所有此 observer 的依赖关系删除。
+
+最后，如果 get 取的值不是对象(typeof obj !== "object")，那么是基本类型，直接返回即可。如果是对象，那么：
+
+如果在 proxies 存在，直接返回 proxy 引用。eg： const name = obj.name，这时 name 变量也是一个代理，其依赖也可追踪。
+如果在 proxies 不存在，将这个对象重新按照如上流程处理一遍，这就是惰性代理，比如访问到 a.b.c，那么会分别将 a b c 各走一遍 get 处理，这样无论其中哪一环，都是代理对象，可追踪，相反，如果 a 对象还存在其他字段，因为没有被访问到，所以不会进行处理，其值也不是代理，因为没有访问的对象也没必要追踪。
+如果 currentObserver 不为空，将 object + key -> currentObserver 的映射记录到 observers 对象中。同时为 currentObserver.observedKeys 添加当前的映射引用，当 unobserve 时，需要读取 observer.observedKeys 属性，将 observers 中所有此 observer 的依赖关系删除。
+
+最后，如果 get 取的值不是对象(typeof obj !== "object")，那么是基本类型，直接返回即可。如果是对象，那么：
+
+如果在 proxies 存在，直接返回 proxy 引用。eg： const name = obj.name，这时 name 变量也是一个代理，其依赖也可追踪。
+如果在 proxies 不存在，将这个对象重新按照如上流程处理一遍，这就是惰性代理，比如访问到 a.b.c，那么会分别将 a b c 各走一遍 get 处理，这样无论其中哪一环，都是代理对象，可追踪，相反，如果 a 对象还存在其他字段，因为没有被访问到，所以不会进行处理，其值也不是代理，因为没有访问的对象也没必要追踪。`
+window.onload = () => {
+	let ary = str.split("");
+	console.log(ary);
+	let diva = document.getElementById('a');
+	let getFirst = (num, speed) => {
+		return num > speed ? Math.floor(num / speed) : 0;
+	}
+	let render = (speed = 1000) => {
+		let count = 0;
+		let stock = {};
+		let core = () => {
+			count += 16;
+			let index = parseInt(getFirst(count, speed));
+			if(!stock[index]){
+				stock[index] = true;
+				if(ary[index]){
+					diva.innerHTML = diva.innerHTML + ary[index];
+					// diva.innerHTML = [...ary.slice(0,index)].join("")
+					window.requestAnimationFrame(core)
+				}
+			}
+		}
+		core();
+	}
+	render(15);
+}
+</script>
+</html>

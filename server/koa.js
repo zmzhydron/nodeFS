@@ -8,7 +8,6 @@ var cluster = require("cluster")
 var os = require("os");
 var socketIO = require('socket.io');
 var koaSingle = require("./koa-thread.js");
-// var mongoApi = require("./db/mongoose.js")
 
 function convertip(ip, len){
 	let ipstr = "";
@@ -47,31 +46,30 @@ if(cluster.isMaster){
 		cluster.workers[workerID].send("sticky-session", conn);
 	}).listen(8081)
 }else{
-	// koaSingle();
+	koaSingle();
 	/***********************************/
-	var server = http.createServer( (req, res) => {
-
-		res.write(`nihao :  ${ req.connection.remoteAddress}`)
-		res.end();
-	})
-	server.listen(0);
-	server.on("connection", req => {
-		req.on("data", chunk => {
-			console.log('收到数据***********: ', chunk.toString(), "****************")
-		})
-		console.log(`收到请求`)
-	})
-	// server.on("connect", (req, sock, head) => {
-	// 	console.log(`server.on("connect", (req, sock, head) => {`)
-	// 	// sock.write("connect received")
-	// 	// sock.end();
+	// var server = http.createServer( (req, res) => {
+	// 	res.write(`nihao :  ${ req.connection.remoteAddress}`)
+	// 	res.end();
 	// })
-	process.on('message', (msg, handler) => {
-		console.log(msg, " $$$$$$$$$$$$$$$  ");
-		if(msg === 'sticky-session'){
-			server.emit("connection", handler);
-		}
-	})
+	// server.listen(0);
+	// server.on("connection", req => {
+	// 	req.on("data", chunk => {
+	// 		console.log('收到数据***********: ', chunk.toString(), "****************")
+	// 	})
+	// 	console.log(`收到请求`)
+	// })
+	// // server.on("connect", (req, sock, head) => {
+	// // 	console.log(`server.on("connect", (req, sock, head) => {`)
+	// // 	// sock.write("connect received")
+	// // 	// sock.end();
+	// // })
+	// process.on('message', (msg, handler) => {
+	// 	console.log(msg, " $$$$$$$$$$$$$$$  ");
+	// 	if(msg === 'sticky-session'){
+	// 		server.emit("connection", handler);
+	// 	}
+	// })
 
 	/***********************************/
 }
