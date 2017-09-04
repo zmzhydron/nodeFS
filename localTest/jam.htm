@@ -1,0 +1,60 @@
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		#haha{
+			position: absolute;
+		}
+	</style>
+</head>
+<body>
+	<button id='bt'>haha</button>
+	<table id="haha">
+
+	</table>	
+</body>
+<script type="text/javascript">
+	window.onload = function(){
+		var startTime = new Date().valueOf();
+		let table = document.getElementById('haha');
+		for(let i = 0; i< 100; i++){
+			let tr = document.createElement("tr");
+			tr.id = `tr: ${i}`;
+			for(let j =0;j< 30;j++){
+				let td = document.createElement("td");
+				td.id = `tr: ${i} td: ${j}`;
+				td.innerHTML = `${i}:${j}`
+				tr.appendChild(td);
+			}
+			table.appendChild(tr)
+		}
+		setTimeout( () => {
+			console.log(`cost : ${ (new Date().valueOf() - startTime) }` )
+			let x, y = 0;
+			let core = function(){
+				x += 1;
+				x = x > 10000 ? 0 : y;
+				y += 1;
+				y = y > 10000 ? 0 : y;
+				table.style.left = x+"px"
+				table.style.top = y+"px";
+				Fibonacci(1000)
+				requestAnimationFrame(core)
+			}
+			window.requestAnimationFrame(core)
+		},0)
+	}
+	function Fibonacci(num){
+		let ary = [1,1];
+		function core(){
+			if(ary.length === num){
+				return ary;
+			}
+			ary = [...ary,ary.pop()+ary.pop(-2)]
+			return core();
+		}
+		return core();
+	}
+	// console.log(Fibonacci(10000))
+</script>
+</html>

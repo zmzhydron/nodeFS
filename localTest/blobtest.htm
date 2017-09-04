@@ -20,7 +20,7 @@
   </style>
 </head>
 <body>
-  <img src="12-5.png"/>
+  <img src="12-5.png" id='hehe'/>
   <input type="file" id='asdf' />
   <canvas id="ca"></canvas>
 </body>
@@ -38,12 +38,13 @@
         // var hiddend = document.getElementById('hiddend');
         var canvas = document.getElementById("ca");
         img.id = "hiddend";
+        var img2 = document.getElementById("hehe");
         document.body.appendChild(img)
         canvas.width = img.width;
         canvas.height = img.height;
-        canvas.getContext("2d").drawImage(img,0,0,img.width,img.height)
+        canvas.getContext("2d").drawImage(img2,0,0,img.width,img.height)
         var base64 = canvas.toDataURL(canvas,"image/png"); //转换为base64，用于blob创建
-        var parts = base64.split(';base64,');
+        var parts = base64.split(';base64,'); 
         var contentType = parts[0].split(':')[1];
         var raw = window.atob(parts[1]) //解析base64回图片原始的代码
         var uint8Array = new Uint8Array(raw.length); //得到原始代码的长度创建强类型的uintArray
