@@ -73,51 +73,10 @@ export default class App extends React.Component {
 	componentDidUpdate() {
 	}
 	getCollections = () => {
-		let tool = tools.tools;
-		let final = val => (resolve, reject) =>{
-			$.ajax({
-				url: `/api/${val}`,
-				type: 'post',
-				data: {
-					name: "zmz",
-				},
-				success: res => {
-					let { status, data, } = res
-					if(status === 'ok'){
-						resolve(data);
-					}else{
-						reject(res);
-					}
-					
-				}
-			})
-		}
-		function *gen(val){
-			// let cc = confirm("azmz");
-			// if(cc){
-			// 	console.log(cc)
-			// }else{
-			// 	console.log("aaa")
-			// 	// return Promise.resolve("false");
-			// 	return []
-			// }
-			var a = yield pro(val,one)
-			var b = yield pro(a,two)
-			var c = yield pro(b,final)
-		}
-		// tool.zoo(gen, 'zmz').then( val => {
-		// 	console.log(val)
-		// 	val = val ? val : [];
-		// 	this.setState({
-		// 		cars: val
-		// 	})
-		// }).catch( val => {
-		// 	console.log(` final value is ${val}`)
-		// })
 		$.ajax({
 			url: "api/getCollections",
 			success: (val) =>{
-				console.log(`>>>>`,val)
+				console.log(val)
 				if(val.errorCode){
 					this.setState({
 						cars: val.data
@@ -157,7 +116,7 @@ export default class App extends React.Component {
 			},
 			success: res =>  {
 				this.setState({
-					cars: res
+					cars: res.data
 				})
 			}
 		})
@@ -184,7 +143,7 @@ export default class App extends React.Component {
 			},
 			success: res =>  {
 				this.setState({
-					cars: res
+					cars: res.data
 				})
 			}
 		})
@@ -195,9 +154,8 @@ export default class App extends React.Component {
 			type: 'post',
 			data:{},
 			success: res =>  {
-				console.log(res);
 				this.setState({
-					cars: res
+					cars: res.data
 				})
 			}
 		})
@@ -216,7 +174,7 @@ export default class App extends React.Component {
 		)
 	}
 	renderCars = () => {
-		let { cars, showADDCar } = this.state;
+		let { cars = [], showADDCar } = this.state;
 		return cars.map((item, index) => {
 			let { _id, carName, fuelType, driveType, bhp, torque, gearbox, gearNumber, acceleration, door, price } = item;
 			return (
@@ -238,20 +196,20 @@ export default class App extends React.Component {
 		})
 	}
 	testExtend = () => {
-		$.ajax({
-			url: `api/hello?name=zmz&age=29`,
-			type: 'POST',
-			timeout: 0,
-			data: {
-				skill: `fullstackengineer`
-			},
-			success: val =>{
-				console.log(val)
-			},
-			error: val => {
-				console.log(val ," ERORR")
-			}
-		})
+		// $.ajax({
+		// 	url: `api/hello?name=zmz&age=29`,
+		// 	type: 'POST',
+		// 	timeout: 0,
+		// 	data: {
+		// 		skill: `fullstackengineer`
+		// 	},
+		// 	success: val =>{
+		// 		console.log(val)
+		// 	},
+		// 	error: val => {
+		// 		console.log(val ," ERORR")
+		// 	}
+		// })
 		$.ajax({
 			url: `api/rr?name=zmz&age=30`,
 			timeout: 600000,
@@ -263,6 +221,28 @@ export default class App extends React.Component {
 				console.log(val ," RR ERORR")
 			}
 		})
+	}
+	addCookies = () => {
+		$.ajax({
+			url: `api/addCookies?name=zmz&age=30`,
+			success: val =>{
+				console.log(val, 'addCookies')
+			},
+			error: val => {
+				console.log(val ," RR ERORR")
+			}
+		})
+	}
+	removeCookies = () => {
+		$.ajax({
+			url: `api/removeCookies?name=zmz&age=30`,
+			success: val =>{
+				console.log(val, 'removeCookies')
+			},
+			error: val => {
+				console.log(val ," RR ERORR")
+			}
+		})	
 	}
 	upload = e =>{
 		let forms = new FormData();
@@ -279,92 +259,6 @@ export default class App extends React.Component {
 				console.log(val, `by uploading this <thing>		</thing>`)
 			}
 		})
-	}
-	download = e => {
-		let downloadF = $("#downloadF")[0];
-		if(downloadF){
-
-		}else{
-			$("body").append(`<form action="/api/download?age=29" id="downloadF">
-				<input type="hidden" value="zhangmingzhi" name="name"/>
-			</form> `)
-		}
-		downloadF = $("#downloadF")[0]
-		downloadF.submit();
-		console.log(downloadF);
-	}
-	getPhoto = e => {
-		this.setState({
-			photoBtnDisable: "disabled"
-		})
-		let { photoStartIndex = 0, photolist = [] } = this.state;
-		$.ajax({
-			url: "/api/getPhoto",
-			type: 'post',
-			data: {
-				start: photoStartIndex,
-				limit: 5,
-			},
-			success: (val) =>{
-				let { list, total, morePhoto = 0 } = val;
-				morePhoto = parseInt(morePhoto);
-				console.log(val)
-				if(list.length){
-					this.setState({
-						photoBtnDisable: "",
-						photolist: [...photolist, ...list],
-						photoStartIndex: photoStartIndex + 5 > total ? photoStartIndex + (total - photoStartIndex) : photoStartIndex + 5,
-					})
-				}
-			}
-		})
-	}
-	renderPhotos = () => {
-		let { photolist = [] } = this.state;
-		return photolist.map( (item, index) => {
-			let { resizeSrc, originSrc, infos = {}, } = item;
-			let { name = "" } = infos;
-			resizeSrc = resizeSrc.replace(/\\/g,"/");
-			let imgStyle = this.resizeImage(infos, resizeSrc, 200);
-			let { width, height } = imgStyle;
-			imgStyle = { width, height, }
-			return (
-				<div className="singleImg" onClick={this.popPhoto(item)} key={index}>
-					<div className="singleImgDis">
-						<img style={imgStyle} src={resizeSrc} />
-					</div>
-					<div className="singleImgName">{name}</div>
-				</div>
-			)
-		})
-	}
-	popPhoto = obj => e => { 
-		let { resizeSrc, originSrc: src, infos: { width, height, }, infos,  } = obj;
-		console.log(obj, " ************  ")
-		src = src.replace(/\\/g,"/");
-		this.setState({
-			popShow: true,
-			popSrc: src,
-			imgInfos: infos
-		})
-	}
-	inferno = () => {
-		setInterval( () => {
-			$.ajax({
-				url: `api/hello?name=zmz&age=29`,
-				type: 'POST',
-				timeout: 0,
-				data: {
-					skill: `fullstackengineer`
-				},
-				success: val =>{
-					console.log(val)
-				},
-				error: val => {
-					console.log(val ," ERORR")
-				}
-			})
-		},10);
 	}
 	closePopup = e => {
 		this.setState({
@@ -393,14 +287,13 @@ export default class App extends React.Component {
 					<button onClick={this.closePopup}>X</button>
 				</div>
 				<input type="file" onChange={this.upload}/>
-				<h1>DB control panel <button onClick={this.testExtend}>test extends</button></h1>
-				<button disabled={photoBtnDisable} onClick={this.getPhoto}>getPhoto</button>
+				<h1>DB control panel <button onClick={this.testExtend}>test extends</button>
+					<button onClick={this.addCookies}>add Cookies</button>
+					<button onClick={this.removeCookies}>remove Cookies</button>
+				</h1>
 				<button onClick={this.download}>下载</button>
 				<button onClick={this.getCollections}>查询</button>
 				<button onClick={this.showADDCar}>显示添加</button>
-				<div className="photowall">
-					{this.renderPhotos()}
-				</div>
 				<div style={{ display: showADDCar ? "block" : "none" }}>
 					<h2>自定义添加</h2>
 					<div>

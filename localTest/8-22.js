@@ -93,14 +93,12 @@ abcd[2] = {
 	name: "purr"
 }
 abcd.splice(0,1,"fuckyou");
-console.log(abcd)
 
 function convertUrl(url){
 	console.log(url," $$$$$$ ")
 	return url.replace(/\\/g,"@")
 }
 var rela = path.relative("C:\\Users\\zmz\\Desktop\\W\\C09\\src\\components\\Content\\CreateCase\\CaseTable.jsx", "C:\\Users\\zmz\\Desktop\\W\\C09\\src\\redux\\CreatCase\\CaseAnimation\\CaseAnimation.actions.jsx")
-console.log(rela)
 function aaaa(a){
 	a = {
 		skill: "Code"
@@ -119,12 +117,14 @@ function pro1(){
 }
 function pro2(){
 	return new Promise( (resolve, reject) => {
-		try{
-			console.log(zmz)
-		}catch(e){
-			console.log("promise handle errors")
-			reject(e)
-		}
+		resolve("fuckyou")
+		// console.log(znmz)
+		// try{
+		// 	console.log(zmz)
+		// }catch(e){
+		// 	console.log("promise handle errors")
+		// 	reject(e.message)
+		// }
 	})
 }
 function pro3(){
@@ -135,46 +135,75 @@ function pro3(){
 }
 async function hehe(name){
 	var r;
-	try{
-		r = await pro1();	
+	// try{
+	// 	console.log('aa')
+	// 	r = await pro1();	
+	// 	r = await pro2();	
+	// 	r = await pro3();	
+	// 	console.log("bb");
+	// }catch(e){
+	// 	console.log("async catch route")
+	// 	r = e;
+	// }
+	r = await pro1();	
+	if(r === 'zmz'){
 		r = await pro2();	
 		r = await pro3();	
-	}catch(e){
-		console.log("async catch route")
-		r = e;
 	}
-	// r = await pro1();	
-	// r = await pro2();	
-	// r = await pro3();	
+
 	return r;
 }
 
-hehe("zhangmingzhi").then( val => {
-	console.log(val, "$$$$$$$$$$$$$$")
-	aaaa(obja);
-	console.log(obja)
-}).catch( val => {
-	console.log(val, " ~~~~~~~~~~~~ ")
-})
+// hehe("zhangmingzhi").then( val => {
+// 	console.log(val, "$$$$$$$$$$$$$$")
+// 	// aaaa(obja);
+// 	console.log(obja)
+// }).catch( val => {
+// 	console.log(val, " ~~~~~~~~~~~~ ")
+// })
 
-setTimeout(function() {
-  console.log(1)
-}, 0);
-new Promise(function executor(resolve) {
-  console.log(2);
-  for( var i=0 ; i<10000 ; i++ ) {
-    i == 9999 && resolve();
-  }
-  console.log(3);
-}).then(function() {
-  console.log(4);
-});
-console.log(5);
-
-for (var i = 0; i < 5; i++) {
-	+function(i){
-		setTimeout(function() {
-		  console.log(i);
-		}, 1000 * i);
-	}(i)
+async function mymy(){
+	// var r =  await mmaa();
+	var r = "shit man "
+	console.log(r, " ***********************  ");
+	// return r;
 }
+console.log(mymy(), " ~~~~~~~~~~~~ ")
+function mmaa(){
+	return new Promise( (resolve, reject) => {
+		console.log("hello: ")
+		setTimeout( () => {
+			resolve('new york')
+		},1000)
+	})
+}
+function resolves(){
+	return Promise.resolve(mymy());
+}
+async function momo(){
+	return await resolves();
+}
+momo().then( val => {
+	console.log(val, "  $$$$$$$$$$$$$$$$$$  ")
+})
+// setTimeout(function() {
+//   console.log(1)
+// }, 0);
+// new Promise(function executor(resolve) {
+//   console.log(2);
+//   for( var i=0 ; i<10000 ; i++ ) {
+//     i == 9999 && resolve();
+//   }
+//   console.log(3);
+// }).then(function() {
+//   console.log(4);
+// });
+// console.log(5);
+
+// for (var i = 0; i < 5; i++) {
+// 	+function(i){
+// 		setTimeout(function() {
+// 		  console.log(i);
+// 		}, 1000 * i);
+// 	}(i)
+// }

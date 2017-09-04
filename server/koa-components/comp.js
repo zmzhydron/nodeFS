@@ -5,6 +5,57 @@ var nodemailer = require("nodemailer")
 var photoprocess;
 var infoProcess;
 
+
+/*
+	KOA compose 组件，用于把多个middleware组合成一个middleware数组来使用
+	E.G.
+	const all = compose([ONE , TWO , THREE]);
+	app.use(all);
+	ONE TWO THREE 是3个无关的middleware，但是可以顺序执行;
+*/
+/**
+ * Compose `middleware` returning
+ * a fully valid middleware comprised
+ * of all those which are passed.
+ *
+ * @param {Array} middleware
+ * @return {Function}
+ * @api public
+ */
+
+function compose (middleware) {
+  if (!Array.isArray(middleware)) throw new TypeError('Middleware stack must be an array!')
+  for (const fn of middleware) {
+    if (typeof fn !== 'function') throw new TypeError('Middleware must be composed of functions!')
+  }
+
+  /**
+   * @param {Object} context
+   * @return {Promise}
+   * @api public
+   */
+
+  return function (context, next) {
+    // last called middleware #
+    let index = -1
+    return dispatch(0)
+    function dispatch (i) {
+      if (i <= index) return Promise.reject(new Error('next() called multiple times'))
+      index = i
+      let fn = middleware[i]
+      if (i === middleware.length) fn = next
+      if (!fn) return Promise.resolve()
+      try {
+        return Promise.resolve(fn(context, function next () {
+          return dispatch(i + 1)
+        }))
+      } catch (err) {
+        return Promise.reject(err)
+      }
+    }
+  }
+}
+
 let emailServer = nodemailer.createTransport({
     host: 'smtp.qq.com',
     port: 465,
@@ -16,6 +67,7 @@ let emailServer = nodemailer.createTransport({
 });
 
 var tools = {
+	compose: compose,
 	lusting: (o, next) => {
 		console.log(o)
 		o.body = "fucking nice yeah!!!"
@@ -150,6 +202,22 @@ var tools = {
 
 		}
 	},
+	parseCookie: cookie => {
+		let obj = {};
+		if(!cookie){
+			return obj;
+		}
+		cookie.split(";").forEach( item => {
+			let pair = item.split("=");
+			obj[pair[0].trim()] = pair[1].trim();
+		})
+		return obj;
+	},
+	setCookie: (obj = {}) => {
+		return Object.keys(obj).map( item => {
+			return `${item}=${obj[item]}`
+		})
+	},
 	emailCore: mailOptions => {
 		return new Promise( (resolve, reject) => {
 			emailServer.sendMail(mailOptions, (error, info) => {
@@ -191,7 +259,8 @@ var tools = {
 	},
 	socketOne: function(){
 		// var io = require('socket.io')(server)
-	}
+	},
+
 }
 
 module.exports = tools;
