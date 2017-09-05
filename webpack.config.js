@@ -13,7 +13,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery"
-    }),
+    })
     new webpack.DllReferencePlugin({
       context: __dirname,
       manifest: require('./manifest.json'),
@@ -21,7 +21,8 @@ module.exports = {
     // new webpack.optimize.UglifyJsPlugin() //部署才用，作用是最小化文件，开发情况下会增加打包时间
   ],
   externals: {
-    'react': 'window.React'
+    'react': 'window.React',
+    'react-dom' : 'window.ReactDOM'
   },
   module: {
     rules: [
