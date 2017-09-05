@@ -215,7 +215,7 @@ var tools = {
 	},
 	setCookie: (obj = {}) => {
 		return Object.keys(obj).map( item => {
-			return `${item}=${obj[item]}`
+			return `${item}=${obj[item]};`
 		})
 	},
 	emailCore: mailOptions => {

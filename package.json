@@ -7,12 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "asd": "webpack-dev-server --port 3000 --hot",
     "build": "webpack",
-    "start": "node ./webpack/config"
+    "start": "node ./webpackcfg/config"
   },
   "config": {
-    "devHost": "localhost",
-    "devPort": 3002,
-    "devProxy": "localhost:8080"
+    "devHost": "127.0.0.1",
+    "devPort": 8080,
+    "devProxy": "localhost:8081"
   },
   "repository": {
     "type": "git",
@@ -43,12 +43,14 @@
     "koa-compose": "^4.0.0",
     "koa-multer": "^1.0.1",
     "koa-router": "^7.2.1",
+    "koa-static": "^4.0.1",
     "lodash": "^4.17.3",
     "mongodb": "^2.2.27",
     "mongoose": "^4.10.5",
     "multer": "^1.3.0",
     "multiparty": "^4.1.3",
     "node-sass": "^4.4.0",
+    "nodemailer": "^4.1.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
     "react-redux": "^5.0.1",

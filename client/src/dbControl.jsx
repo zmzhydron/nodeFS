@@ -212,6 +212,9 @@ export default class App extends React.Component {
 		// })
 		$.ajax({
 			url: `api/rr?name=zmz&age=30`,
+			xhrFields: {
+			   withCredentials: true
+			},
 			timeout: 600000,
 			async: true,
 			success: val =>{
@@ -225,6 +228,9 @@ export default class App extends React.Component {
 	addCookies = () => {
 		$.ajax({
 			url: `api/addCookies?name=zmz&age=30`,
+			xhrFields: {
+			   withCredentials: true
+			},
 			success: val =>{
 				console.log(val, 'addCookies')
 			},
@@ -236,6 +242,9 @@ export default class App extends React.Component {
 	removeCookies = () => {
 		$.ajax({
 			url: `api/removeCookies?name=zmz&age=30`,
+			xhrFields: {
+			   withCredentials: true
+			},
 			success: val =>{
 				console.log(val, 'removeCookies')
 			},
@@ -289,7 +298,7 @@ export default class App extends React.Component {
 				<input type="file" onChange={this.upload}/>
 				<h1>DB control panel <button onClick={this.testExtend}>test extends</button>
 					<button onClick={this.addCookies}>add Cookies</button>
-					<button onClick={this.removeCookies}>remove Cookies</button>
+					<button onClick={this.removeCookies}>remove Cookies1</button>
 				</h1>
 				<button onClick={this.download}>下载</button>
 				<button onClick={this.getCollections}>查询</button>

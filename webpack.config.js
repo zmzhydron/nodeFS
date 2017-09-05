@@ -1,31 +1,46 @@
 var path = require("path")
-var webpack = require("webpack")
-var ExtractTextPlugin = require("extract-text-webpack-plugin")
+var webpack = require("webpack");
 module.exports = {
-  entry: path.resolve(__dirname,"./hehe/zmz.js"),
-  output: {
-    path: path.resolve(__dirname, "./haha"),
-    filename: "haha.js"
+  entry: {
+    index: path.resolve(__dirname,"./client/app.jsx"),
   },
-  // plugins : [
-  //   new webpack.ProvidePlugin({
-  //     $: "jquery",
-  //     jQuery: "jquery"
-  //   }),
-  //   new webpack.optimize.UglifyJsPlugin({
-  //     compress: {
-  //       warnings: false
-  //     }
-  //   })
-  // ],
+  output: {
+    path: path.resolve(__dirname, "./client"),
+    filename: "zmz1.js"
+  },
+  plugins : [
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery"
+    })
+    new webpack.DllReferencePlugin({
+      context: __dirname,
+      manifest: require('./manifest.json'),
+    }),
+    new webpack.optimize.UglifyJsPlugin() //部署才用，作用是最小化文件，开发情况下会增加打包时间
+  ],
+  externals: {
+    'react': 'window.React'
+  },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        loader: 'babel-loader',
         exclude: /node_modules/,
-        query: {
-            presets: ['react','es2015','stage-0']
+        use: {
+          loader: 'babel-loader',  
+          query: {
+              presets: ['react','es2015','stage-0'],
+              "plugins": [[
+                "transform-runtime",
+                {
+                  "helpers": false,
+                  "polyfill": false,
+                  "regenerator": true,
+                  "moduleName": "babel-runtime"
+                }
+              ]]
+          }
         }
       },
       {
@@ -36,6 +51,6 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['','.coffee','.js']
+    extensions: ['.coffee','.js','.jsx']
   }
 }
