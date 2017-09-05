@@ -61,7 +61,7 @@ import Accident from "./carAccident.jsx"
 				<div className = {klassdbb}>
 					<DbControl {...this.props}/>
 				</div>
-				<PhotoWall />
+				{/*<PhotoWall />*/}
 			</div>
 		)
 	}

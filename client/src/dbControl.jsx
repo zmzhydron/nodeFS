@@ -269,6 +269,12 @@ export default class App extends React.Component {
 		let { width, height, } = infos;
 		let w = width >= height ? max : (width / height * max);
 		let h = width >= height ? (height / width * max) : max;
+
+		// var img = new Image();
+		// img.src=src;
+		// img.onload=() => {
+		// 	console.log("~~~~~~~~~~~~")
+		// }
 		return {
 			backgroundImage: `url(${src})`,
 			height: Math.floor(h),

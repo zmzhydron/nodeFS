@@ -3,7 +3,7 @@ var WebpackDevServer = require('webpack-dev-server');
 var pkg = require('../package.json');
 var peizhi = require("./peizhi");
 
-var url = "webpack-dev-server/client?http://localhost:3002" //gongsi
+var url = "webpack-dev-server/client?http://127.0.0.1" //gongsi
 // var url = "webpack-dev-server/client?http://localhost:3000" //jia
 // var temp = "webpack-dev-server/client?http://192.168.2.91:3000/"
 
@@ -22,7 +22,7 @@ var server = new WebpackDevServer(webpack(peizhi),{
 });
 var port = pkg.config.devPort;
 var host = pkg.config.devHost;
-server.listen(port, host, function(err){
+server.listen(port, function(err){
 	if(err){
 		console.log("~error~");
 	}

@@ -1,0 +1,32 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/api/addCookies?name=zmz&age=30",
+    "header": {
+      "host": "127.0.0.1:8081",
+      "connection": "keep-alive",
+      "pragma": "no-cache",
+      "cache-control": "no-cache",
+      "accept": "*/*",
+      "x-requested-with": "XMLHttpRequest",
+      "user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36",
+      "referer": "http://127.0.0.1:8081/app.htm",
+      "accept-encoding": "gzip, deflate, br",
+      "accept-language": "zh-CN,zh;q=0.8,en;q=0.6"
+    }
+  },
+  "response": {
+    "status": 404,
+    "message": "Not Found",
+    "header": {}
+  },
+  "app": {
+    "subdomainOffset": 2,
+    "proxy": false,
+    "env": "development"
+  },
+  "originalUrl": "/api/addCookies?name=zmz&age=30",
+  "req": "<original node req>",
+  "res": "<original node res>",
+  "socket": "<original node socket>"
+}

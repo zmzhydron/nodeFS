@@ -49,7 +49,7 @@ export default class App extends React.Component{
 				<h1>this is control panel</h1>
 				<div className="serverBar">
 					<input ref="pathInputBox" onBlur={this.changePath}/>
-					<button id="fuckyoubutton" onClick={this.trigger}>click me!</button>
+					<button id="fuckyoubutton" onClick={this.trigger}>click me!111</button>
 				</div>
 			</div>
 		)
