@@ -282,9 +282,7 @@ export default class App extends React.Component {
 		}
 	}
 	render() {
-		// this.inferno();
 		let { showADDCar, photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {} } = this.state;
-		// photoBtnDisable = '';
 		let popStyle = this.resizeImage(imgInfos,popSrc, 650);
 		popStyle = {...popStyle, marginLeft: -(popStyle.width / 2), marginTop: -(popStyle.height / 2) }
 		return (

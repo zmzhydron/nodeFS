@@ -7,6 +7,7 @@ import React from "react"
 // import $ from "jquery"
 export default class App extends React.Component{
 	constructor(props){
+		debugger;
 		super();
 		let { actions: { requestRoot }, currentPath } = props;
 		requestRoot({
@@ -26,10 +27,11 @@ export default class App extends React.Component{
 
 	}
 	componentDidMount(){
-		this.refs.pathInputBox.value = this.props.currentPath;
+		this.refs.pathInputBoxs.value = this.props.currentPath;
 	}
 	componentDidUpdate(){
-		this.refs.pathInputBox.value = this.props.currentPath;	
+		this.refs.pathInputBoxs.value = this.props.currentPath;	
+
 	}
 	changePath = e => {
 		let ele = e.target,
@@ -46,9 +48,9 @@ export default class App extends React.Component{
 	render(){
 		return (
 			<div>
-				<h1>this is control panel</h1>
+				<h1>this is cont222rol panel111</h1>
 				<div className="serverBar">
-					<input ref="pathInputBox" onBlur={this.changePath}/>
+					<input ref="pathInputBoxs" onBlur={this.changePath}/>
 					<button id="fuckyoubutton" onClick={this.trigger}>click me!111</button>
 				</div>
 			</div>

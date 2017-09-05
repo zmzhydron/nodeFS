@@ -8,6 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, "./client"),
     filename: "zmz1.js"
   },
+  devtool: 'eval-source-map',
   plugins : [
     new webpack.ProvidePlugin({
       $: "jquery",
