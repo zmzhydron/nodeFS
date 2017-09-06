@@ -4,6 +4,7 @@
 	
 */
 import React from "react"
+import { fadeIn } from 'react-animations'
 // import $ from "jquery"
 export default class App extends React.Component{
 	constructor(props){
@@ -46,10 +47,14 @@ export default class App extends React.Component{
 		});
 	}
 	render(){
+		console.log(fadeIn, " fadeIn ");
+		console.log(tools.hi(), " ~~~~~~~~~~~!!");
 		return (
 			<div>
-				<h1>this is cont222rol panel111</h1>
+				<h1>this is controlaaaaaaaa</h1>
 				<div className="serverBar">
+					<span>222222222222222</span>
+					<img src="./pus/1.png" alt="" />
 					<input ref="pathInputBoxs" onBlur={this.changePath}/>
 					<button id="fuckyoubutton" onClick={this.trigger}>click me!111</button>
 				</div>

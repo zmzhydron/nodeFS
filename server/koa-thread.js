@@ -16,7 +16,7 @@ function gogo(){
 	app.on("error", val => {
 		console.log(val, "APP 级别报错才会出现");
 	})
-	app.use(koaStatic(path.resolve(__dirname,"../client/")))
+	app.use(koaStatic(path.resolve(__dirname,"../build")))
 	// app.use(koaStatic('.'))
 	app.use(async (o, next) =>{
 		try{

@@ -51,15 +51,17 @@ import Accident from "./carAccident.jsx"
 				// <button id="dbtest" onClick={this.dbswitch}>db开关</button>
 		return (
 			<div>
+			<ControlBar {...indexProps} actions = {actions}/>
+			<DbControl {...this.props}/>
 				<div className = {klassdba}>
 					{/*<Chat {...indexProps} />*/}
 					{/*<Player {...indexProps} />*/}
-					<ControlBar {...indexProps} actions = {actions}/>
+					
 					{/*<Accident {...indexProps} actions = {actions}/>*/}
 					{/*<TableList {...this.props}/>*/}
 				</div>
 				<div className = {klassdbb}>
-					<DbControl {...this.props}/>
+					
 				</div>
 				{/*<PhotoWall />*/}
 			</div>

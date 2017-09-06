@@ -12,7 +12,7 @@ const vendors = [
 module.exports = {
     output: {
         //把公共库集中打包后存放的地址
-        path: path.resolve(__dirname,"./client/vendors"),
+        path: path.resolve(__dirname,"./build/vendors"),
         //打包文件名称
         filename: 'vendors.js',
         //

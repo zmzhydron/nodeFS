@@ -39,7 +39,7 @@ let two = store => next => action =>{
 }
 let middlewares = [start, one, two];
 const createStoreWithMidderware = applyMiddleware(ReduxThunk, ...middlewares)(createStore);
-
+console.log(tools.hi())
 let store = createStoreWithMidderware(reducers)
 
 ReactDom.render(
