@@ -7,8 +7,7 @@ import React from "react"
 // import $ from "jquery"
 export default class App extends React.Component{
 	constructor(props){
-		debugger;
-		super();
+		super(props);
 		let { actions: { requestRoot }, currentPath } = props;
 		requestRoot({
 			path: currentPath
@@ -46,6 +45,11 @@ export default class App extends React.Component{
 		});
 	}
 	render(){
+		//DLL 55b412957cbadfdd6684
+		//DLL 55b412957cbadfdd6684
+				//55b412957cbadfdd6684
+		console.log("~~!!~!!!")
+		console.log("~~!!~!!!")
 		return (
 			<div>
 				<h1>this is cont222rol panel111</h1>
