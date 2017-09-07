@@ -3,16 +3,17 @@
     "method": "GET",
     "url": "/api/addCookies?name=zmz&age=30",
     "header": {
-      "host": "127.0.0.1:8081",
-      "connection": "keep-alive",
-      "pragma": "no-cache",
-      "cache-control": "no-cache",
+      "host": "www.zzhangmingzhimba.com:8081",
+      "user-agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.86 Safari/537.36",
       "accept": "*/*",
-      "x-requested-with": "XMLHttpRequest",
-      "user-agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36",
-      "referer": "http://127.0.0.1:8081/app.htm",
-      "accept-encoding": "gzip, deflate, br",
-      "accept-language": "zh-CN,zh;q=0.8,en;q=0.6"
+      "accept-encoding": "gzip, deflate",
+      "accept-language": "en-US,zh-CN;q=0.8,zh;q=0.6,en;q=0.4",
+      "cache-control": "no-cache",
+      "cookie": "name=zhangmingzhi; age=29; sex=male; adds=chengdushiyanshi; isMarired=true; son=goudan; expires=Wed, 05 Sep 2018 07:36:08 GMT; domain=null; path=/; Expires=Wed, 05 Sep 2018 07:53:54 GMT; Domain=\"\"; Son=goudan; Path=/; Max-Age=36000000",
+      "pragma": "no-cache",
+      "proxy-connection": "keep-alive",
+      "referer": "http://www.zzhangmingzhimba.com:8081/app.htm",
+      "x-requested-with": "XMLHttpRequest"
     }
   },
   "response": {

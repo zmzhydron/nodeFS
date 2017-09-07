@@ -1,19 +1,30 @@
 var path = require("path")
 var webpack = require("webpack");
+var CopyWebpackPlugin = require("copy-webpack-plugin")
 module.exports = {
   entry: {
     index: path.resolve(__dirname,"./client/app.jsx"),
   },
   output: {
-    path: path.resolve(__dirname, "./client"),
-    filename: "zmz1.js"
+    path: path.resolve(__dirname, "./build"),
+    filename: "zmz1.js",
+    // publicPath: "http://www.zzhangmingzhimba.com:8081/"
+    publicPath: "http://127.0.0.1:8081/"
   },
-  devtool: 'eval-source-map',
+  // devtool: 'eval-source-map',
   plugins : [
+    new CopyWebpackPlugin([
+      {
+        from: path.join(__dirname, "./client/src/rawSrc"),
+        to: path.join(__dirname, "./build/src/rawSrc")
+      },
+    ]),
     new webpack.ProvidePlugin({
       $: "jquery",
-      jQuery: "jquery"
+      jQuery: "jquery",
+      tools: "tools"
     }),
+
     new webpack.DllReferencePlugin({
       context: __dirname,
       manifest: require('./manifest.json'),
@@ -22,7 +33,8 @@ module.exports = {
   ],
   externals: {
     'react': 'window.React',
-    'react-dom' : 'window.ReactDOM'
+    'react-dom' : 'window.ReactDOM',
+    // "tools": "window.tools"
   },
   module: {
     rules: [
@@ -51,13 +63,25 @@ module.exports = {
         loader: "style-loader!css-loader!sass-loader"
       },
       {
-        test: /\.png|\.jpg?$/,
+        test: /\.(jpg|png)$/,
         exclude: /node_modules/,
-        loader: "url-loader"
+        loader: "url-loader?limit=1&name=imgs/[hash:5].[name].[ext]"
       }
+      // {
+      //   test: /\.png|\.jpg?$/,
+      //   exclude: /node_modules/,
+      //   loader: "file-loader?name=imgs/[name]-[hash].[ext]",
+      //   // query: {
+      //   //   name: "./imgs/[name].[ext]"
+      //   // }
+      // }
     ]
   },
   resolve: {
-    extensions: [".jsx",'.js','.coffee']
+    extensions: [".jsx",'.js','.coffee'],
+    alias: {
+      tools$: path.resolve(__dirname, "./client/src/tools/tools.js"),
+      // imgs: path.resolve(__dirname, "./build/imgs"),
+    }
   }
 }

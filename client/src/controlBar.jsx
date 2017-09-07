@@ -4,7 +4,8 @@
 	
 */
 import React from "react"
-// import $ from "jquery"
+import { fadeIn } from 'react-animations'
+import src1 from "./imgs/1.png"
 export default class App extends React.Component{
 	constructor(props){
 		super(props);
@@ -45,15 +46,14 @@ export default class App extends React.Component{
 		});
 	}
 	render(){
-		//DLL 55b412957cbadfdd6684
-		//DLL 55b412957cbadfdd6684
-				//55b412957cbadfdd6684
-		console.log("~~!!~!!!")
-		console.log("~~!!~!!!")
+		console.log(fadeIn, " fadeIn ");
+		console.log(tools.hi(), " ~~~~~~~~~~~!!");
 		return (
 			<div>
-				<h1>this is cont222rol panel111</h1>
+				<h1>this is controlaaaaaaaa</h1>
 				<div className="serverBar">
+					<span>~~~~~~~~~~~~~~~~</span>
+					<img src={src1} alt="1111111111" />
 					<input ref="pathInputBoxs" onBlur={this.changePath}/>
 					<button id="fuckyoubutton" onClick={this.trigger}>click me!111</button>
 				</div>
