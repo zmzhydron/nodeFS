@@ -3,25 +3,32 @@ var webpack = require("webpack");
 var CopyWebpackPlugin = require("copy-webpack-plugin")
 module.exports = {
   entry: {
-    index: path.resolve(__dirname,"./client/app.jsx"),
+    zmz1: path.resolve(__dirname,"./client/app.jsx"),
+    pussy: path.resolve(__dirname,"./client/webpack1.js"),
+    fuck: path.resolve(__dirname,"./client/webpack2.js"),
   },
   output: {
     path: path.resolve(__dirname, "./build"),
-    filename: "zmz1.js",
+    filename: "[name].js",
     // publicPath: "http://www.zzhangmingzhimba.com:8081/"
     publicPath: "http://127.0.0.1:8081/"
   },
   // devtool: 'eval-source-map',
   plugins : [
+    //拷贝打包目录下的文件、文件夹到指定的输出
     new CopyWebpackPlugin([
       {
-        from: path.join(__dirname, "./client/src/rawSrc"),
+        from: path.join(__dirname, "./client/src/rawSrc"), 
         to: path.join(__dirname, "./build/src/rawSrc")
       },
+      {
+        from: path.join(__dirname, "./node_modules/_jquery@3.2.1@jquery/dist/jquery.min.js"),
+        to: path.join(__dirname, "./build/src/rawSrc/jquery.min.js")
+      }
     ]),
     new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery",
+      // $: "jquery",
+      // jQuery: "jquery",
       tools: "tools"
     }),
 
@@ -34,6 +41,8 @@ module.exports = {
   externals: {
     'react': 'window.React',
     'react-dom' : 'window.ReactDOM',
+    'jquery' : 'jQuery',
+    'jquery' : '$',
     // "tools": "window.tools"
   },
   module: {
@@ -65,7 +74,7 @@ module.exports = {
       {
         test: /\.(jpg|png)$/,
         exclude: /node_modules/,
-        loader: "url-loader?limit=1&name=imgs/[hash:5].[name].[ext]"
+        loader: "url-loader?limit=1&nameimgs/[hash:5].[name].[ext]"
       }
       // {
       //   test: /\.png|\.jpg?$/,

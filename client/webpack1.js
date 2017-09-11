@@ -1,0 +1,5 @@
+var react = require('react')
+console.log(` start of webpack1.js console `)
+console.log("$")
+console.log(tools)
+console.log(` end of webpack1.js console `)
