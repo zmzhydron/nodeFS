@@ -141,12 +141,14 @@ function request2(list){
 						fs.mkdirSync(dist)
 						//获取单个文章中的全部主要图片；
 						console.log(`开始下载 ${title}`)
-				  	var imgs = Array.from($("img")).filter( item => {
+				  	var imgs = Array.from($("img"))
+				  	.filter( item => {
 				  		let attrs = item.attribs;
 				  		if(attrs.zoomfile && attrs.file){
 				  			return attrs.file;
 				  		}
-				  	}).map( (item,index) => {
+				  	})
+				  	.map( (item,index) => {
 				  		return dowmloadImage(`https://www.chiphell.com/${item.attribs.file}`,`${dist}/${index}.jpg`)
 				  	})
 				  	//单个文章图片全部完成时候输入log
