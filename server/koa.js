@@ -46,37 +46,37 @@ if(cluster.isMaster){
 		cluster.workers[workerID].send("sticky-session", conn);
 	}).listen(8081)
 }else{
-	// koaSingle();
+	koaSingle();
 	/***********************************/
-	var server = http.createServer( (req, res) => {
-		fs.writeFile("../1234.json", JSON.stringify(req.headers,null,2), err => {
-			if(err){
-				console.log(err,`~~~~~~~~~~~`)
-			}else{
-				res.write(`nihao! :  ${ req.connection.remoteAddress}`)
-				res.end();
-			}
-		})
+	// var server = http.createServer( (req, res) => {
+	// 	fs.writeFile("../1234.json", JSON.stringify(req.headers,null,2), err => {
+	// 		if(err){
+	// 			console.log(err,`~~~~~~~~~~~`)
+	// 		}else{
+	// 			res.write(`nihao! :  ${ req.connection.remoteAddress}`)
+	// 			res.end();
+	// 		}
+	// 	})
 
-	})
-	server.listen(0);
-	server.on("connection", req => {
-		req.on("data", chunk => {
-			console.log('收到数据***********: ', chunk.toString(), "****************")
-		})
-		console.log(`收到请求`)
-	})
-	// server.on("connect", (req, sock, head) => {
-	// 	console.log(`server.on("connect", (req, sock, head) => {`)
-	// 	// sock.write("connect received")
-	// 	// sock.end();
 	// })
-	process.on('message', (msg, handler) => {
-		console.log(msg, " $$$$$$$$$$$$$$$  ");
-		if(msg === 'sticky-session'){
-			server.emit("connection", handler);
-		}
-	})
+	// server.listen(0);
+	// server.on("connection", req => {
+	// 	req.on("data", chunk => {
+	// 		console.log('收到数据***********: ', chunk.toString(), "****************")
+	// 	})
+	// 	console.log(`收到请求`)
+	// })
+	// // server.on("connect", (req, sock, head) => {
+	// // 	console.log(`server.on("connect", (req, sock, head) => {`)
+	// // 	// sock.write("connect received")
+	// // 	// sock.end();
+	// // })
+	// process.on('message', (msg, handler) => {
+	// 	console.log(msg, " $$$$$$$$$$$$$$$  ");
+	// 	if(msg === 'sticky-session'){
+	// 		server.emit("connection", handler);
+	// 	}
+	// })
 
 	/***********************************/
 }

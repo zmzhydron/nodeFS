@@ -196,20 +196,20 @@ export default class App extends React.Component {
 		})
 	}
 	testExtend = () => {
-		// $.ajax({
-		// 	url: `api/hello?name=zmz&age=29`,
-		// 	type: 'POST',
-		// 	timeout: 0,
-		// 	data: {
-		// 		skill: `fullstackengineer`
-		// 	},
-		// 	success: val =>{
-		// 		console.log(val)
-		// 	},
-		// 	error: val => {
-		// 		console.log(val ," ERORR")
-		// 	}
-		// })
+		$.ajax({
+			url: `api/hello?name=zmz&age=29`,
+			type: 'POST',
+			timeout: 0,
+			data: {
+				skill: `fullstackengineer`
+			},
+			success: val =>{
+				console.log(val)
+			},
+			error: val => {
+				console.log(val ," ERORR")
+			}
+		})
 		$.ajax({
 			url: `api/rr?name=zmz&age=30`,
 			timeout: 600000,

@@ -10,7 +10,6 @@ var koabody = require("koa-body")
 var upload = multer({ dest: path.join(__dirname, "../shitbird")})
 var socketIO = require('socket.io');
 // var mongoApi = require("./db/mongoose.js")
-console.log(__dirname, " ****************************** ")
 function gogo(){
 	var app = new koa();
 	var soc;
