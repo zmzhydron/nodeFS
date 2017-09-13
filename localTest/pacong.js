@@ -24,20 +24,24 @@ var os = require("os")
 // console.log(bf1);
 // console.log(iconv.decode(bf1, "utf8")) 
 
-if(cluster.isMaster){
-	os.cpus().forEach( (item, index) => {
-		cluster.fork()
-	})
-	cluster.on("listening", (worker, address) => {
-		console.log('listening: worker ' + worker.process.pid +', port: '+address.port);
-	})
-	cluster.on("exit", (worker, code, signal) => {
-		setTimeout( () => {
-			console.log(`worker : ${worker.process.id} 重启`)
-			worker.fork();
-		},1000);
-	})
-}else{
+const prechunk = 5;
+let maxLinks = 200;
+let links = 0;
+
+// if(cluster.isMaster){
+// 	os.cpus().forEach( (item, index) => {
+// 		cluster.fork()
+// 	})
+// 	cluster.on("listening", (worker, address) => {
+// 		console.log('listening: worker ' + worker.process.pid +', port: '+address.port);
+// 	})
+// 	cluster.on("exit", (worker, code, signal) => {
+// 		setTimeout( () => {
+// 			console.log(`worker : ${worker.process.id} 重启`)
+// 			worker.fork();
+// 		},1000);
+// 	})
+// }else{
 	if(!fs.existsSync("./errorlog.json")){
 		fs.writeFileSync('./errorlog.json',"")
 	}
@@ -49,7 +53,14 @@ if(cluster.isMaster){
 	if(!fs.existsSync(cfg)){
 		fs.writeFileSync(cfg,"");
 	}
-
+	var error2 = path.resolve(rootPath, "./error2.json");
+	if(!fs.existsSync(error2)){
+		fs.writeFileSync(error2,"");
+	}
+	var error1 = path.resolve(rootPath, "./error1.json");
+	if(!fs.existsSync(error1)){
+		fs.writeFileSync(error1,"");
+	}
 	var totoalSize = 0;
 	//过滤名称中的非法字符串，避免创建失败
 	function filterDist(str){
@@ -90,17 +101,17 @@ if(cluster.isMaster){
 			.on('response', res => {
 				if(res.statusCode == 200){
 					totoalSize += parseInt(res.headers['content-length'])
-					console.log(`下载图片${url}开始`)
+					// console.log(`下载图片${url}开始`)
 				}
 			})
 			.on('end', val => {
-				console.log(`${url}完成`)
+				// console.log(`${url}完成`)
 				errorCount = 0;
 				resolve("ok");
 			})
 			.on('error', val => {
 				console.log(`下载${url}失败`)
-				fs.appendFileSync("./zmz1.json", url+";")
+				fs.appendFileSync(error, `${val}@${url};`)
 				errorCount++;
 				core(url, dist, resolve, reject)
 			})
@@ -137,10 +148,17 @@ if(cluster.isMaster){
 		}
 		return new Promise( (resolve, reject) => {
 			request(options, function (error, response, body) {
-			  if (!error && response.statusCode == 200 || response.statusCode == 302) {
-			  	// let str = iconv.decode(body,"utf8")
-			  	resolve(callback(response, body, cheerio.load(body, {decodeEntities: false})));	
-			  }
+				if(!response){
+					console.log(error)
+					fs.appendFileSync(error2, error+"@"+url+";")
+					resolve("0")
+				}else{
+					if (!error && response.statusCode == 200 || response.statusCode == 302) {
+						// let str = iconv.decode(body,"utf8")
+						resolve(callback(response, body, cheerio.load(body, {decodeEntities: false})));	
+					}
+				}
+
 			})
 		})
 	}
@@ -148,6 +166,7 @@ if(cluster.isMaster){
 	function request1(url){
 		return new Promise( (resolve, reject) => {
 			requestCore(url).then( val => {
+
 				let [ response, body, $,] = val;
 				var articles = Array.from($("a"))
 				.filter((item, index) => {
@@ -157,64 +176,83 @@ if(cluster.isMaster){
 					}
 				})
 				.map( item => `https://www.chiphell.com/${item.attribs.href}`);
-				resolve(articles = [...new Set(articles)]);
+				articles = [...new Set(articles)]
+				var lists = [];
+				var count = 0;
+				var chunk = articles.slice(count*prechunk, (count+1)*prechunk)
+				while(chunk.length){
+					lists.push(chunk)
+					count++;
+					chunk = articles.slice(count*prechunk, (count+1)*prechunk)
+				}
+				resolve(lists);
 			})
 		})
 	}
 
 	//get article infomations;
 	function request2(list){
-		function donwloadSigle(url){
-			return new Promise((resolve, reject) => {
-				let key = url.split(".com/")[1];
-				if(oldList.includes(key)){
-					console.log(`${key} 已经存在, 快读！！！！`)
-					resolve(`已经存在`)
-				}else{
-					requestCore(url).then( val => {
-						let [ response, body, $,] = val;
-						let title = filterDist($("#thread_subject").html());
-						if(!title){
-							resolve(`${url} 读取 title失败`)
-							fs.appendFileSync("./errorlog.json", url+"@"+$("#thread_subject")+";")
-							return;
-						}
-						//在window系统中如果路径含有特殊字符则会创建失败
-						let dist = path.resolve(rootPath, `./${title}`);
-						if(!fs.existsSync(dist)){
-							fs.mkdirSync(dist)
-							//获取单个文章中的全部主要图片；
-							console.log(`开始下载 ${title}`)
-					  	var imgs = Array.from($("img"))
-					  	.filter( item => {
-					  		let attrs = item.attribs;
-					  		if(attrs.zoomfile && attrs.file){
-					  			return attrs.file;
-					  		}
-					  	})
-					  	.map( (item,index) => {
-					  		return dowmloadImage(`https://www.chiphell.com/${item.attribs.file}`,`${dist}/${index}.jpg`)
-					  	})
-					  	//单个文章图片全部完成时候输入log
-					  	Promise.all(imgs).then( val => {
-					  		console.log(`${title} 图片全部下载完成, 写入cfg`)
-					  		fs.appendFileSync(cfg,`${key}:`)
-					  		resolve("ok2")
-					  	})
-						}else{
-							fs.appendFileSync(cfg,`${key}:`)
-							console.log(`${title}已经存在, 写入cfg`)
-							resolve(`${title}已经存在`)
-						}
-					})
-				}
-
-			}) 
+		function donwloadChunk(chunk){
+			function single(url){
+				return new Promise((resolve, reject) => {
+					let key = url.split(".com/")[1];
+					if(oldList.includes(key)){
+						console.log(`${key} 已经存在, 快读！！！！`)
+						resolve(`已经存在`)
+					}else{
+						requestCore(url).then( val => {
+							if(val == "0"){
+								resolve("0")
+								return
+							}
+							let [ response, body, $,] = val;
+							let title = filterDist($("#thread_subject").html());
+							if(!title){
+								resolve(`${url} 读取 title失败`)
+								fs.appendFileSync("./errorlog.json", url+"@"+$("#thread_subject")+";")
+								return;
+							}
+							//在window系统中如果路径含有特殊字符则会创建失败
+							let dist = path.resolve(rootPath, `./${title}`);
+							if(!fs.existsSync(dist)){
+								fs.mkdirSync(dist)
+								//获取单个文章中的全部主要图片；
+								console.log(`开始下载 ${title}`)
+						  	var imgs = Array.from($("img"))
+						  	.filter( item => {
+						  		let attrs = item.attribs;
+						  		if(attrs.zoomfile && attrs.file){
+						  			return attrs.file;
+						  		}
+						  	})
+						  	.map( (item,index) => {
+						  		return dowmloadImage(`https://www.chiphell.com/${item.attribs.file}`,`${dist}/${index}.jpg`)
+						  	})
+						  	//单个文章图片全部完成时候输入log
+						  	Promise.all(imgs).then( val => {
+						  		console.log(`${title} 图片全部下载完成, 写入cfg`)
+						  		fs.appendFileSync(cfg,`${key}:`)
+						  		resolve("ok2")
+						  	})
+							}else{
+								fs.appendFileSync(cfg,`${key}:`)
+								console.log(`${title}已经存在, 写入cfg`)
+								resolve(`${title}已经存在`)
+							}
+						})
+					}
+				}) 
+			}
+			let chunkPromise = chunk.map( item => {
+				return single(item);
+			});
+			return Promise.all(chunkPromise);
 		}
 		return new Promise( (resolve, reject) => {
+
 			async function core(list){
 				for(let i = 0; i<list.length; i++){
-					await donwloadSigle(list[i])
+					await donwloadChunk(list[i])
 				}
 			}
 			core(list).then( val => {
@@ -263,7 +301,7 @@ if(cluster.isMaster){
 		// 	.pipe(fs.createWriteStream('./../../1.jpg'))
 		// }
 		// aaa();
-}
+// }
 
 
 
