@@ -10,7 +10,8 @@ var os = require("os")
 var events = require('events')
 var eventEmitter = new events.EventEmitter()
 
-const prechunk = 100;
+const prechunk = 100; //最大并发下载数
+const preart = 5; //最大文章读取数
 
 // if(cluster.isMaster){
 // 	os.cpus().forEach( (item, index) => {
@@ -72,9 +73,21 @@ const prechunk = 100;
 			  // 'Proxy-Connection': `keep-alive`,
 			  // 'Upgrade-Insecure-Requests': 1
 			}
+	//把一个数组拆分成小块数组
+	function sliceToChunk(list, chunknum){
+		var chunkList = [];
+		var count = 0;
+		var chunk = list.slice(count*chunknum, (count+1)*chunknum)
+		while(chunk.length){
+			chunkList.push(chunk)
+			count++;
+			chunk = list.slice(count*chunknum, (count+1)*chunknum)
+		}
+		return chunkList;
+	}
 	function dowmloadImage(url, dist){
 		var errorCount = 0;
-		function requestCore(url,dist, resolve, reject, hashKey){
+		function core(url,dist, resolve, reject, hashKey){
 			request.get(url)
 			.on('response', res => {
 				if(res.statusCode == 200){
@@ -94,7 +107,7 @@ const prechunk = 100;
 			.pipe(fs.createWriteStream(dist))
 		}
 		return new Promise( (resolve, reject) => {
-			requestCore(url, dist, resolve, reject)
+			core(url, dist, resolve, reject)
 		})
 	}
 	function requestCore(url,callback = (...val) => val){
@@ -112,9 +125,12 @@ const prechunk = 100;
 					fs.appendFileSync(error2, error+"@"+url+";")
 					resolve("0")
 				}else{
-					if (!error && response.statusCode == 200 || response.statusCode == 302) {
+					if (!error && (response.statusCode == 200 || response.statusCode == 302)) {
 						// let str = iconv.decode(body,"utf8")
 						resolve(callback(response, body, cheerio.load(body, {decodeEntities: false})));	
+					}else{
+						console.log('error: ', error, response.statusCode)
+						resolve("0")
 					}
 				}
 			})
@@ -141,24 +157,35 @@ const prechunk = 100;
 
 
 	function makeImages(articles){
-		let articlesPro = articles.map( (item, index) => {
-			return new Promise((resolve, reject) => {
-				let key = item.split(".com/")[1];
-				if(oldList.includes(key)){
-					console.log(`############ ${key} 已经存在, 快读！！！！`)
-					resolve([])
-				}else{
-					requestCore(item).then( val => {
-						if(val == "0"){
-							console.log(" 。。。。。。。。。。。  ")
-							resolve([])
-						}else{
+		async function processChunk(articles){
+			let chunkList = sliceToChunk(articles, preart);
+			let rlist = [];
+			for(let i = 0;i <chunkList.length; i++){
+					let r = await core(chunkList[i]);
+					rlist = [...rlist, ...r];
+
+			}
+			return rlist;
+		}
+		function core(articles){
+			let articlesPro = articles.map( (item, index) => {
+				return new Promise((resolve, reject) => {
+					let key = item.split(".com/")[1];
+					if(oldList.includes(key)){
+						console.log(`############ ${key} 已经存在, 快读！！！！`)
+						resolve([])
+					}else{
+						requestCore(item).then( val => {
+							if(val == "0"){
+								resolve([])
+								return;
+							}
 							let [ response, body, $,] = val;
 							let title = filterDist($("#thread_subject").html());
 							if(!title){
 								resolve([])
 								console.log("解析title失败!!!", item)
-								fs.appendFileSync(errorlog, url+"@"+$("#thread_subject")+";")
+								fs.appendFileSync(errorlog, item+"@"+$("#thread_subject")+";")
 								return;
 							}
 							//在window系统中如果路径含有特殊字符则会创建失败
@@ -187,12 +214,13 @@ const prechunk = 100;
 								console.log(`----------------- ${title}已经存在, 写入cfg`)
 								resolve([])
 							}
-						}
-					})
-				}
+						})
+					}
+				})
 			})
-		})
-		return Promise.all(articlesPro)
+			return Promise.all(articlesPro)
+		}
+		return processChunk(articles);
 	}
 
 	function donwloadChunk(chunkimgs){
@@ -204,34 +232,24 @@ const prechunk = 100;
 	}
 	//get all img infomations;
 	function request2(imglist){
-		var chunkList = [];
-		var count = 0;
-		var chunk = imglist.slice(count*prechunk, (count+1)*prechunk)
-		while(chunk.length){
-			chunkList.push(chunk)
-			count++;
-			chunk = imglist.slice(count*prechunk, (count+1)*prechunk)
-		}
-		return new Promise( (resolve, reject) => {
-			async function core(chunkList){
-				for(let i = 0; i<chunkList.length; i++){
-					await donwloadChunk(chunkList[i])
-				}
+		let chunkList = sliceToChunk(imglist, prechunk)
+		async function core(chunkList){
+			for(let i = 0; i<chunkList.length; i++){
+				await donwloadChunk(chunkList[i])
 			}
-			core(chunkList).then( val => {
-				resolve("全部完成！！");
-			})
-		})
+			return "request2 完成";
+		}
+		return core(chunkList)
 	}
 	async function crawlCHH(){
 		var start = new Date().valueOf();
 		var articles = await request1(`https://www.chiphell.com`);
-		articles = [...articles.slice(0,40)];
-		var imgchunks = await makeImages(articles)
-		console.log("~~~~~~~~~~~~~~~~~~")
-		var imgs = imgchunks.reduce( (a,b) =>{ return [...a,...b] },[])
-		console.log(imgs, " ~~~~~~~~~~~~~~~ ");
-		var r = await request2(imgs);
+		// articles = [...articles.slice(0,40)];
+		// console.log(articles)
+		var imglist = await makeImages(articles)
+		imglist = imglist.reduce( (a, b) => [...a, ...b], [])
+		console.log('~~~~~~~~~~~~~~~~~~');
+		var r = await request2(imglist);
 		console.log("爬虫用时: ", new Date().valueOf() - start);
 		return r;
 	}
