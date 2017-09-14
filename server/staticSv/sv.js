@@ -60,6 +60,4 @@ app.use(koabody())
 app.use(proxy({
 	proxUrl: '127.0.0.1:8081'
 }))
-
-
 var server = app.listen(8888);
