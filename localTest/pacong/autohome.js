@@ -7,6 +7,7 @@ var spa = require("superagent")
 var cheerio = require("cheerio")
 var cluster = require("cluster")
 var os = require("os")
+var util = require("util")
 var events = require('events')
 var eventEmitter = new events.EventEmitter()
 
@@ -14,8 +15,11 @@ const prechunk = 100; //最大并发下载数
 const preart = 5; //最大文章读取数
 
 
-console.log(__dirname, " )))))))))))) ")
-console.log(path.relative(__dirname,path.resolve(__dirname, "../../client/src")), " )))))))))))) ")
+const interest = ["宝马M", "AMG", "法拉利", "911", "阿斯顿", "奥迪RS", "兰博基尼", "宾利"];
+const keyinterest = ["媳妇", "女友", "闺蜜", "性感", "黑丝", "肉丝"];
+
+// console.log(__dirname, " )))))))))))) ")
+// console.log(path.relative(__dirname,path.resolve(__dirname, "../../client/src")), " )))))))))))) ")
 
 // if(cluster.isMaster){
 // 	os.cpus().forEach( (item, index) => {
@@ -49,6 +53,10 @@ console.log(path.relative(__dirname,path.resolve(__dirname, "../../client/src"))
 		fs.writeFileSync(error1,"");
 	}
 	var errorlog = path.resolve(rootPath, "./errorTITLE.json");
+	if(!fs.existsSync(errorlog)){
+		fs.writeFileSync(errorlog,"")
+	}
+	var domLog = path.resolve(rootPath, "./domLog.json");
 	if(!fs.existsSync(errorlog)){
 		fs.writeFileSync(errorlog,"")
 	}
@@ -116,7 +124,7 @@ console.log(path.relative(__dirname,path.resolve(__dirname, "../../client/src"))
 	}
 	function requestCore(url,callback = (...val) => val){
 		var options = {
-			// encoding: null,
+			encoding: null,
 			url: url,
 			gzip: true,
 			// jar: j,
@@ -130,8 +138,9 @@ console.log(path.relative(__dirname,path.resolve(__dirname, "../../client/src"))
 					resolve("0")
 				}else{
 					if (!error && (response.statusCode == 200 || response.statusCode == 302)) {
-						// let str = iconv.decode(body,"utf8")
-						resolve(callback(response, body, cheerio.load(body, {decodeEntities: false})));	
+						let str = iconv.decode(body,"gb2312")
+						// fs.writeFileSync(domLog, util.inspect(str));
+						resolve(callback(response, str, cheerio.load(str, { decodeEntities : false})));	
 					}else{
 						console.log('error: ', error, response.statusCode)
 						resolve("0")
@@ -145,21 +154,53 @@ console.log(path.relative(__dirname,path.resolve(__dirname, "../../client/src"))
 		return new Promise( (resolve, reject) => {
 			requestCore(url).then( val => {
 				let [ response, body, $,] = val;
-				var articles = Array.from($("a"))
+				var forms = Array.from($(".forum-list02 a"))
 				.filter((item, index) => {
 					let { attribs: attrs, parent, } = item;
-					if(/^article-/.test(attrs.href) && parent.attribs.class === 'm'){
-						return true;
+					if(index === 0){
+						// console.log(item.attribs.title);
 					}
+					// console.log(item.attribs.title);
+					return interest.filter( asdf => item.attribs.title.includes(asdf)).length;
 				})
-				.map( item => `https://www.chiphell.com/${item.attribs.href}`);
-				articles = [...new Set(articles)]
-				resolve(articles);
+				.map( item => {
+					return {
+						url: `http://club.autohome.com.cn${item.attribs.href}`,
+						title: item.attribs.title
+					}
+				});
+				forms = [...new Set(forms)]
+				resolve(forms);
 			})
 		})
 	}
+ 	//解析每个论坛的帖子，并创建这个论坛的文件夹
+	function parseForms(obj){
+		//创建文件夹
+		let { url, title } = obj;
+		let dir = path.resolve(rootPath, `./${title}`);
+		console.log(dir, fs.existsSync(dir))
+		if(!fs.existsSync(dir)){
+			fs.mkdirSync(dir);
+		}
+		return new Promise( (resolve, reject) => {
+			requestCore(url).then( val => {
+				let [ response, body, $,] = val;
+				console.log(body)
+				fs.writeFileSync(domLog, body);
+				let jinghua = Array.from($(".icon_jing"));
+				// console.log(jinghua)
+				jinghua.filter( (item, index) => {
+					if(index === 0){
+						console.log(item.parent, " (((((((((((((((((")
+					}
+				})
+				.map( (item, index) => {
 
-
+				})
+			})	
+		})
+	}
 	function makeImages(articles){
 		async function processChunk(articles){
 			let chunkList = sliceToChunk(articles, preart);
@@ -247,19 +288,21 @@ console.log(path.relative(__dirname,path.resolve(__dirname, "../../client/src"))
 	}
 	async function crawlCHH(){
 		var start = new Date().valueOf();
-		var articles = await request1(`https://www.chiphell.com`);
+		var forms = await request1(`http://club.autohome.com.cn/`);
+		var subject = await parseForms(forms[1]);
 		// articles = [...articles.slice(0,40)];
 		// console.log(articles)
-		var imglist = await makeImages(articles)
-		imglist = imglist.reduce( (a, b) => [...a, ...b], [])
-		console.log('~~~~~~~~~~~~~~~~~~');
-		var r = await request2(imglist);
-		console.log("爬虫用时: ", new Date().valueOf() - start);
-		return r;
+		// var imglist = await makeImages(articles)
+		// imglist = imglist.reduce( (a, b) => [...a, ...b], [])
+		// console.log('~~~~~~~~~~~~~~~~~~');
+		// var r = await request2(imglist);
+		// console.log("爬虫用时: ", new Date().valueOf() - start);
+		// return r;
+		return subject
 	}
-	// crawlCHH().then( val => {
-	// 	let totoal = totoalSize / 1000 * 1000;
-	// 	console.log(`*(************${val}*****************`, totoal, totoalSize)
-	// })
+	crawlCHH().then( val => {
+		let totoal = totoalSize / 1000 * 1000;
+		console.log(val[1])
+		console.log(`*(************${val}*****************`, totoal, totoalSize)
+	})
 // }
-
