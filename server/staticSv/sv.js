@@ -9,8 +9,8 @@ var util = require("util")
 var koabody = require("koa-body")
 
 var app = new koa()
-app.use(koaStatic(path.resolve(__dirname, '../../build/')))
 
+// app.use(koaStatic(path.resolve(__dirname, '../../build/')))
 
 function proxy(obj){
 	let { proxUrl, } = obj;
@@ -57,7 +57,10 @@ function proxy(obj){
 	}
 }
 app.use(koabody())
-app.use(proxy({
+/*app.use(proxy({
 	proxUrl: '127.0.0.1:8081'
-}))
+}))*/
+app.use( async (o,next) => {
+	o.body = "this is from proxy server 8888";
+})
 var server = app.listen(8888);

@@ -11,7 +11,8 @@ module.exports = {
     path: path.resolve(__dirname, "./build"),
     filename: "[name].js",
     // publicPath: "http://www.zzhangmingzhimba.com:8081/"
-    publicPath: "http://127.0.0.1:8081/"
+    // publicPath: "http://localhost:8081/"
+    publicPath: "./"
   },
   // devtool: 'eval-source-map',
   plugins : [

@@ -57,7 +57,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "http://127.0.0.1:8081/";
+/******/ 	__webpack_require__.p = "./";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 8);
@@ -4545,7 +4545,7 @@ var App = function (_React$Component) {
 
 		_this.testExtend = function () {
 			$.ajax({
-				url: 'api/hello?name=zmz&age=29',
+				url: 'fuckoff/hello?name=zmz&age=29',
 				type: 'POST',
 				timeout: 0,
 				data: {

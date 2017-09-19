@@ -16,7 +16,8 @@ function gogo(){
 	app.on("error", val => {
 		console.log(val, "APP 级别报错才会出现");
 	})
-	app.use(koaStatic(path.resolve(__dirname,"../build")))
+	//使用nginx调用静态文件;
+	// app.use(koaStatic(path.resolve(__dirname,"../build")))
 	// app.use(koaStatic('.'))
 	app.use(async (o, next) =>{
 		try{

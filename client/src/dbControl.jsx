@@ -197,7 +197,7 @@ export default class App extends React.Component {
 	}
 	testExtend = () => {
 		$.ajax({
-			url: `api/hello?name=zmz&age=29`,
+			url: `fuckoff/hello?name=zmz&age=29`,
 			type: 'POST',
 			timeout: 0,
 			data: {
