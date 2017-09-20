@@ -13,6 +13,7 @@ var eventEmitter = new events.EventEmitter()
 
 const prechunk = 100; //最大并发下载数
 const preart = 5; //最大文章读取数
+const maxDrill = 5; //最大每个论坛往下查找5页
 
 
 const interest = ["宝马M", "AMG", "法拉利", "911", "阿斯顿", "奥迪RS", "兰博基尼", "宾利"];
@@ -35,6 +36,8 @@ const keyinterest = ["媳妇", "女友", "闺蜜", "性感", "黑丝", "肉丝"]
 // 		},1000);
 // 	})
 // }else{
+
+	const ROOTURL = 'http://club.autohome.com.cn';
 
 	var rootPath = path.resolve(__dirname,`./../../../autohome`)
 	if(!fs.existsSync(rootPath)){
@@ -149,8 +152,8 @@ const keyinterest = ["媳妇", "女友", "闺蜜", "性感", "黑丝", "肉丝"]
 			})
 		})
 	}
-	//get chiphell
-	function request1(url){
+	//get forms
+	function getEveryForms(url){
 		return new Promise( (resolve, reject) => {
 			requestCore(url).then( val => {
 				let [ response, body, $,] = val;
@@ -179,25 +182,43 @@ const keyinterest = ["媳妇", "女友", "闺蜜", "性感", "黑丝", "肉丝"]
 		//创建文件夹
 		let { url, title } = obj;
 		let dir = path.resolve(rootPath, `./${title}`);
-		console.log(dir, fs.existsSync(dir))
 		if(!fs.existsSync(dir)){
 			fs.mkdirSync(dir);
 		}
 		return new Promise( (resolve, reject) => {
 			requestCore(url).then( val => {
 				let [ response, body, $,] = val;
-				console.log(body)
-				fs.writeFileSync(domLog, body);
-				let jinghua = Array.from($(".icon_jing"));
-				// console.log(jinghua)
-				jinghua.filter( (item, index) => {
-					if(index === 0){
-						console.log(item.parent, " (((((((((((((((((")
+				let topics = Array.from($(".a_topic"))
+				.filter( (i,j) => {
+					let lang = i.parent.parent.attribs.lang;
+					if(lang){
+						lang = lang.split("|");
+						return lang[7] == "3" && lang[9] == "1";
+					}else{
+						return false;
 					}
 				})
-				.map( (item, index) => {
+				.map( (i,j) => {
+					let topicName = filterDist(i.children[0].data.trim());
+					if(!topicName){
+						return false;
+					}
+					let topicSrc = ROOTURL+i.attribs.href;
+					let donwloadSrc = path.resolve(dir,`./${topicName}`);
 
+					if(j === 0){
+						if(!fs.existsSync(donwloadSrc)){
+							fs.mkdirSync(donwloadSrc)
+						}
+					}
+					return {
+						donwloadSrc,
+						topicName,
+						topicSrc
+					}
 				})
+				fs.writeFileSync(domLog, util.inspect(topics));
+				resolve(topics);
 			})	
 		})
 	}
@@ -267,7 +288,6 @@ const keyinterest = ["媳妇", "女友", "闺蜜", "性感", "黑丝", "肉丝"]
 		}
 		return processChunk(articles);
 	}
-
 	function donwloadChunk(chunkimgs){
 		let imgPromise = chunkimgs.map( (item, index) => {
 			let { url, dist } = item;
@@ -288,8 +308,24 @@ const keyinterest = ["媳妇", "女友", "闺蜜", "性感", "黑丝", "肉丝"]
 	}
 	async function crawlCHH(){
 		var start = new Date().valueOf();
-		var forms = await request1(`http://club.autohome.com.cn/`);
-		var subject = await parseForms(forms[1]);
+		var forms = await getEveryForms(ROOTURL);
+		//每个论坛往下查找5页
+		var allforms = [];
+		forms.forEach( (item, index) => {
+			let e = /-\d+\.html/;
+			let { url, title, } = item;
+			let count = 1;
+			while(count < (maxDrill + 1)){
+				url = url.replace(e, `-${count}.html`);
+				count++;
+				allforms.push({
+					url,
+					title,
+				})
+			}
+		})
+		console.log(allforms)
+		var topics = await parseForms(allforms[4]);
 		// articles = [...articles.slice(0,40)];
 		// console.log(articles)
 		// var imglist = await makeImages(articles)
@@ -298,11 +334,11 @@ const keyinterest = ["媳妇", "女友", "闺蜜", "性感", "黑丝", "肉丝"]
 		// var r = await request2(imglist);
 		// console.log("爬虫用时: ", new Date().valueOf() - start);
 		// return r;
-		return subject
+		return topics
 	}
 	crawlCHH().then( val => {
 		let totoal = totoalSize / 1000 * 1000;
-		console.log(val[1])
-		console.log(`*(************${val}*****************`, totoal, totoalSize)
+		console.log(val.length)
+		// console.log(`*(************${val}*****************`, totoal, totoalSize)
 	})
 // }
