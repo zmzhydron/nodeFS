@@ -2,6 +2,7 @@ var path = require("path")
 var fs = require("fs")
 var childProcess = require("child_process")
 var nodemailer = require("nodemailer")
+var authomepacong = require("../../localtest/pacong/autohome.js")
 var photoprocess;
 var infoProcess;
 
@@ -256,6 +257,11 @@ var tools = {
 		    			</div>`
 		    }
 		o.body = await tools.emailCore(mailOptions);
+	},
+	//
+	autohome: () => async (o,next) => {
+		let r = await authomepacong(o,next);
+		o.body = r;
 	},
 	socketOne: function(){
 		// var io = require('socket.io')(server)

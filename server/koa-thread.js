@@ -21,11 +21,12 @@ function gogo(){
 	// app.use(koaStatic('.'))
 	app.use(async (o, next) =>{
 		try{
-			o.io = soc; //bind socket to koa request instances
-			// soc.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
+			if(!o.io){
+				o.io = soc; //bind socket to koa request instances	
+			}
+			o.io.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
 			await next();
 			o.body.cok = koas.parseCookie(o.request.headers.cookie)
-			console.log("这菊花应该不会执行啦。")
 		}catch(err){
 			o.response.status = 500;
 			o.body = {
@@ -74,13 +75,6 @@ function gogo(){
 		// 	['Set-Cookie', 'Path=/'],
 		// 	['Set-Cookie', 'Max-Age=36000000'],
 		// ])
-		fs.writeFile("./hehe.json", JSON.stringify(o,null,2), (err, data) =>{
-			if(err){
-				console.log("err")
-			}else{
-				console.log("~~~~~~~~~~~~~~")
-			}
-		})
 		// o.response.set("Set-Cookie", ["aaa=bbb","ccc=ddd","eee=fff", "maxAge=60", 'domain=""', "expires="+date.toUTCString()])
 		
 		await next();
@@ -109,14 +103,15 @@ function gogo(){
 	router.post("/api/sendEmail",koas.sendEmail())
 	router.post("/api/upload", upload.single("hehe"), koas.upload())
 	router.post("/api/trax", upload.single("hehe"), koas.trax())
+	router.post("/api/autohomepacong", koas.autohome())
 	app.use( async (o, next) =>{
-		console.log("2222")
 		if(o.isrr){
 			o.outfit = "nothing"	
 		}else{
 			o.outfit = 'black lace'
 		}
 		o.body = {name: ` ^^kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`}
+		o.io.emit("windowa", "kendra lust")
 		// await next();
 	})
 	var server = app.listen(0);
@@ -129,10 +124,12 @@ function gogo(){
 		server.emit("connection", handler);
 		handler.resume();
 	})
-	// io.on("connection", socket => {
-	// 	socket.on("setSoc", msg => {
-	// 		soc = socket;
-	// 	})
-	// })
+	io.on("connection", socket => {
+		socket.on("setSoc", msg => {
+			if(!soc){
+				soc = socket;				
+			}
+		})
+	})
 }
 module.exports = gogo;

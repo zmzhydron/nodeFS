@@ -4,42 +4,7 @@
 */
 import React from "react"
 
-let one = val => (resolve, reject) =>{
-	$.ajax({
-		url: '/api/one',
-		type: 'post',
-		data: {
-			name: "zmz",
-		},
-		success: res => {
-			let { status, url } = res
-			if(status === 'ok'){
-				resolve(url);
-			}else{
-				reject("reject by one");
-			}
-		}
-	})
-}
-let two = val => (resolve, reject) =>{
-	$.ajax({
-		url: `/api/${val}`,
-		type: 'post',
-		data: {
-			name: "zmz",
-		},
-		success: res => {
-			let { status, url } = res
-			if(status === 'ok'){
-				resolve(url);
-			}else{
-				reject('reject by two');
-			}
-			
-		}
-	})
-}
-
+let socket;
 
 function pro(val, callback){
 	return new Promise(callback(val))
@@ -69,6 +34,34 @@ export default class App extends React.Component {
 
 	}
 	componentDidMount() {
+		socket = io("http://localhost:8081");
+		let _v;
+		socket.on("soc", data => {
+			console.log(data, "soc give you a message, and her's id")
+		})
+		// socket.on("heartbeat", data => {
+		// 	var dataObj = JSON.parse(data);
+		// 	console.log("********heartbeat*********")
+		// 	console.log(dataObj);
+		// 	if(dataObj && Object.keys(dataObj).length){
+		// 		let { cur, total, status } = dataObj;
+		// 		if(status === '1'){
+		// 			this.setState({
+		// 				progress: dataObj
+		// 			})	
+		// 		}
+		// 	}
+		// })
+		socket.emit("setSoc", '')
+		socket.on("m3", data => {
+			console.log(data, " m3 message")
+		})
+		socket.on("fuckyou", data => {
+			console.log(data, " fuckyou socket")
+		})
+		socket.on("crawl", data => {
+			console.log(data, " of crawl!!!!")
+		})
 	}
 	componentDidUpdate() {
 	}
@@ -269,17 +262,21 @@ export default class App extends React.Component {
 		let { width, height, } = infos;
 		let w = width >= height ? max : (width / height * max);
 		let h = width >= height ? (height / width * max) : max;
-
-		// var img = new Image();
-		// img.src=src;
-		// img.onload=() => {
-		// 	console.log("~~~~~~~~~~~~")
-		// }
 		return {
 			backgroundImage: `url(${src})`,
 			height: Math.floor(h),
 			width: Math.floor(w),
 		}
+	}
+	autohome = () => {
+		$.ajax({
+			url: "/api/autohomepacong",
+			type: "POST",
+			data: {},
+			success: function(val){
+				console.log(val, ` autohome`)
+			}
+		})
 	}
 	render() {
 		let { showADDCar, photoBtnDisable = '', popSrc = "", popShow = false, imgInfos = {} } = this.state;
@@ -294,6 +291,7 @@ export default class App extends React.Component {
 				<h1>DB control panel <button onClick={this.testExtend}>test extends</button>
 					<button onClick={this.addCookies}>add Cookies</button>
 					<button onClick={this.removeCookies}>remove Cookies</button>
+					<button onClick={this.autohome}>autohome</button>
 				</h1>
 				<button onClick={this.download}>下载</button>
 				<button onClick={this.getCollections}>查询</button>

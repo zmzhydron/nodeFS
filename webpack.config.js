@@ -14,7 +14,7 @@ module.exports = {
     // publicPath: "http://localhost:8081/"
     publicPath: "./"
   },
-  // devtool: 'eval-source-map',
+  devtool: 'eval-source-map',
   plugins : [
     //拷贝打包目录下的文件、文件夹到指定的输出
     new CopyWebpackPlugin([

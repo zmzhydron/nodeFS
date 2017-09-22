@@ -10,6 +10,7 @@ import Player from "./player.jsx"
 import Chat from "./chat.jsx"
 import DbControl from "./dbControl.jsx"
 import PhotoWall from "./photoWall.jsx"
+import Pacong from "../pacong.jsx"
 
 import Accident from "./carAccident.jsx"
 
@@ -49,10 +50,12 @@ import Accident from "./carAccident.jsx"
 				// <h3>{newCar} and the price is : {price}</h3>
 				// <button id="jquerytest">test middleware</button>
 				// <button id="dbtest" onClick={this.dbswitch}>db开关</button>
+
+				//<ControlBar {...indexProps} actions = {actions}/>
+				//<DbControl {...this.props}/>
 		return (
 			<div>
-			<ControlBar {...indexProps} actions = {actions}/>
-			<DbControl {...this.props}/>
+			<Pacong {...this.props}/>
 				<div className = {klassdba}>
 					{/*<Chat {...indexProps} />*/}
 					{/*<Player {...indexProps} />*/}

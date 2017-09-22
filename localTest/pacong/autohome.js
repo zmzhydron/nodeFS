@@ -20,6 +20,15 @@ const interest = ["宝马M", "AMG", "法拉利论坛", "911", "阿斯顿", "奥�
 const keyinterest = ["媳妇", "女友", "闺蜜", "性感", "黑丝", "肉丝"];
 const ROOTURL = 'http://club.autohome.com.cn';
 
+
+function pa(o,next){
+	let io = function(msg, name = "windowa"){
+		if(o.io){
+			o.io.emit(name, msg)
+		}else{
+			throw Error("io接口为空");
+		}
+	}
 	var rootPath = path.resolve(__dirname,`./../../../autohome`)
 	if(!fs.existsSync(rootPath)){
 		fs.mkdirSync(rootPath);
@@ -32,9 +41,9 @@ const ROOTURL = 'http://club.autohome.com.cn';
 	if(!fs.existsSync(error2)){
 		fs.writeFileSync(error2,"");
 	}
-	var error1 = path.resolve(rootPath, "./errorimg.json");
-	if(!fs.existsSync(error1)){
-		fs.writeFileSync(error1,"");
+	var errorimg = path.resolve(rootPath, "./errorimg.json");
+	if(!fs.existsSync(errorimg)){
+		fs.writeFileSync(errorimg,"");
 	}
 	var errorlog = path.resolve(rootPath, "./errorTITLE.json");
 	if(!fs.existsSync(errorlog)){
@@ -102,7 +111,7 @@ const ROOTURL = 'http://club.autohome.com.cn';
 				.on('error', val => {
 					resolve("false")
 					console.log(`下载${url}失败`, val);
-					fs.appendFileSync(error1, `下载${url}失败;`);
+					fs.appendFileSync(error1, `${JSON.stringify({url, dist})};`);
 				})
 				.pipe(fs.createWriteStream(dist))
 			})
@@ -172,7 +181,7 @@ const ROOTURL = 'http://club.autohome.com.cn';
 			})
 		})
 	}
- 	//解析每个论坛的帖子，并创建这个论坛的文件夹
+		//解析每个论坛的帖子，并创建这个论坛的文件夹
 	function parseForms(obj){
 		function single(item){
 			//创建文件夹
@@ -180,6 +189,7 @@ const ROOTURL = 'http://club.autohome.com.cn';
 			let dir = path.resolve(rootPath, `./${title}`);
 			if(!fs.existsSync(dir)){
 				fs.mkdirSync(dir);
+				io(`${dir} 已经完成创建本地文件夹！`)
 			}
 			return new Promise( (resolve, reject) => {
 				requestCore(url).then( val => {
@@ -187,6 +197,7 @@ const ROOTURL = 'http://club.autohome.com.cn';
 						resolve([]);
 						return 
 					}
+					io(`${title} 已经完成解析论坛大类！`, "windowc")
 					let [ response, body, $,] = val;
 					let topics = Array.from($(".a_topic"))
 					.filter( (i,j) => {
@@ -207,6 +218,7 @@ const ROOTURL = 'http://club.autohome.com.cn';
 						let donwloadSrc = path.resolve(dir,`./${topicName}`);
 						if(!fs.existsSync(donwloadSrc)){
 							fs.mkdirSync(donwloadSrc)
+							io(`${topicName} 已经完成创建topic本地文件夹！`, "windowb")
 						}
 						return {
 							donwloadSrc,
@@ -308,40 +320,23 @@ const ROOTURL = 'http://club.autohome.com.cn';
 	}
 	async function crawl(){
 		var start = new Date().valueOf();
-
 		var forms = await getEveryForms(ROOTURL);
-		var allforms = drill(forms,2);
+		var allforms = drill(forms,1);
 		var topics = await parseForms(sliceToChunk(allforms, 2));
-		topics = sliceToChunk(topics, 2);
-		topics = [...topics.slice(0,40)]
-		var imgs = await processImage(topics)
-		console.log(imgs.length, " *************************  ")
-		console.log('~~~~~~~~~~~~~~~~~~');
-		var r = await dowmloadImage(sliceToChunk(imgs, 50))
+		// topics = sliceToChunk(topics, 2);
+		// topics = [...topics.slice(0,40)]
+		// var imgs = await processImage(topics)
+		// console.log(imgs.length, " *************************  ")
+		// var r = await dowmloadImage(sliceToChunk(imgs, 50))
 		// var r = await request2(imglist);
 		// console.log("爬虫用时: ", new Date().valueOf() - start);
 		// return r;
-		fs.appendFileSync(domLog, util.inspect(topics));
-		return topics;
+		// fs.appendFileSync(domLog, util.inspect(topics));
+		io("爬开点！")
+		console.log('~~~~~~~~~~~~~~~~~~');
+		return "hehe";
 	}
-	crawl().then( val => {
-		let totoal = totoalSize / 1000 * 1000;
-		// console.log(val)
-		console.log(`*(************ok!!!!!*****************`, totoal, totoalSize)
-	})
-// }
+	return crawl()
+}
 
-
-				// request.get(`http://club2.autoimg.cn/album/g7/M00/F6/3E/userphotos/2017/07/05/12/500_wKjB0FlcakiAIKO4AAir2ZODQ8s742.jpg`)
-				// .on('response', res => {
-				// 	if(res.statusCode == 200){
-				// 		console.log(`下载图片开始`)
-				// 	}
-				// })
-				// .on('end', val => {
-				// 	console.log(`完成`)
-				// })
-				// .on('error', val => {
-				// 	console.log(`下载失败`, val);
-				// })
-				// .pipe(fs.createWriteStream('C:\\Users\\zmz\\Desktop\\Github\\autohome\\阿斯顿·马丁论坛\\『最爱还是自己的信仰』阿斯顿马丁VantageV8换车贴~/5.jpg'))
+module.exports = pa;

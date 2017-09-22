@@ -172,3 +172,21 @@ body {
 		}
 	}
 }
+.infoCtn{
+	display: flex;
+	flex-flow: row;
+}
+.inforoll{
+	width: 300px;
+	height: 400px;
+	overflow: scroll;
+	.ctn{
+		height: auto;
+		width: 300px;
+		p{
+			height: 15px;
+			white-space: nowrap;
+			font-size: 12px;
+		}
+	}
+}
