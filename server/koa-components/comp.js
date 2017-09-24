@@ -260,6 +260,7 @@ var tools = {
 	},
 	//
 	autohome: () => async (o,next) => {
+		console.log('start')
 		let r = await authomepacong(o,next);
 		o.body = r;
 	},

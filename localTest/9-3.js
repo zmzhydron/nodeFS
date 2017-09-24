@@ -1,5 +1,6 @@
 'use strict'
-
+var fs = require("fs")
+var path = require("path")
 /*
 	async promise 并发，按顺序读取测试;
 
@@ -74,9 +75,9 @@ function *gen(val){
 	console.log(r, "!!!!!!")
 	return r;
 }
-run(gen, "zhangmingzhi").then( val => {
-	console.log(val, " ************* ");
-})
+// run(gen, "zhangmingzhi").then( val => {
+// 	console.log(val, " ************* ");
+// })
 // let pro = function(){
 // 	let list = [pro1(), pro2(), pro3()];
 // 	return Promise.all(list)
@@ -87,3 +88,35 @@ run(gen, "zhangmingzhi").then( val => {
 // 	// })
 // 	console.log(val)
 // })
+
+function removeDir(dir){
+	let files = fs.readdirSync(dir);
+	files.forEach( (item, index) => {
+		let src = path.resolve(dir,item);
+		if(fs.statSync(src).isDirectory()){
+			removeDir(src)
+		}else{
+			fs.unlinkSync(src)
+		}
+	})
+	fs.rmdirSync(dir);
+}
+async function b(){
+	await "bb"
+}
+async function c(){
+	if(5>3){
+
+	}else{
+		console.log("2222")
+		await "cc"
+	}
+}
+async function a(){
+	await c();
+	console.log('111111111')
+	return await b()
+}
+a().then( val => {
+	console.log(val);
+})
