@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "asd": "webpack-dev-server --port 3000 --hot",
-    "build": "webpack",
-    "start": "node ./webpackcfg/config"
+    "build": "webpack --config webpack-build.js",
+    "start": "webpack-dev-server --config webpack-dev.js"
   },
   "config": {
     "devHost": "127.0.0.1",
@@ -71,5 +71,8 @@
     "url-loader": "^0.5.9",
     "webpack": "3.5.5",
     "webpack-dev-server": "^2.7.1"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^2.8.2"
   }
 }
