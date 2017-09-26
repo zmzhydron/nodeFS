@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "asd": "webpack-dev-server --port 3000 --hot",
-    "build": "webpack --config webpack-build.js",
+    "build": "webpack --config webpack-dll.js && webpack --config webpack-build.js --progress --color",
     "start": "webpack-dev-server --config webpack-dev.js"
   },
   "config": {
