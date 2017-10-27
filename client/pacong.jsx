@@ -4,7 +4,7 @@
 */
 import React from "react"
 let socket;
-const typeList = ['windowa', 'windowb', 'windowc', 'windowd', 'windowe'] 
+const typeList = ['windowa', 'windowb', 'windowc', 'windowd', 'windowe'];
 export default class App extends React.Component {
 	constructor(props) {
 		super();
@@ -50,7 +50,7 @@ export default class App extends React.Component {
 	}
 	testExtend = () => {
 		$.ajax({
-			url: `fuckoff/hello?name=zmz&age=29`,
+			url: `api/hello?name=zmz&age=29`,
 			type: 'POST',
 			timeout: 0,
 			data: {
@@ -60,7 +60,7 @@ export default class App extends React.Component {
 				console.log(val)
 			},
 			error: val => {
-				console.log(val, " ERORR")
+				console.log(val, " ERORR!!!")
 			}
 		})
 		$.ajax({

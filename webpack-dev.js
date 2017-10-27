@@ -35,6 +35,10 @@ module.exports = {
         // to: path.join(__dirname, "./dev/src")
       },
       {
+        from: path.join(__dirname, "./build/vendors/vendors.js")
+        // to: path.join(__dirname, "./dev/src")
+      },
+      {
         from: path.join(__dirname, "./node_modules/_jquery@3.2.1@jquery/dist/jquery.min.js")
         // to: path.join(__dirname, "./dev/fuckoff/jquery.min.js")
       }
@@ -42,7 +46,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: "jquery",
       jQuery: "jquery",
-      // tools: "tools"
+      tools: "tools"
     }),
 
     new webpack.DllReferencePlugin({
