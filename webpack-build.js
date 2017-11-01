@@ -4,27 +4,22 @@ var CopyWebpackPlugin = require("copy-webpack-plugin")
 module.exports = {
   entry: {
     zmz1: path.resolve(__dirname,"./client/app.jsx"),
-    pussy: path.resolve(__dirname,"./client/webpack1.js"),
-    fuck: path.resolve(__dirname,"./client/webpack2.js"),
   },
   output: {
     path: path.resolve(__dirname, "./build"),
     filename: "[name].js",
-    // publicPath: "http://www.zzhangmingzhimba.com:8081/"
-    // publicPath: "http://localhost:8081/"
-    publicPath: "./"
+    publicPath: "/fuckoff/"
   },
-  devtool: 'eval-source-map',
   plugins : [
     //拷贝打包目录下的文件、文件夹到指定的输出
     new CopyWebpackPlugin([
-      {
-        from: path.join(__dirname, "./client/src/rawSrc"), 
-        to: path.join(__dirname, "./build/src/rawSrc")
-      },
+      // {
+      //   from: path.join(__dirname, "./client/src/rawSrc"), 
+      //   to: path.join(__dirname, "./build/src")
+      // },
       {
         from: path.join(__dirname, "./node_modules/_jquery@3.2.1@jquery/dist/jquery.min.js"),
-        to: path.join(__dirname, "./build/src/rawSrc/jquery.min.js")
+        to: path.join(__dirname, "./build/src/jquery.min.js")
       }
     ]),
     new webpack.ProvidePlugin({
@@ -32,11 +27,10 @@ module.exports = {
       // jQuery: "jquery",
       tools: "tools"
     }),
-
     new webpack.DllReferencePlugin({
       context: __dirname,
       manifest: require('./manifest.json'),
-    })
+    }),
     // new webpack.optimize.UglifyJsPlugin() //部署才用，作用是最小化文件，开发情况下会增加打包时间
   ],
   externals: {
@@ -75,7 +69,11 @@ module.exports = {
       {
         test: /\.(jpg|png)$/,
         exclude: /node_modules/,
-        loader: "url-loader?limit=1&nameimgs/[hash:5].[name].[ext]"
+        loader: "url-loader",
+        options: {
+          limit: 1,
+          name: "imgs/[name].[ext]"
+        }
       }
       // {
       //   test: /\.png|\.jpg?$/,
