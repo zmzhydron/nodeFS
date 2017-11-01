@@ -4,7 +4,7 @@
 */
 import React from "react"
 let socket;
-const typeList = ['windowa', 'windowb', 'windowc', 'windowd', 'windowe'];
+const typeList = ['windowa', 'windowb', 'windowc', 'windowd', 'windowe', 'windowr'];
 export default class App extends React.Component {
 	constructor(props) {
 		super();
@@ -28,10 +28,15 @@ export default class App extends React.Component {
 					title: "windowd",
 					klass: "d"
 				},
-								{
+				{
 					list: [],
 					title: "windowe",
 					klass: "e"
+				},
+				{
+					list: [],
+					title: "windowr",
+					klass: "r"
 				}
 			]
 		}
@@ -111,7 +116,6 @@ export default class App extends React.Component {
 		})
 	}
 	renderInfos = () => {
-
 		let { infos = []} = this.state;
 		function core(list) {
 			return list.map((item, index) => {

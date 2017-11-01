@@ -13,7 +13,7 @@ function pro1(val){
 		setTimeout( () => {
 			console.log("1 done")
 			resolve(val)
-		},3000);
+		},1000);
 	})
 }
 function pro2(val){
@@ -28,8 +28,9 @@ function pro3(val){
 	return new Promise( (resolve, reject) => {
 		setTimeout( () => {
 			console.log("3 done")
+			console.log(val)
 			resolve(val)
-		},2000);
+		},1000);
 	})
 }
 
@@ -50,73 +51,61 @@ async function hehe(){
 // 	console.log(val, 'cost ', new Date().valueOf() - st);
 // })
 
+
 function run(gen, val){
-	var g = gen(val);
-	return new Promise( (resolve, reject) => {
-		function core(val){
+	return new Promise((resolve, reject) => {
+		var g = gen(val);
+		function core(g, val){
 			var r = g.next(val);
 			if(r.done){
-				resolve(r.value);
+				resolve(val);
 			}else{
-				r.value.then( val => {
-					core(val);
-				})
+				r.value.then(val => {
+					core(g, val);
+				})	
 			}
 		}
-		core();	
-	})
+		core(g, val);
+	}) 
 }
 
 function *gen(val){
-	var r = "";
-	r = yield pro1(val);
-	r = yield pro2(r+" zao");
-	r = yield pro3(r+" shang hao");
-	console.log(r, "!!!!!!")
-	return r;
+	var a = yield pro1(val);
+	var b = yield pro2(a + " fuck");
+	var c = yield pro3(b + " pussy");
 }
-// run(gen, "zhangmingzhi").then( val => {
-// 	console.log(val, " ************* ");
-// })
-// let pro = function(){
-// 	let list = [pro1(), pro2(), pro3()];
-// 	return Promise.all(list)
-// }
-// pro().then( val => {
-// 	// val.forEach( item => {
-// 	// 	item.
-// 	// })
-// 	console.log(val)
-// })
-
-function removeDir(dir){
-	let files = fs.readdirSync(dir);
-	files.forEach( (item, index) => {
-		let src = path.resolve(dir,item);
-		if(fs.statSync(src).isDirectory()){
-			removeDir(src)
-		}else{
-			fs.unlinkSync(src)
-		}
-	})
-	fs.rmdirSync(dir);
-}
-async function b(){
-	await "bb"
-}
-async function c(){
-	if(5>3){
-
-	}else{
-		console.log("2222")
-		await "cc"
-	}
-}
-async function a(){
-	await c();
-	console.log('111111111')
-	return await b()
-}
-a().then( val => {
-	console.log(val);
+var r = run(gen, 'zhangmingzhi').then(val => {
+	console.log(val, '~~~~~~~~~~~~')
 })
+
+// function removeDir(dir){
+// 	let files = fs.readdirSync(dir);
+// 	files.forEach( (item, index) => {
+// 		let src = path.resolve(dir,item);
+// 		if(fs.statSync(src).isDirectory()){
+// 			removeDir(src)
+// 		}else{
+// 			fs.unlinkSync(src)
+// 		}
+// 	})
+// 	fs.rmdirSync(dir);
+// }
+// async function b(){
+// 	await "bb"
+// }
+// async function c(){
+// 	if(5>3){
+
+// 	}else{
+// 		console.log("2222")
+// 		await "cc"
+// 	}
+// }
+// async function a(){
+// 	await c();
+// 	console.log('111111111')
+// 	return await b()
+// }
+// a().then( val => {
+// 	console.log(val);
+// })
