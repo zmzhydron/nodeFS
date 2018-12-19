@@ -42,7 +42,6 @@ if(cluster.isMaster){
 	// }
 	net.createServer({ pauseOnConnect: true }, conn => {
 		let workerID = convertip(conn.remoteAddress, os.cpus().length);
-		// console.log(workerID, " koa.js: @@@@@@@@@@@@@  ")
 		cluster.workers[workerID].send("sticky-session", conn);
 	}).listen(8081)
 }else{

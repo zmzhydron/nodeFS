@@ -10,6 +10,7 @@ var koabody = require("koa-body")
 var upload = multer({ dest: path.join(__dirname, "../shitbird")})
 var socketIO = require('socket.io');
 // var mongoApi = require("./db/mongoose.js")
+
 function gogo(){
 	var app = new koa();
 	var soc;
@@ -24,9 +25,9 @@ function gogo(){
 			if(!o.io){
 				o.io = soc; //bind socket to koa request instances	
 			}
-			o.io.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
+			// o.io.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
 			await next();
-			o.body.cok = koas.parseCookie(o.request.headers.cookie)
+			// o.body.cok = koas.parseCookie(o.request.headers.cookie)
 		}catch(err){
 			o.response.status = 500;
 			o.body = {
@@ -37,15 +38,24 @@ function gogo(){
 	})
 
 	app.use(koabody())
+
 	app.use(async (o,next) => {
 		// throw new Error("去屎吧")
 		// o.throw(500, 'name required'); //也可以绕过第一个错误处理的方法；
-		console.log(o.query,o.querystring, o.request.body,"  queryyyyyyyyyyyyyyy ")
+		console.log(o.query,o.querystring, o.request.header,"  queryyyyyyyyyyyyyyy ")
 		o.skill = o.request.body.skill || "sleep";
 		await next();
 	})
 	app.use(koatools.test())
 	app.use(router.routes()).use(router.allowedMethods())
+	router.post("/api/postvue", async(o, next) => {
+		console.log(o.request.body)
+		o.body = {
+			name: "postvue",
+			status: "ok",
+		};
+		// await next();
+	})
 	router.get("/api/rr", async (o, next) =>{
 		o.pos = 'ride';
 		o.isrr = true;
@@ -111,7 +121,7 @@ function gogo(){
 			o.outfit = 'black lace'
 		}
 		o.body = {name: ` ^^kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`}
-		o.io.emit("windowa", "kendra lust")
+		// o.io.emit("windowa", "kendra lust")
 		// await next();
 	})
 	var server = app.listen(0);

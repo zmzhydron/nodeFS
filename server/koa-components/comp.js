@@ -88,14 +88,19 @@ var tools = {
 	},
 	upload: function(){
 		return async function upload(o,next){
+			console.log(o.type, " ~~~~~~~~~~~~~~~ ")
 			o.body = await tools.uploadCore(o.req.file);
+			// o.set({"Content-Type": 'text/html'});
+			o.set("Content-Type",'text/html');
 		}
 	},
 	download: function(){
 		return async function download(o,next){
 			o.body = await new Promise( (resolve, reject) => {
-				var src = path.join(__dirname,"../../localtest/12-5.png");
+				// var src = path.join(__dirname,"../../localtest/12-5.png");
+				var src = "C:/Users/zmz/Desktop/stuff/aa.jpg";
 				var rs = fs.createReadStream(src);
+				console.log("~~~~~, ok ok")
 				o.set({
 					'Content-Type': 'application/octet-stream',
 					'Content-Disposition': `attachment;filename=123.png`
