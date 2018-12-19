@@ -4,7 +4,7 @@
 */
 import React from "react"
 let socket;
-const typeList = ['windowa', 'windowb', 'windowc', 'windowd', 'windowe'] 
+const typeList = ['windowa', 'windowb', 'windowc', 'windowd', 'windowe', 'windowr'];
 export default class App extends React.Component {
 	constructor(props) {
 		super();
@@ -28,10 +28,15 @@ export default class App extends React.Component {
 					title: "windowd",
 					klass: "d"
 				},
-								{
+				{
 					list: [],
 					title: "windowe",
 					klass: "e"
+				},
+				{
+					list: [],
+					title: "windowr",
+					klass: "r"
 				}
 			]
 		}
@@ -51,7 +56,7 @@ export default class App extends React.Component {
 	testExtend = () => {
 		debugger;
 		$.ajax({
-			url: `fuckoff/hello?name=zmz&age=29`,
+			url: `api/hello?name=zmz&age=29`,
 			type: 'POST',
 			timeout: 0,
 			data: {
@@ -61,7 +66,7 @@ export default class App extends React.Component {
 				console.log(val)
 			},
 			error: val => {
-				console.log(val, " ERORR")
+				console.log(val, " ERORR!!!")
 			}
 		})
 		$.ajax({
@@ -112,7 +117,6 @@ export default class App extends React.Component {
 		})
 	}
 	renderInfos = () => {
-
 		let { infos = []} = this.state;
 		function core(list) {
 			return list.map((item, index) => {

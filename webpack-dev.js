@@ -20,7 +20,7 @@ module.exports = {
     port: 9988,
     hot: true,
     // publicPath: "/asdf/",
-    host: "10.0.2.203",
+    host: "127.0.0.1",
     inline: true,
     proxy: {
       "/api": "http://localhost:8081"
@@ -51,9 +51,12 @@ module.exports = {
       //   to: "./src/vendors.js"
       // },
       {
-        from: path.join(__dirname, "./node_modules/_jquery@3.2.1@jquery/dist/jquery.min.js"),
-        // to: "./jquery.min.js"
-        // to: path.join(__dirname, "./dev/src/jquery.min.js"),
+        from: path.join(__dirname, "./build/vendors/vendors.js")
+        // to: path.join(__dirname, "./dev/src")
+      },
+      {
+        from: path.join(__dirname, "./node_modules/_jquery@3.2.1@jquery/dist/jquery.min.js")
+        // to: path.join(__dirname, "./dev/fuckoff/jquery.min.js")
       }
     ]),
     new webpack.ProvidePlugin({

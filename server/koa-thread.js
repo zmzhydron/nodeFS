@@ -25,9 +25,12 @@ function gogo(){
 			if(!o.io){
 				o.io = soc; //bind socket to koa request instances	
 			}
-			// o.io.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
+
+			o.io.emit("m3", " ask you shale receive, bimmer m3 , yeah..")	
+			console.log(1)
 			await next();
-			// o.body.cok = koas.parseCookie(o.request.headers.cookie)
+			o.body.cok = koas.parseCookie(o.request.headers.cookie);
+			console.log(8)
 		}catch(err){
 			o.response.status = 500;
 			o.body = {
@@ -44,18 +47,12 @@ function gogo(){
 		// o.throw(500, 'name required'); //也可以绕过第一个错误处理的方法；
 		console.log(o.query,o.querystring, o.request.header,"  queryyyyyyyyyyyyyyy ")
 		o.skill = o.request.body.skill || "sleep";
+		console.log(2)
 		await next();
+		console.log(7)
 	})
 	app.use(koatools.test())
 	app.use(router.routes()).use(router.allowedMethods())
-	router.post("/api/postvue", async(o, next) => {
-		console.log(o.request.body)
-		o.body = {
-			name: "postvue",
-			status: "ok",
-		};
-		// await next();
-	})
 	router.get("/api/rr", async (o, next) =>{
 		o.pos = 'ride';
 		o.isrr = true;
@@ -98,10 +95,17 @@ function gogo(){
 		}))
 		await next();
 	})
+	router.post("/api/hello", async (o, next) =>{
+		o.body = "hello from zmz";
+		console.log(3)
+		await next();
+		console.log(6);
+	})
 	router.get("/api/",koabody, async (o, next) =>{
 		o.pos = 'ride';
 		o.isrr = true;
 		await next();
+		
 	})
 	// router.get("/api/getCollections",mongoApi.querys())
 	// router.post("/api/addCar",mongoApi.addCar())
@@ -121,8 +125,10 @@ function gogo(){
 			o.outfit = 'black lace'
 		}
 		o.body = {name: ` ^^kendra lust wear ${o.outfit} and suck it down >>> ${o.pos} style`}
-		// o.io.emit("windowa", "kendra lust")
-		// await next();
+		o.io.emit("windowa", "kendra lust");
+		console.log(4)
+		await next();
+		console.log(5);
 	})
 	var server = app.listen(0);
 	var io = socketIO(server);

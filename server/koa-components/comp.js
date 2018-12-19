@@ -266,8 +266,11 @@ var tools = {
 	//
 	autohome: () => async (o,next) => {
 		console.log('start')
+		o.body = "狗狗狗狗";
 		let r = await authomepacong(o,next);
-		o.body = r;
+		// o.body = r;
+		console.log("完成咯，请慢用....");
+		
 	},
 	socketOne: function(){
 		// var io = require('socket.io')(server)
