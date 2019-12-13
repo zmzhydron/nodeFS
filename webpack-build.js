@@ -11,7 +11,7 @@ module.exports = {
     publicPath: "/fuckoff/"
   },
   plugins : [
-    //拷贝打包目录下的文件、文件夹到指定的输出
+    //拷贝打包目录下的文件、文件夹到指定的输出1111
     new CopyWebpackPlugin([
       // {
       //   from: path.join(__dirname, "./client/src/rawSrc"), 
