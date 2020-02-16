@@ -12,7 +12,7 @@ let start = store => next => action =>{
 	let { type, value } = action;
 	if(type === 'TESTMIDDLEWARE'){
 		action.value = "AMG GT ";
-		console.log(store.getState().index.price, "1")
+		console.log(store.getState().index.price, "111")
 	}
 	next(action)
 }
